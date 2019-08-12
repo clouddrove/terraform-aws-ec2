@@ -1,0 +1,61 @@
+---
+#
+# This is the canonical configuration for the `README.md`
+# Run `make readme` to rebuild the `README.md`
+#
+
+# Name of this project
+name : Terraform AWS EC2
+
+# License of this project
+license: "MIT"
+
+# Canonical GitHub repo
+github_repo: clouddrove/terraform-aws-ec2
+
+# Badges to display
+badges:
+  - name: "Terraform"
+    image: "https://img.shields.io/badge/Terraform-v0.12-green"
+    url: "https://www.terraform.io"
+  - name: "Licence"
+    image: "https://img.shields.io/badge/License-MIT-blue.svg"
+    url: "LICENSE.md"
+
+#  description of this project
+description: |-
+  Terraform module to create an EC2 resource on AWS with Elastic IP Addresses and Elastic Block Store.
+
+# extra content
+include:
+  - "terraform.md"
+
+# How to use this project
+usage : |-
+  ### Simple Example
+  Here is an example of how you can use this module in your inventory structure:
+  ```hcl
+      module "ec2" {
+        source                      = "git::https://github.com/clouddrove/terraform-aws-ec2.git"
+        name        = "ec2-instance"
+        application = "clouddrove"
+        environment = "test"
+        label_order = ["environment", "name", "application"]
+        instance_count              = 2
+        ami                         = "ami-08d658f84a6d84a80"
+        ebs_optimized               = false
+        instance_type               = "t2.nano"
+        key_name                    = module.keypair.name
+        monitoring                  = false
+        associate_public_ip_address = true
+        tenancy                     = "default"
+        disk_size                   = 8
+        vpc_security_group_ids_list = [module.ssh.security_group_ids, module.http-https.security_group_ids]
+        subnet_ids                  = tolist(module.public_subnets.public_subnet_id)
+        assign_eip_address = true
+        ebs_volume_enabled = true
+        ebs_volume_type    = "gp2"
+        ebs_volume_size    = 30
+        user_data          = "./_bin/user_data.sh"
+      }
+  ```
