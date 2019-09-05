@@ -3,7 +3,7 @@ provider "aws" {
 }
 
 module "keypair" {
-  source = "git::https://github.com/clouddrove/terraform-aws-keypair.git"
+  source = "git::https://github.com/clouddrove/terraform-aws-keypair.git?ref=tags/0.12.1"
 
   key_path        = "~/.ssh/id_rsa.pub"
   key_name        = "main-key"
@@ -11,7 +11,7 @@ module "keypair" {
 }
 
 module "vpc" {
-  source = "git::https://github.com/clouddrove/terraform-aws-vpc.git"
+  source = "git::https://github.com/clouddrove/terraform-aws-vpc.git?ref=tags/0.12.1"
 
   name        = "vpc"
   application = "clouddrove"
@@ -22,7 +22,7 @@ module "vpc" {
 }
 
 module "public_subnets" {
-  source = "git::https://github.com/clouddrove/terraform-aws-subnet.git"
+  source = "git::https://github.com/clouddrove/terraform-aws-subnet.git?ref=tags/0.12.1"
 
   name        = "public-subnet"
   application = "clouddrove"
@@ -37,7 +37,7 @@ module "public_subnets" {
 }
 
 module "http-https" {
-  source = "git::https://github.com/clouddrove/terraform-aws-security-group.git"
+  source = "git::https://github.com/clouddrove/terraform-aws-security-group.git?ref=tags/0.12.1"
 
   name        = "http-https"
   application = "clouddrove"
@@ -50,7 +50,7 @@ module "http-https" {
 }
 
 module "ssh" {
-  source = "git::https://github.com/clouddrove/terraform-aws-security-group.git"
+  source = "git::https://github.com/clouddrove/terraform-aws-security-group.git?ref=tags/0.12.1"
 
   name        = "ssh"
   application = "clouddrove"
@@ -63,7 +63,7 @@ module "ssh" {
 }
 
 module "ec2" {
-  source = "git::https://github.com/clouddrove/terraform-aws-ec2.git"
+  source = "git::https://github.com/clouddrove/terraform-aws-ec2.git?ref=tags/0.12.1"
 
   name        = "ec2-instance"
   application = "clouddrove"

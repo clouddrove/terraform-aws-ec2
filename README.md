@@ -70,7 +70,7 @@ This module has a few dependencies:
 Here is an example of how you can use this module in your inventory structure:
 ```hcl
     module "ec2" {
-      source                      = "git::https://github.com/clouddrove/terraform-aws-ec2.git"
+      source                      = "git::https://github.com/clouddrove/terraform-aws-ec2.git?ref=tags/0.12.1"
       name        = "ec2-instance"
       application = "clouddrove"
       environment = "test"
