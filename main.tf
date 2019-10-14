@@ -57,7 +57,8 @@ resource "aws_instance" "default" {
     {
 
       "Name" = format("%s%s%s", module.labels.id, var.delimiter, (count.index + 1))
-    }
+    },
+    var.instance_tags
   )
 
   volume_tags = merge(

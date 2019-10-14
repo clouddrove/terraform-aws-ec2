@@ -63,7 +63,7 @@ module "ssh" {
 }
 
 module "ec2" {
-  source = "git::https://github.com/clouddrove/terraform-aws-ec2.git?ref=tags/0.12.1"
+  source = "git::https://github.com/clouddrove/terraform-aws-ec2.git?ref=tags/0.12.2"
 
   name        = "ec2-instance"
   application = "clouddrove"
@@ -88,4 +88,5 @@ module "ec2" {
   ebs_volume_type    = "gp2"
   ebs_volume_size    = 30
   user_data          = "./_bin/user_data.sh"
+  instance_tags      = { "snapshot" = true }
 }

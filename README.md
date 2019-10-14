@@ -61,7 +61,9 @@ This module has a few dependencies:
 
 
 
+
 ## Examples
+
 
 **IMPORTANT:** Since the `master` branch used in `source` varies based on new modifications, we suggest that you use the release versions [here](https://github.com/clouddrove/terraform-aws-ec2/releases).
 
@@ -70,11 +72,11 @@ This module has a few dependencies:
 Here is an example of how you can use this module in your inventory structure:
 ```hcl
     module "ec2" {
-      source                      = "git::https://github.com/clouddrove/terraform-aws-ec2.git?ref=tags/0.12.1"
-      name        = "ec2-instance"
-      application = "clouddrove"
-      environment = "test"
-      label_order = ["environment", "name", "application"]
+      source                      = "git::https://github.com/clouddrove/terraform-aws-ec2.git?ref=tags/0.12.2"
+      name                        = "ec2-instance"
+      application                 = "clouddrove"
+      environment                 = "test"
+      label_order                 = ["environment", "name", "application"]
       instance_count              = 2
       ami                         = "ami-08d658f84a6d84a80"
       ebs_optimized               = false
@@ -86,13 +88,17 @@ Here is an example of how you can use this module in your inventory structure:
       disk_size                   = 8
       vpc_security_group_ids_list = [module.ssh.security_group_ids, module.http-https.security_group_ids]
       subnet_ids                  = tolist(module.public_subnets.public_subnet_id)
-      assign_eip_address = true
-      ebs_volume_enabled = true
-      ebs_volume_type    = "gp2"
-      ebs_volume_size    = 30
-      user_data          = "./_bin/user_data.sh"
+      assign_eip_address          = true
+      ebs_volume_enabled          = true
+      ebs_volume_type             = "gp2"
+      ebs_volume_size             = 30
+      user_data                   = "./_bin/user_data.sh"
+      instance_tags               = {"snapshot"=true}
     }
 ```
+
+
+
 
 
 
@@ -125,6 +131,7 @@ Here is an example of how you can use this module in your inventory structure:
 | instance_count | Number of instances to launch. | number | `1` | no |
 | instance_enabled | Flag to control the instance creation. | bool | `true` | no |
 | instance_initiated_shutdown_behavior | Shutdown behavior for the instance. | string | `` | no |
+| instance_tags | Instance tags. | map | `<map>` | no |
 | instance_type | The type of instance to start. Updates to this field will trigger a stop/start of the EC2 instance. | string | - | yes |
 | ipv6_address_count | Number of IPv6 addresses to associate with the primary network interface. Amazon EC2 chooses the IPv6 addresses from the range of your subnet. | number | `0` | no |
 | ipv6_addresses | List of IPv6 addresses from the range of the subnet to associate with the primary network interface. | list | `<list>` | no |
@@ -161,8 +168,8 @@ Here is an example of how you can use this module in your inventory structure:
 
 
 
-## Testing
 
+## Testing
 In this module testing is performed with [terratest](https://github.com/gruntwork-io/terratest) and it creates a small piece of infrastructure, matches the output like ARN, ID and Tags name etc and destroy infrastructure in your AWS account. This testing is written in GO, so you need a [GO environment](https://golang.org/doc/install) in your system.
 
 You need to run the following command in the testing folder:

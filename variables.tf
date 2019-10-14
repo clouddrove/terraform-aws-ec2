@@ -251,3 +251,9 @@ variable "cpu_credits" {
   default     = "standard"
   description = "The credit option for CPU usage. Can be `standard` or `unlimited`. T3 instances are launched as unlimited by default. T2 instances are launched as standard by default."
 }
+
+variable "instance_tags" {
+  type        = map
+  default     = {}
+  description = "Instance tags."
+}

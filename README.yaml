@@ -36,11 +36,11 @@ usage : |-
   Here is an example of how you can use this module in your inventory structure:
   ```hcl
       module "ec2" {
-        source                      = "git::https://github.com/clouddrove/terraform-aws-ec2.git?ref=tags/0.12.1"
-        name        = "ec2-instance"
-        application = "clouddrove"
-        environment = "test"
-        label_order = ["environment", "name", "application"]
+        source                      = "git::https://github.com/clouddrove/terraform-aws-ec2.git?ref=tags/0.12.2"
+        name                        = "ec2-instance"
+        application                 = "clouddrove"
+        environment                 = "test"
+        label_order                 = ["environment", "name", "application"]
         instance_count              = 2
         ami                         = "ami-08d658f84a6d84a80"
         ebs_optimized               = false
@@ -52,10 +52,11 @@ usage : |-
         disk_size                   = 8
         vpc_security_group_ids_list = [module.ssh.security_group_ids, module.http-https.security_group_ids]
         subnet_ids                  = tolist(module.public_subnets.public_subnet_id)
-        assign_eip_address = true
-        ebs_volume_enabled = true
-        ebs_volume_type    = "gp2"
-        ebs_volume_size    = 30
-        user_data          = "./_bin/user_data.sh"
+        assign_eip_address          = true
+        ebs_volume_enabled          = true
+        ebs_volume_type             = "gp2"
+        ebs_volume_size             = 30
+        user_data                   = "./_bin/user_data.sh"
+        instance_tags               = {"snapshot"=true}
       }
   ```
