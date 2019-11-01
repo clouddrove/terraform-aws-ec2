@@ -111,12 +111,14 @@ Here is an example of how you can use this module in your inventory structure:
 | assign_eip_address | Assign an Elastic IP address to the instance. | bool | `false` | no |
 | associate_public_ip_address | Associate a public IP address with the instance. | bool | `true` | no |
 | attributes | Additional attributes (e.g. `1`). | list | `<list>` | no |
-| availability_zone | Availability Zone the instance is launched in. If not set, will be launched in the first AZ of the region. | string | `` | no |
+| availability_zone | Availability Zone the instance is launched in. If not set, will be launched in the first AZ of the region. | list | `<list>` | no |
 | cpu_core_count | Sets the number of CPU cores for an instance. | string | `` | no |
 | cpu_credits | The credit option for CPU usage. Can be `standard` or `unlimited`. T3 instances are launched as unlimited by default. T2 instances are launched as standard by default. | string | `standard` | no |
 | delimiter | Delimiter to be used between `organization`, `environment`, `name` and `attributes`. | string | `-` | no |
 | disable_api_termination | If true, enables EC2 Instance Termination Protection. | bool | `false` | no |
 | disk_size | Size of the root volume in gigabytes. | number | `8` | no |
+| dns_enabled | Flag to control the dns_enable. | bool | `false` | no |
+| dns_zone_id | The Zone ID of Route53. | string | `` | no |
 | ebs_block_device | Additional EBS block devices to attach to the instance. | list | `<list>` | no |
 | ebs_device_name | Name of the EBS device to mount. | list(string) | `<list>` | no |
 | ebs_iops | Amount of provisioned IOPS. This must be set with a volume_type of io1. | number | `0` | no |
@@ -127,10 +129,12 @@ Here is an example of how you can use this module in your inventory structure:
 | environment | Environment (e.g. `prod`, `dev`, `staging`). | string | `` | no |
 | ephemeral_block_device | Customize Ephemeral (also known as Instance Store) volumes on the instance. | list | `<list>` | no |
 | host_id | The Id of a dedicated host that the instance will be assigned to. Use when an instance is to be launched on a specific dedicated host. | string | `` | no |
+| hostname | DNS records to create. | string | `` | no |
 | iam_instance_profile | The IAM Instance Profile to launch the instance with. Specified as the name of the Instance Profile. | string | `` | no |
 | instance_count | Number of instances to launch. | number | `1` | no |
 | instance_enabled | Flag to control the instance creation. | bool | `true` | no |
 | instance_initiated_shutdown_behavior | Shutdown behavior for the instance. | string | `` | no |
+| instance_profile_enabled | Flag to control the instance profile creation. | bool | `false` | no |
 | instance_tags | Instance tags. | map | `<map>` | no |
 | instance_type | The type of instance to start. Updates to this field will trigger a stop/start of the EC2 instance. | string | - | yes |
 | ipv6_address_count | Number of IPv6 addresses to associate with the primary network interface. Amazon EC2 chooses the IPv6 addresses from the range of your subnet. | number | `0` | no |
@@ -147,6 +151,8 @@ Here is an example of how you can use this module in your inventory structure:
 | subnet_ids | A list of VPC Subnet IDs to launch in. | list(string) | `<list>` | no |
 | tags | Additional tags (e.g. map(`BusinessUnit`,`XYZ`). | map | `<map>` | no |
 | tenancy | The tenancy of the instance (if the instance is running in a VPC). An instance with a tenancy of dedicated runs on single-tenant hardware. The host tenancy is not supported for the import-instance command. | string | `` | no |
+| ttl | The TTL of the record to add to the DNS zone to complete certificate validation. | string | `300` | no |
+| type | Type of DNS records to create. | string | `CNAME` | no |
 | user_data | The Base64-encoded user data to provide when launching the instances. | string | `` | no |
 | vpc_security_group_ids_list | A list of security group IDs to associate with. | list(string) | `<list>` | no |
 
