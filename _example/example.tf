@@ -16,7 +16,7 @@ module "vpc" {
   name        = "vpc"
   application = "clouddrove"
   environment = "test"
-  label_order = ["environment", "name", "application"]
+  label_order = ["environment", "application", "name"]
 
   cidr_block = "172.16.0.0/16"
 }
@@ -27,7 +27,7 @@ module "public_subnets" {
   name        = "public-subnet"
   application = "clouddrove"
   environment = "test"
-  label_order = ["environment", "name", "application"]
+  label_order = ["environment", "application", "name"]
 
   availability_zones = ["eu-west-1b", "eu-west-1c"]
   vpc_id             = module.vpc.vpc_id
@@ -42,7 +42,7 @@ module "http-https" {
   name        = "http-https"
   application = "clouddrove"
   environment = "test"
-  label_order = ["environment", "name", "application"]
+  label_order = ["environment", "application", "name"]
 
   vpc_id        = module.vpc.vpc_id
   allowed_ip    = ["0.0.0.0/0"]
@@ -55,7 +55,7 @@ module "ssh" {
   name        = "ssh"
   application = "clouddrove"
   environment = "test"
-  label_order = ["environment", "name", "application"]
+  label_order = ["environment", "application", "name"]
 
   vpc_id        = module.vpc.vpc_id
   allowed_ip    = [module.vpc.vpc_cidr_block]
@@ -68,7 +68,7 @@ module "iam-role" {
   name               = "iam-role"
   application        = "clouddrove"
   environment        = "test"
-  label_order        = ["application", "name", "name"]
+  label_order        = ["environment", "application", "name"]
   assume_role_policy = data.aws_iam_policy_document.default.json
 
   policy_enabled = true
@@ -105,7 +105,7 @@ module "ec2" {
   name        = "ec2-instance"
   application = "clouddrove"
   environment = "test"
-  label_order = ["environment", "name", "application"]
+  label_order = ["environment", "application", "name"]
 
   instance_count = 2
   ami            = "ami-08d658f84a6d84a80"
