@@ -56,7 +56,7 @@ resource "aws_instance" "default" {
     module.labels.tags,
     {
 
-      "Name" = format("%s%s%s", module.labels.id, var.delimiter, (count.index + 0))
+      "Name" = format("%s%s%s", module.labels.id, var.delimiter, (count.index))
     },
     var.instance_tags
   )
@@ -64,7 +64,7 @@ resource "aws_instance" "default" {
   volume_tags = merge(
     module.labels.tags,
     {
-      "Name" = format("%s%s%s", module.labels.id, var.delimiter, (count.index + 0))
+      "Name" = format("%s%s%s", module.labels.id, var.delimiter, (count.index))
     }
   )
 
@@ -91,7 +91,7 @@ resource "aws_eip" "default" {
   tags = merge(
     module.labels.tags,
     {
-      "Name" = format("%s%s%s-eip", module.labels.id, var.delimiter, (count.index + 0))
+      "Name" = format("%s%s%s-eip", module.labels.id, var.delimiter, (count.index))
     }
   )
 }
@@ -109,7 +109,7 @@ resource "aws_ebs_volume" "default" {
   tags = merge(
     module.labels.tags,
     {
-      "Name" = format("%s%s%s", module.labels.id, var.delimiter, (count.index + 0))
+      "Name" = format("%s%s%s", module.labels.id, var.delimiter, (count.index))
     }
   )
 }
@@ -137,7 +137,7 @@ resource "aws_iam_instance_profile" "default" {
 resource "aws_route53_record" "default" {
   count   = var.dns_enabled ? var.instance_count : 0
   zone_id = var.dns_zone_id
-  name    = format("%s%s%s", var.hostname, var.delimiter, (count.index + 0))
+  name    = format("%s%s%s", var.hostname, var.delimiter, (count.index))
   type    = var.type
   ttl     = var.ttl
   records = [element(aws_instance.default.*.private_dns, count.index)]
