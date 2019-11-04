@@ -109,7 +109,7 @@ resource "aws_ebs_volume" "default" {
   tags = merge(
     module.labels.tags,
     {
-      "Name" = format("%s%s%s-volume", module.labels.id, var.delimiter, (count.index + 0))
+      "Name" = format("%s%s%s", module.labels.id, var.delimiter, (count.index + 0))
     }
   )
 }
