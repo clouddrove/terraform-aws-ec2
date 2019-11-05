@@ -151,8 +151,8 @@ variable "ebs_iops" {
 }
 
 variable "availability_zone" {
-  type        = string
-  default     = ""
+  type        = list
+  default     = []
   description = "Availability Zone the instance is launched in. If not set, will be launched in the first AZ of the region."
 }
 
@@ -190,6 +190,11 @@ variable "ebs_volume_enabled" {
   type        = bool
   default     = false
   description = "Flag to control the ebs creation."
+}
+variable "instance_profile_enabled" {
+  type        = bool
+  default     = false
+  description = "Flag to control the instance profile creation."
 }
 
 variable "subnet_ids" {
@@ -256,4 +261,34 @@ variable "instance_tags" {
   type        = map
   default     = {}
   description = "Instance tags."
+}
+
+variable "dns_zone_id" {
+  type        = string
+  default     = ""
+  description = "The Zone ID of Route53."
+}
+
+variable "dns_enabled" {
+  type        = bool
+  default     = false
+  description = "Flag to control the dns_enable."
+}
+
+variable "hostname" {
+  type        = string
+  default     = ""
+  description = "DNS records to create."
+}
+
+variable "type" {
+  type        = string
+  default     = "CNAME"
+  description = "Type of DNS records to create."
+}
+
+variable "ttl" {
+  type        = string
+  default     = "300"
+  description = "The TTL of the record to add to the DNS zone to complete certificate validation."
 }
