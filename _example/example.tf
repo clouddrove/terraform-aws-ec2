@@ -37,7 +37,7 @@ module "public_subnets" {
 }
 
 module "http-https" {
-  source = "git::https://github.com/clouddrove/terraform-aws-security-group.git?ref=tags/0.12.2"
+  source = "git::https://github.com/clouddrove/terraform-aws-security-group.git?ref=tags/0.12.3"
 
   name        = "http-https"
   application = "clouddrove"
@@ -50,7 +50,7 @@ module "http-https" {
 }
 
 module "ssh" {
-  source = "git::https://github.com/clouddrove/terraform-aws-security-group.git?ref=tags/0.12.2"
+  source = "git::https://github.com/clouddrove/terraform-aws-security-group.git?ref=tags/0.12.3"
 
   name        = "ssh"
   application = "clouddrove"
@@ -100,7 +100,7 @@ data "aws_iam_policy_document" "iam-policy" {
 }
 
 module "ec2" {
-  source = "git::https://github.com/clouddrove/terraform-aws-ec2.git?ref=tags/0.12.3"
+  source = "./../"
 
   name        = "ec2-instance"
   application = "clouddrove"
