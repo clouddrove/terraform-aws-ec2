@@ -36,11 +36,12 @@ usage : |-
   Here is an example of how you can use this module in your inventory structure:
   ```hcl
       module "ec2" {
-        source                      = "git::https://github.com/clouddrove/terraform-aws-ec2.git?ref=tags/0.12.3"
+        source                      = "git::https://github.com/clouddrove/terraform-aws-ec2.git?ref=tags/0.12.4"
         name                        = "ec2-instance"
         application                 = "clouddrove"
         environment                 = "test"
-        label_order                 = ["environment", "application", "name"]        instance_count = 2
+        label_order                 = ["environment", "application", "name"]
+        instance_count              = 2
         ami                         = "ami-08d658f84a6d84a80"
         instance_type               = "t2.nano"
         key_name                    = module.keypair.name
