@@ -22,7 +22,7 @@ module "vpc" {
 }
 
 module "public_subnets" {
-  source = "git::https://github.com/clouddrove/terraform-aws-subnet.git?ref=tags/0.12.3"
+  source = "git::https://github.com/clouddrove/terraform-aws-subnet.git?ref=tags/0.12.4"
 
   name        = "public-subnet"
   application = "clouddrove"
@@ -63,7 +63,7 @@ module "ssh" {
 }
 
 module "iam-role" {
-  source = "git::https://github.com/clouddrove/terraform-aws-iam-role.git?ref=tags/0.12.0"
+  source = "git::https://github.com/clouddrove/terraform-aws-iam-role.git?ref=tags/0.12.1"
 
   name               = "iam-role"
   application        = "clouddrove"
