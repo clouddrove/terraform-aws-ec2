@@ -2,13 +2,7 @@ provider "aws" {
   region = "eu-west-1"
 }
 
-module "keypair" {
-  source = "git::https://github.com/clouddrove/terraform-aws-keypair.git?ref=tags/0.12.2"
 
-  key_path        = "~/.ssh/id_rsa.pub"
-  key_name        = "main-key"
-  enable_key_pair = true
-}
 
 module "vpc" {
   source = "git::https://github.com/clouddrove/terraform-aws-vpc.git?ref=tags/0.12.4"
@@ -22,7 +16,7 @@ module "vpc" {
 }
 
 module "public_subnets" {
-  source = "git::https://github.com/clouddrove/terraform-aws-subnet.git?ref=tags/0.12.3"
+  source = "git::https://github.com/clouddrove/terraform-aws-subnet.git?ref=tags/0.12.4"
 
   name        = "public-subnet"
   application = "clouddrove"
@@ -37,7 +31,7 @@ module "public_subnets" {
 }
 
 module "http-https" {
-  source = "git::https://github.com/clouddrove/terraform-aws-security-group.git?ref=tags/0.12.2"
+  source = "git::https://github.com/clouddrove/terraform-aws-security-group.git?ref=tags/0.12.3"
 
   name        = "http-https"
   application = "clouddrove"
@@ -50,7 +44,7 @@ module "http-https" {
 }
 
 module "ssh" {
-  source = "git::https://github.com/clouddrove/terraform-aws-security-group.git?ref=tags/0.12.2"
+  source = "git::https://github.com/clouddrove/terraform-aws-security-group.git?ref=tags/0.12.3"
 
   name        = "ssh"
   application = "clouddrove"
@@ -63,7 +57,7 @@ module "ssh" {
 }
 
 module "iam-role" {
-  source = "git::https://github.com/clouddrove/terraform-aws-iam-role.git?ref=tags/0.12.0"
+  source = "git::https://github.com/clouddrove/terraform-aws-iam-role.git?ref=tags/0.12.1"
 
   name               = "iam-role"
   application        = "clouddrove"
@@ -100,7 +94,7 @@ data "aws_iam_policy_document" "iam-policy" {
 }
 
 module "ec2" {
-  source = "git::https://github.com/clouddrove/terraform-aws-ec2.git?ref=tags/0.12.3"
+  source = "./../"
 
   name        = "ec2-instance"
   application = "clouddrove"
@@ -110,7 +104,6 @@ module "ec2" {
   instance_count = 2
   ami            = "ami-08d658f84a6d84a80"
   instance_type  = "t2.nano"
-  key_name       = module.keypair.name
   monitoring     = false
   tenancy        = "default"
 
