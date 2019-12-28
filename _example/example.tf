@@ -2,13 +2,7 @@ provider "aws" {
   region = "eu-west-1"
 }
 
-module "keypair" {
-  source = "git::https://github.com/clouddrove/terraform-aws-keypair.git?ref=tags/0.12.2"
 
-  key_path        = "~/.ssh/id_rsa.pub"
-  key_name        = "main-key"
-  enable_key_pair = true
-}
 
 module "vpc" {
   source = "git::https://github.com/clouddrove/terraform-aws-vpc.git?ref=tags/0.12.4"
@@ -110,7 +104,6 @@ module "ec2" {
   instance_count = 2
   ami            = "ami-08d658f84a6d84a80"
   instance_type  = "t2.nano"
-  key_name       = module.keypair.name
   monitoring     = false
   tenancy        = "default"
 
