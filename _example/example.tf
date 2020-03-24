@@ -2,8 +2,6 @@ provider "aws" {
   region = "eu-west-1"
 }
 
-
-
 module "vpc" {
   source = "git::https://github.com/clouddrove/terraform-aws-vpc.git?ref=tags/0.12.4"
 
@@ -122,7 +120,6 @@ module "ec2" {
   ebs_volume_type    = "gp2"
   ebs_volume_size    = 30
 
-  user_data     = "./_bin/user_data.sh"
   instance_tags = { "snapshot" = true }
 
   dns_zone_id = "Z1XJD7SSBKXLC1"

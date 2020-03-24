@@ -3,7 +3,9 @@
 # Copyright @ CloudDrove. All Right Reserved.
 
 #Module      : Label
-#Description : This terraform module is designed to generate consistent label names and #              tags for resources. You can use terraform-labels to implement a strict #              naming convention.
+#Description : This terraform module is designed to generate consistent label names and
+#              tags for resources. You can use terraform-labels to implement a strict
+#              naming convention.
 module "labels" {
   source = "git::https://github.com/clouddrove/terraform-labels.git?ref=tags/0.12.0"
 
@@ -11,6 +13,7 @@ module "labels" {
   application = var.application
   environment = var.environment
   label_order = var.label_order
+  managedby   = var.managedby
 }
 
 locals {
