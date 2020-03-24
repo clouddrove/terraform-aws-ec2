@@ -72,7 +72,7 @@ This module has a few dependencies:
 Here is an example of how you can use this module in your inventory structure:
 ```hcl
     module "ec2" {
-      source                      = "git::https://github.com/clouddrove/terraform-aws-ec2.git?ref=tags/0.12.4"
+      source                      = "git::https://github.com/clouddrove/terraform-aws-ec2.git?ref=tags/0.12.5"
       name                        = "ec2-instance"
       application                 = "clouddrove"
       environment                 = "test"
@@ -94,7 +94,6 @@ Here is an example of how you can use this module in your inventory structure:
       ebs_volume_enabled          = true
       ebs_volume_type             = "gp2"
       ebs_volume_size             = 30
-      user_data                   = "./_bin/user_data.sh"
       instance_tags               = { "snapshot" = true }
       dns_zone_id                 = "Z1XJD7SSBKXLC1"
       hostname                    = "ec2"
