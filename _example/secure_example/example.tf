@@ -91,12 +91,12 @@ data "aws_iam_policy_document" "iam-policy" {
   }
   statement {
     actions = [
-      "kms:CreateGrant"]
+    "kms:CreateGrant"]
     effect    = "Allow"
     resources = [module.kms_key.key_arn]
     condition {
-      test = "Bool"
-      values = [true]
+      test     = "Bool"
+      values   = [true]
       variable = "kms:GrantIsForAWSResource"
     }
   }
@@ -104,11 +104,11 @@ data "aws_iam_policy_document" "iam-policy" {
 
 module "kms_key" {
   source                  = "git::https://github.com/clouddrove/terraform-aws-kms.git?ref=tags/0.12.4"
-  name        = "kms"
-  application = "clouddrove"
-  environment = "test"
-  label_order = ["environment", "application", "name"]
-  enabled     = true
+  name                    = "kms"
+  application             = "clouddrove"
+  environment             = "test"
+  label_order             = ["environment", "application", "name"]
+  enabled                 = true
   description             = "KMS key for ec2"
   deletion_window_in_days = 7
   enable_key_rotation     = true
@@ -139,12 +139,12 @@ module "ec2" {
   environment = "test"
   label_order = ["environment", "application", "name"]
 
-  instance_count = 2
-  ami            = "ami-08d658f84a6d84a80"
-  instance_type  = "t2.nano"
-  monitoring     = false
-  tenancy        = "default"
-  key_name = module.keypair.name
+  instance_count              = 2
+  ami                         = "ami-08d658f84a6d84a80"
+  instance_type               = "t2.nano"
+  monitoring                  = false
+  tenancy                     = "default"
+  key_name                    = module.keypair.name
   vpc_security_group_ids_list = [module.ssh.security_group_ids, module.http-https.security_group_ids]
   subnet_ids                  = tolist(module.public_subnets.public_subnet_id)
 
@@ -159,9 +159,9 @@ module "ec2" {
   ebs_volume_enabled = true
   ebs_volume_type    = "gp2"
   ebs_volume_size    = 30
-  encrypted = true
-  kms_key_id = module.kms_key.key_arn
-  instance_tags = { "snapshot" = true }
-  dns_zone_id = "Z1XJD7SSBKXLC1"
-  hostname    = "ec2"
+  encrypted          = true
+  kms_key_id         = module.kms_key.key_arn
+  instance_tags      = { "snapshot" = true }
+  dns_zone_id        = "Z1XJD7SSBKXLC1"
+  hostname           = "ec2"
 }
