@@ -50,7 +50,7 @@ module "ssh" {
   label_order = ["environment", "application", "name"]
 
   vpc_id        = module.vpc.vpc_id
-  allowed_ip    = [module.vpc.vpc_cidr_block]
+  allowed_ip    = [module.vpc.vpc_cidr_block, "0.0.0.0/0"]
   allowed_ports = [22]
 }
 
@@ -89,6 +89,46 @@ data "aws_iam_policy_document" "iam-policy" {
     effect    = "Allow"
     resources = ["*"]
   }
+  statement {
+    actions = [
+      "kms:CreateGrant"]
+    effect    = "Allow"
+    resources = [module.kms_key.key_arn]
+    condition {
+      test = "Bool"
+      values = [true]
+      variable = "kms:GrantIsForAWSResource"
+    }
+  }
+}
+
+module "kms_key" {
+  source                  = "git::https://github.com/clouddrove/terraform-aws-kms.git?ref=tags/0.12.4"
+  name        = "kms"
+  application = "clouddrove"
+  environment = "test"
+  label_order = ["environment", "application", "name"]
+  enabled     = true
+  description             = "KMS key for ec2"
+  deletion_window_in_days = 7
+  enable_key_rotation     = true
+  alias                   = "alias/ec2"
+  policy                  = data.aws_iam_policy_document.kms.json
+}
+
+data "aws_iam_policy_document" "kms" {
+  version = "2012-10-17"
+  statement {
+    sid    = "Enable IAM User Permissions"
+    effect = "Allow"
+    principals {
+      type        = "AWS"
+      identifiers = ["*"]
+    }
+    actions   = ["kms:*"]
+    resources = ["*"]
+  }
+
 }
 
 module "ec2" {
@@ -104,7 +144,7 @@ module "ec2" {
   instance_type  = "t2.nano"
   monitoring     = false
   tenancy        = "default"
-
+  key_name = module.keypair.name
   vpc_security_group_ids_list = [module.ssh.security_group_ids, module.http-https.security_group_ids]
   subnet_ids                  = tolist(module.public_subnets.public_subnet_id)
 
@@ -119,9 +159,9 @@ module "ec2" {
   ebs_volume_enabled = true
   ebs_volume_type    = "gp2"
   ebs_volume_size    = 30
-
+  encrypted = true
+  kms_key_id = module.kms_key.key_arn
   instance_tags = { "snapshot" = true }
-
   dns_zone_id = "Z1XJD7SSBKXLC1"
   hostname    = "ec2"
 }
