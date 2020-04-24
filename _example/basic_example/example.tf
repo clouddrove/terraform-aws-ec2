@@ -100,12 +100,12 @@ module "ec2" {
   environment = "test"
   label_order = ["environment", "application", "name"]
 
-  instance_count = 2
-  ami            = "ami-08d658f84a6d84a80"
-  instance_type  = "t2.nano"
-  monitoring     = false
-  tenancy        = "default"
-  key_name = module.keypair.name
+  instance_count              = 2
+  ami                         = "ami-08d658f84a6d84a80"
+  instance_type               = "t2.nano"
+  monitoring                  = false
+  tenancy                     = "default"
+  key_name                    = module.keypair.name
   vpc_security_group_ids_list = [module.ssh.security_group_ids, module.http-https.security_group_ids]
   subnet_ids                  = tolist(module.public_subnets.public_subnet_id)
 
@@ -122,6 +122,6 @@ module "ec2" {
   ebs_volume_size    = 30
 
   instance_tags = { "snapshot" = true }
-  dns_zone_id = "Z1XJD7SSBKXLC1"
-  hostname    = "ec2"
+  dns_zone_id   = "Z1XJD7SSBKXLC1"
+  hostname      = "ec2"
 }
