@@ -72,7 +72,7 @@ Here is examples of how you can use this module in your inventory structure:
 ### Basic Example
 ```hcl
     module "ec2" {
-      source                      = "git::https://github.com/clouddrove/terraform-aws-ec2.git?ref=tags/0.12.5"
+      source                      = "git::https://github.com/clouddrove/terraform-aws-ec2.git?ref=tags/0.12.7"
       name                        = "ec2-instance"
       application                 = "clouddrove"
       environment                 = "test"
@@ -102,7 +102,7 @@ Here is examples of how you can use this module in your inventory structure:
 ### Secure Example
 ```hcl
     module "ec2" {
-      source                      = "git::https://github.com/clouddrove/terraform-aws-ec2.git?ref=tags/0.12.5"
+      source                      = "git::https://github.com/clouddrove/terraform-aws-ec2.git?ref=tags/0.12.7"
       name                        = "ec2-instance"
       application                 = "clouddrove"
       environment                 = "test"
