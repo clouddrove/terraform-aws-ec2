@@ -44,7 +44,6 @@ usage : |-
         instance_count              = 2
         ami                         = "ami-08d658f84a6d84a80"
         instance_type               = "t2.nano"
-        key_name                    = module.keypair.name
         monitoring                  = false
         tenancy                     = "default"
         vpc_security_group_ids_list = [module.ssh.security_group_ids, module.http-https.security_group_ids]
@@ -75,7 +74,6 @@ usage : |-
         instance_count              = 2
         ami                         = "ami-08d658f84a6d84a80"
         instance_type               = "t2.nano"
-        key_name                    = module.keypair.name
         monitoring                  = false
         tenancy                     = "default"
         vpc_security_group_ids_list = [module.ssh.security_group_ids, module.http-https.security_group_ids]

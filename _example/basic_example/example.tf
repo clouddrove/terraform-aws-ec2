@@ -93,7 +93,7 @@ data "aws_iam_policy_document" "iam-policy" {
 
 
 module "ec2" {
-  source = "./../"
+  source = "./../../"
 
   name        = "ec2-instance"
   application = "clouddrove"
@@ -105,7 +105,6 @@ module "ec2" {
   instance_type               = "t2.nano"
   monitoring                  = false
   tenancy                     = "default"
-  key_name                    = module.keypair.name
   vpc_security_group_ids_list = [module.ssh.security_group_ids, module.http-https.security_group_ids]
   subnet_ids                  = tolist(module.public_subnets.public_subnet_id)
 
