@@ -49,6 +49,8 @@ resource "aws_instance" "default" {
   root_block_device {
     volume_size           = var.disk_size
     delete_on_termination = true
+    encrypted             = var.encrypted
+    kms_key_id            = var.kms_key_id
   }
 
   credit_specification {
@@ -108,7 +110,8 @@ resource "aws_ebs_volume" "default" {
   size              = var.ebs_volume_size
   iops              = local.ebs_iops
   type              = var.ebs_volume_type
-
+  encrypted         = var.encrypted
+  kms_key_id        = var.kms_key_id
   tags = merge(
     module.labels.tags,
     {

@@ -50,7 +50,7 @@ module "ssh" {
   label_order = ["environment", "application", "name"]
 
   vpc_id        = module.vpc.vpc_id
-  allowed_ip    = [module.vpc.vpc_cidr_block]
+  allowed_ip    = [module.vpc.vpc_cidr_block, "0.0.0.0/0"]
   allowed_ports = [22]
 }
 
@@ -91,20 +91,20 @@ data "aws_iam_policy_document" "iam-policy" {
   }
 }
 
+
 module "ec2" {
-  source = "./../"
+  source = "./../../"
 
   name        = "ec2-instance"
   application = "clouddrove"
   environment = "test"
   label_order = ["environment", "application", "name"]
 
-  instance_count = 2
-  ami            = "ami-08d658f84a6d84a80"
-  instance_type  = "t2.nano"
-  monitoring     = false
-  tenancy        = "default"
-
+  instance_count              = 2
+  ami                         = "ami-08d658f84a6d84a80"
+  instance_type               = "t2.nano"
+  monitoring                  = false
+  tenancy                     = "default"
   vpc_security_group_ids_list = [module.ssh.security_group_ids, module.http-https.security_group_ids]
   subnet_ids                  = tolist(module.public_subnets.public_subnet_id)
 
@@ -121,7 +121,6 @@ module "ec2" {
   ebs_volume_size    = 30
 
   instance_tags = { "snapshot" = true }
-
-  dns_zone_id = "Z1XJD7SSBKXLC1"
-  hostname    = "ec2"
+  dns_zone_id   = "Z1XJD7SSBKXLC1"
+  hostname      = "ec2"
 }

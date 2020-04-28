@@ -298,3 +298,15 @@ variable "ttl" {
   default     = "300"
   description = "The TTL of the record to add to the DNS zone to complete certificate validation."
 }
+
+variable "kms_key_id" {
+  type        = string
+  default     = ""
+  description = "The ARN for the KMS encryption key. When specifying kms_key_id, encrypted needs to be set to true."
+}
+
+variable "encrypted" {
+  type        = bool
+  default     = false
+  description = "If true, the disk will be encrypted."
+}
