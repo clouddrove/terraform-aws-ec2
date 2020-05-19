@@ -60,7 +60,7 @@ resource "aws_instance" "default" {
   tags = merge(
     module.labels.tags,
     {
-      "Name" = format("%s%s%s", module.labels.id, var.delimiter, (count.index + 1))
+      "Name" = format("%s%s%s", module.labels.id, var.delimiter, (count.index))
     },
     var.instance_tags
   )
@@ -68,7 +68,7 @@ resource "aws_instance" "default" {
   volume_tags = merge(
     module.labels.tags,
     {
-      "Name" = format("%s%s%s", module.labels.id, var.delimiter, (count.index + 1))
+      "Name" = format("%s%s%s", module.labels.id, var.delimiter, (count.index))
     }
   )
 
@@ -95,7 +95,7 @@ resource "aws_eip" "default" {
   tags = merge(
     module.labels.tags,
     {
-      "Name" = format("%s%s%s-eip", module.labels.id, var.delimiter, (count.index + 1))
+      "Name" = format("%s%s%s-eip", module.labels.id, var.delimiter, (count.index))
     }
   )
 }
@@ -115,7 +115,7 @@ resource "aws_ebs_volume" "default" {
   tags = merge(
     module.labels.tags,
     {
-      "Name" = format("%s%s%s", module.labels.id, var.delimiter, (count.index + 1))
+      "Name" = format("%s%s%s", module.labels.id, var.delimiter, (count.index))
     }
   )
 }
