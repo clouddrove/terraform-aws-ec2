@@ -20,12 +20,11 @@ locals {
   ebs_iops = var.ebs_volume_type == "io1" ? var.ebs_iops : 0
 }
 
-
 #Module      : EC2
 #Description : Terraform module to create an EC2 resource on AWS with Elastic IP Addresses
 #              and Elastic Block Store.
 resource "aws_instance" "default" {
-  count = var.instance_enabled == true ? var.instance_count : 0
+  count = var.instance_enabled ? var.instance_count : 0
 
   ami                                  = var.ami
   ebs_optimized                        = var.ebs_optimized
@@ -42,10 +41,11 @@ resource "aws_instance" "default" {
   host_id                              = var.host_id
   cpu_core_count                       = var.cpu_core_count
   user_data                            = var.user_data != "" ? base64encode(file(var.user_data)) : ""
-  iam_instance_profile                 = join("", aws_iam_instance_profile.default.*.name)
+  iam_instance_profile                 = var.instance_profile_enabled == "true" ? join("", aws_iam_instance_profile.default.*.name) : ""
   source_dest_check                    = var.source_dest_check
   ipv6_address_count                   = var.ipv6_address_count
   ipv6_addresses                       = var.ipv6_addresses
+  
   root_block_device {
     volume_size           = var.disk_size
     delete_on_termination = true
@@ -60,8 +60,7 @@ resource "aws_instance" "default" {
   tags = merge(
     module.labels.tags,
     {
-
-      "Name" = format("%s%s%s", module.labels.id, var.delimiter, (count.index))
+      "Name" = format("%s%s%s", module.labels.id, var.delimiter, (count.index + 1))
     },
     var.instance_tags
   )
@@ -69,7 +68,7 @@ resource "aws_instance" "default" {
   volume_tags = merge(
     module.labels.tags,
     {
-      "Name" = format("%s%s%s", module.labels.id, var.delimiter, (count.index))
+      "Name" = format("%s%s%s", module.labels.id, var.delimiter, (count.index + 1))
     }
   )
 
@@ -88,7 +87,7 @@ resource "aws_instance" "default" {
 #Module      : EIP
 #Description : Provides an Elastic IP resource.
 resource "aws_eip" "default" {
-  count = var.instance_enabled == true && var.assign_eip_address == true ? var.instance_count : 0
+  count = var.instance_enabled && var.assign_eip_address ? var.instance_count : 0
 
   network_interface = element(aws_instance.default.*.primary_network_interface_id, count.index)
   vpc               = true
@@ -96,7 +95,7 @@ resource "aws_eip" "default" {
   tags = merge(
     module.labels.tags,
     {
-      "Name" = format("%s%s%s-eip", module.labels.id, var.delimiter, (count.index))
+      "Name" = format("%s%s%s-eip", module.labels.id, var.delimiter, (count.index + 1))
     }
   )
 }
@@ -104,7 +103,7 @@ resource "aws_eip" "default" {
 #Module      : EBS VOLUME
 #Description : Manages a single EBS volume.
 resource "aws_ebs_volume" "default" {
-  count = var.instance_enabled == true && var.ebs_volume_enabled == true ? var.instance_count : 0
+  count = var.instance_enabled && var.ebs_volume_enabled ? var.instance_count : 0
 
   availability_zone = element(aws_instance.default.*.availability_zone, count.index)
   size              = var.ebs_volume_size
@@ -112,10 +111,11 @@ resource "aws_ebs_volume" "default" {
   type              = var.ebs_volume_type
   encrypted         = var.encrypted
   kms_key_id        = var.kms_key_id
+  
   tags = merge(
     module.labels.tags,
     {
-      "Name" = format("%s%s%s", module.labels.id, var.delimiter, (count.index))
+      "Name" = format("%s%s%s", module.labels.id, var.delimiter, (count.index + 1))
     }
   )
 }
@@ -123,7 +123,7 @@ resource "aws_ebs_volume" "default" {
 #Module      : VOLUME ATTACHMENT
 #Description : Provides an AWS EBS Volume Attachment as a top level resource, to attach and detach volumes from AWS Instances.
 resource "aws_volume_attachment" "default" {
-  count = var.instance_enabled == true && var.ebs_volume_enabled == true ? var.instance_count : 0
+  count = var.instance_enabled && var.ebs_volume_enabled ? var.instance_count : 0
 
   device_name = element(var.ebs_device_name, count.index)
   volume_id   = element(aws_ebs_volume.default.*.id, count.index)
@@ -133,7 +133,8 @@ resource "aws_volume_attachment" "default" {
 #Module      : IAM INSTANCE PROFILE
 #Description : Provides an IAM instance profile.
 resource "aws_iam_instance_profile" "default" {
-  count = var.instance_enabled == true && var.instance_profile_enabled ? 1 : 0
+  count = var.instance_enabled && var.instance_profile_enabled ? 1 : 0
+  
   name  = format("%s%sinstance-profile", module.labels.id, var.delimiter)
   role  = var.iam_instance_profile
 }
@@ -141,7 +142,8 @@ resource "aws_iam_instance_profile" "default" {
 #Module      : ROUTE53
 #Description : Provides a Route53 record resource.
 resource "aws_route53_record" "default" {
-  count   = var.instance_enabled == true && var.dns_enabled ? var.instance_count : 0
+  count   = var.instance_enabled && var.dns_enabled ? var.instance_count : 0
+  
   zone_id = var.dns_zone_id
   name    = format("%s%s%s", var.hostname, var.delimiter, (count.index))
   type    = var.type

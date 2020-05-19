@@ -18,7 +18,6 @@ output "az" {
 output "public_ip" {
   value       = coalesce(aws_eip.default.*.public_ip, aws_instance.default.*.public_ip)
   description = "Public IP of instance (or EIP)."
-
 }
 
 output "private_ip" {
@@ -54,4 +53,8 @@ output "subnet_id" {
 output "instance_count" {
   value       = var.instance_count
   description = "The count of instances."
+}
+
+output "tags" {
+  value       = module.labels.tags
 }

@@ -52,6 +52,7 @@ variable "managedby" {
 # Description : Terraform EC2 module variables.
 variable "ami" {
   type        = string
+  default     = ""
   description = "The AMI to use for the instance."
 }
 
@@ -63,6 +64,7 @@ variable "ebs_optimized" {
 
 variable "instance_type" {
   type        = string
+  default     = ""
   description = "The type of instance to start. Updates to this field will trigger a stop/start of the EC2 instance."
 }
 
@@ -82,12 +84,6 @@ variable "vpc_security_group_ids_list" {
   type        = list(string)
   default     = []
   description = "A list of security group IDs to associate with."
-}
-
-variable "subnet" {
-  type        = string
-  default     = null
-  description = "VPC Subnet ID the instance is launched in."
 }
 
 variable "associate_public_ip_address" {
@@ -128,7 +124,7 @@ variable "placement_group" {
 
 variable "tenancy" {
   type        = string
-  default     = ""
+  default     = "default"
   description = "The tenancy of the instance (if the instance is running in a VPC). An instance with a tenancy of dedicated runs on single-tenant hardware. The host tenancy is not supported for the import-instance command."
 }
 
@@ -197,6 +193,7 @@ variable "ebs_volume_enabled" {
   default     = false
   description = "Flag to control the ebs creation."
 }
+
 variable "instance_profile_enabled" {
   type        = bool
   default     = false
