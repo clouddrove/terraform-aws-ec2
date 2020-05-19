@@ -57,4 +57,5 @@ output "instance_count" {
 
 output "tags" {
   value       = module.labels.tags
+  description = "Output of tags."
 }
