@@ -1,6 +1,6 @@
 name: 'Terraform GitHub Actions'
 on:
-  - pull_request
+  - push
 
 jobs:
   terraform:
@@ -11,37 +11,74 @@ jobs:
       - name: 'Checkout'
         uses: actions/checkout@master
 
-      - name: 'Terraform Format'
-        uses: clouddrove/github-actions@v2.0
+      - name: 'Terraform Format fmt'
+        uses: hashicorp/terraform-github-actions@master
         with:
-          actions_subcommand: 'fmt'
+          tf_actions_version: 0.13.3
+          tf_actions_subcommand: 'fmt'
+          tf_actions_working_dir: "./_example/basic_example"
+          tf_actions_comment: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: 'Terraform Init'
-        uses: clouddrove/github-actions@v2.0
+      - name: 'Terraform Format fmt'
+        uses: hashicorp/terraform-github-actions@master
         with:
-          actions_subcommand: 'init'
-          tf_actions_working_dir: ./_example
+          tf_actions_version: 0.13.3
+          tf_actions_subcommand: 'fmt'
+          tf_actions_working_dir: "./_example/secure_example"
+          tf_actions_comment: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
 
       - name: Configure AWS Credentials
         uses: clouddrove/configure-aws-credentials@v1
         with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-access-key-id: ${{ secrets.TEST_AWS_ACCESS_KEY }}
+          aws-secret-access-key: ${{ secrets.TEST_AWS_ACCESS_SECRET_KEY }}
           aws-region: us-east-2
 
-      - name: 'Terraform Plan'
-        uses: clouddrove/github-actions@v2.0
+      - name: Set up Go 1.13
+        uses: actions/setup-go@v1
         with:
-          actions_subcommand: 'plan'
-          tf_actions_working_dir: ./_example
+          go-version: 1.13
+        id: go
+
+      - name: Get dependencies
+        run: |
+          if [ -f Gopkg.toml ]; then
+              curl https://raw.githubusercontent.com/golang/dep/master/install.sh | sh
+              dep ensure
+          else
+            go get -v -t -d ./...
+          fi
+
+      - name: Test Basic Example
+        working-directory: ./_test/basic_example
+        run: go test
+
+      - name: Test Secure Example
+        working-directory: ./_test/secure_example
+        run: go test
+
+      - name: 'Terraform Init Baic Example'
+        uses: hashicorp/terraform-github-actions@master
+        with:
+          tf_actions_version: 0.13.3
+          tf_actions_subcommand: 'init'
+          tf_actions_working_dir: "./_example/basic_example"
+          tf_actions_comment: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: 'Terratest'
-        uses: clouddrove/github-actions@v2.0
+      - name: 'Terraform Init Secure Example'
+        uses: hashicorp/terraform-github-actions@master
         with:
-          actions_subcommand: 'terratest'
-          tf_actions_working_dir: ./_test
+          tf_actions_version: 0.13.3
+          tf_actions_subcommand: 'init'
+          tf_actions_working_dir: "./_example/secure_example"
+          tf_actions_comment: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
@@ -53,5 +90,5 @@ jobs:
           author_name: 'Clouddrove'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # required
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK }} # required
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_TERRAFORM }} # required
         if: always()
