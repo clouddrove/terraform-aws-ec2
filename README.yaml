@@ -5,7 +5,7 @@
 #
 
 # Name of this project
-name : Terraform AWS EC2
+name: Terraform AWS EC2
 
 # License of this project
 license: "MIT"
@@ -24,14 +24,16 @@ badges:
 
 #  description of this project
 description: |-
-  Terraform module to create an EC2 resource on AWS with Elastic IP Addresses and Elastic Block Store.
+  Terraform module to create an EC2 resource on AWS with Elastic
+  IP Addresses and Elastic Block Store.
 
 # extra content
 include:
   - "terraform.md"
 
 # How to use this project
-usage : |-
+# yamllint disable rule:line-length
+usage: |-
   Here is examples of how you can use this module in your inventory structure:
   ### Basic Example
   ```hcl
