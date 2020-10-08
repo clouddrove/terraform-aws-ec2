@@ -14,7 +14,7 @@ jobs:
       - name: 'Terraform Format fmt'
         uses: hashicorp/terraform-github-actions@master
         with:
-          tf_actions_version: 0.13.3
+          tf_actions_version: 0.13.4
           tf_actions_subcommand: 'fmt'
           tf_actions_working_dir: "./_example/basic_example"
           tf_actions_comment: true
@@ -24,7 +24,7 @@ jobs:
       - name: 'Terraform Format fmt'
         uses: hashicorp/terraform-github-actions@master
         with:
-          tf_actions_version: 0.13.3
+          tf_actions_version: 0.13.4
           tf_actions_subcommand: 'fmt'
           tf_actions_working_dir: "./_example/secure_example"
           tf_actions_comment: true
@@ -65,7 +65,7 @@ jobs:
       - name: 'Terraform Init Baic Example'
         uses: hashicorp/terraform-github-actions@master
         with:
-          tf_actions_version: 0.13.3
+          tf_actions_version: 0.13.4
           tf_actions_subcommand: 'init'
           tf_actions_working_dir: "./_example/basic_example"
           tf_actions_comment: true
@@ -75,7 +75,7 @@ jobs:
       - name: 'Terraform Init Secure Example'
         uses: hashicorp/terraform-github-actions@master
         with:
-          tf_actions_version: 0.13.3
+          tf_actions_version: 0.13.4
           tf_actions_subcommand: 'init'
           tf_actions_working_dir: "./_example/secure_example"
           tf_actions_comment: true

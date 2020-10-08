@@ -17,7 +17,7 @@ jobs:
           python-version: '3.x'
 
       - name: 'Install test dependencies.'
-        run: pip install pre-commit yamllint
+        run: pip install yamllint
 
       - name: Run yamllint.
         run: yamllint ./README.yaml
@@ -30,9 +30,6 @@ jobs:
           cd  /home/runner/work/terraform-aws-ec2/terraform-aws-ec2
           make packages/install/gomplate
           make readme
-
-      - name: Run pre-commit
-        run: pre-commit run -a && pre-commit install
 
       - name: push to repo back
         run: |
