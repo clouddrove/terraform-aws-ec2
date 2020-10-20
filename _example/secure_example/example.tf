@@ -3,7 +3,8 @@ provider "aws" {
 }
 
 module "vpc" {
-  source = "git::https://github.com/clouddrove/terraform-aws-vpc.git?ref=tags/0.13.0"
+  source  = "clouddrove/vpc/aws"
+  version = "0.13.0"
 
   name        = "vpc"
   application = "clouddrove"
@@ -14,7 +15,8 @@ module "vpc" {
 }
 
 module "public_subnets" {
-  source = "git::https://github.com/clouddrove/terraform-aws-subnet.git?ref=tags/0.12.8"
+  source  = "clouddrove/subnet/aws"
+  version = "0.13.0"
 
   name        = "public-subnet"
   application = "clouddrove"
@@ -30,7 +32,8 @@ module "public_subnets" {
 }
 
 module "http-https" {
-  source = "git::https://github.com/clouddrove/terraform-aws-security-group.git?ref=tags/0.12.5"
+  source  = "clouddrove/security-group/aws"
+  version = "0.13.0"
 
   name        = "http-https"
   application = "clouddrove"
@@ -43,7 +46,8 @@ module "http-https" {
 }
 
 module "ssh" {
-  source = "git::https://github.com/clouddrove/terraform-aws-security-group.git?ref=tags/0.12.5"
+  source  = "clouddrove/security-group/aws"
+  version = "0.13.0"
 
   name        = "ssh"
   application = "clouddrove"
@@ -56,7 +60,8 @@ module "ssh" {
 }
 
 module "iam-role" {
-  source = "git::https://github.com/clouddrove/terraform-aws-iam-role.git?ref=tags/0.12.1"
+  source  = "clouddrove/iam-role/aws"
+  version = "0.13.0"
 
   name               = "iam-role"
   application        = "clouddrove"
@@ -104,7 +109,8 @@ data "aws_iam_policy_document" "iam-policy" {
 }
 
 module "kms_key" {
-  source                  = "git::https://github.com/clouddrove/terraform-aws-kms.git?ref=tags/0.12.4"
+  source                  = "clouddrove/kms/aws"
+  version                 = "0.13.0"
   name                    = "kms"
   application             = "clouddrove"
   environment             = "test"

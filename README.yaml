@@ -38,8 +38,8 @@ usage: |-
   ### Basic Example
   ```hcl
       module "ec2" {
-        source                      = "git::https://github.com/clouddrove/terraform-aws-ec2.git?ref=tags/0.13.0"
-        name                        = "ec2-instance"
+        source                      = "clouddrove/ec2/aws"
+        version                     = "0.13.0"
         application                 = "clouddrove"
         environment                 = "test"
         label_order                 = ["environment", "application", "name"]
@@ -68,8 +68,8 @@ usage: |-
   ### Secure Example
   ```hcl
       module "ec2" {
-        source                      = "git::https://github.com/clouddrove/terraform-aws-ec2.git?ref=tags/0.13.0"
-        name                        = "ec2-instance"
+        source                      = "clouddrove/ec2/aws"
+        version                     = "0.13.0"
         application                 = "clouddrove"
         environment                 = "test"
         label_order                 = ["environment", "application", "name"]
