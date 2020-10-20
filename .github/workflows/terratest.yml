@@ -1,7 +1,7 @@
 name: 'Terratest GitHub Actions'
 on:
   pull_request:
-    branches: 
+    branches:
       - master
     types: [labeled]
 
