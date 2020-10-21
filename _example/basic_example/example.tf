@@ -3,7 +3,8 @@ provider "aws" {
 }
 
 module "vpc" {
-  source = "git::https://github.com/clouddrove/terraform-aws-vpc.git?ref=tags/0.12.4"
+  source  = "clouddrove/vpc/aws"
+  version = "0.13.0"
 
   name        = "vpc"
   application = "clouddrove"
@@ -14,7 +15,8 @@ module "vpc" {
 }
 
 module "public_subnets" {
-  source = "git::https://github.com/clouddrove/terraform-aws-subnet.git?ref=tags/0.12.4"
+  source  = "clouddrove/subnet/aws"
+  version = "0.13.0"
 
   name        = "public-subnet"
   application = "clouddrove"
@@ -26,10 +28,12 @@ module "public_subnets" {
   cidr_block         = module.vpc.vpc_cidr_block
   type               = "public"
   igw_id             = module.vpc.igw_id
+  ipv6_cidr_block    = module.vpc.ipv6_cidr_block
 }
 
 module "http-https" {
-  source = "git::https://github.com/clouddrove/terraform-aws-security-group.git?ref=tags/0.12.3"
+  source  = "clouddrove/security-group/aws"
+  version = "0.13.0"
 
   name        = "http-https"
   application = "clouddrove"
@@ -42,8 +46,8 @@ module "http-https" {
 }
 
 module "ssh" {
-  source = "git::https://github.com/clouddrove/terraform-aws-security-group.git?ref=tags/0.12.3"
-
+  source      = "clouddrove/security-group/aws"
+  version     = "0.13.0"
   name        = "ssh"
   application = "clouddrove"
   environment = "test"
@@ -55,7 +59,8 @@ module "ssh" {
 }
 
 module "iam-role" {
-  source = "git::https://github.com/clouddrove/terraform-aws-iam-role.git?ref=tags/0.12.1"
+  source  = "clouddrove/iam-role/aws"
+  version = "0.13.0"
 
   name               = "iam-role"
   application        = "clouddrove"
