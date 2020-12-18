@@ -6,10 +6,16 @@ variable "name" {
   description = "Name  (e.g. `app` or `cluster`)."
 }
 
-variable "application" {
+variable "repository" {
   type        = string
   default     = ""
-  description = "Application (e.g. `cd` or `clouddrove`)."
+  description = "Terraform current module repo"
+
+  validation {
+    # regex(...) fails if it cannot find a match
+    condition     = can(regex("^https://", var.repository))
+    error_message = "The module-repo value must be a valid Git repo link."
+  }
 }
 
 variable "environment" {
@@ -44,8 +50,8 @@ variable "tags" {
 
 variable "managedby" {
   type        = string
-  default     = "anmol@clouddrove.com"
-  description = "ManagedBy, eg 'CloudDrove' or 'AnmolNagpal'."
+  default     = "hello@clouddrove.com"
+  description = "ManagedBy, eg 'CloudDrove'."
 }
 
 # Module      : EC2 Module
@@ -82,24 +88,28 @@ variable "vpc_security_group_ids_list" {
   type        = list(string)
   default     = []
   description = "A list of security group IDs to associate with."
+  sensitive   = true
 }
 
 variable "subnet" {
   type        = string
   default     = null
   description = "VPC Subnet ID the instance is launched in."
+  sensitive   = true
 }
 
 variable "associate_public_ip_address" {
   type        = bool
   default     = true
   description = "Associate a public IP address with the instance."
+  sensitive   = true
 }
 
 variable "ebs_block_device" {
   type        = list
   default     = []
   description = "Additional EBS block devices to attach to the instance."
+  sensitive   = true
 }
 
 variable "ephemeral_block_device" {
@@ -142,12 +152,14 @@ variable "user_data" {
   type        = string
   default     = ""
   description = "The Base64-encoded user data to provide when launching the instances."
+  sensitive   = true
 }
 
 variable "assign_eip_address" {
   type        = bool
   default     = false
   description = "Assign an Elastic IP address to the instance."
+  sensitive   = true
 }
 
 variable "ebs_iops" {
@@ -160,6 +172,7 @@ variable "availability_zone" {
   type        = list
   default     = []
   description = "Availability Zone the instance is launched in. If not set, will be launched in the first AZ of the region."
+  sensitive   = true
 }
 
 variable "ebs_device_name" {
@@ -207,6 +220,7 @@ variable "subnet_ids" {
   type        = list(string)
   default     = []
   description = "A list of VPC Subnet IDs to launch in."
+  sensitive   = true
 }
 
 variable "instance_count" {
@@ -231,12 +245,14 @@ variable "ipv6_addresses" {
   type        = list
   default     = []
   description = "List of IPv6 addresses from the range of the subnet to associate with the primary network interface."
+  sensitive   = true
 }
 
 variable "network_interface" {
   type        = list(map(string))
   default     = []
   description = "Customize network interfaces to be attached at instance boot time."
+  sensitive   = true
 }
 
 variable "host_id" {
@@ -273,6 +289,7 @@ variable "dns_zone_id" {
   type        = string
   default     = ""
   description = "The Zone ID of Route53."
+  sensitive   = true
 }
 
 variable "dns_enabled" {
@@ -285,6 +302,7 @@ variable "hostname" {
   type        = string
   default     = ""
   description = "DNS records to create."
+  sensitive   = true
 }
 
 variable "type" {
@@ -303,6 +321,7 @@ variable "kms_key_id" {
   type        = string
   default     = ""
   description = "The ARN for the KMS encryption key. When specifying kms_key_id, encrypted needs to be set to true."
+  sensitive   = true
 }
 
 variable "encrypted" {
