@@ -20,42 +20,42 @@ jobs:
           aws-region: us-east-2
 
       - name: 'Terraform Format'
-        uses: 'clouddrove/github-actions@v4.0'
+        uses: 'clouddrove/github-actions@v6.0'
         with:
           actions_subcommand: 'fmt'
 
       - name: 'Terraform init Basic'
-        uses: 'clouddrove/github-actions@v4.0'
+        uses: 'clouddrove/github-actions@v6.0'
         with:
           actions_subcommand: 'init'
           tf_actions_working_dir: ./_example/basic_example
 
       - name: 'Terraform validate Basic'
-        uses: 'clouddrove/github-actions@v4.0'
+        uses: 'clouddrove/github-actions@v6.0'
         with:
           actions_subcommand: 'validate'
           tf_actions_working_dir: ./_example/basic_example
 
       - name: 'Terraform plan Basic'
-        uses: 'clouddrove/github-actions@v4.0'
+        uses: 'clouddrove/github-actions@v6.0'
         with:
           actions_subcommand: 'plan'
           tf_actions_working_dir: ./_example/basic_example
 
       - name: 'Terraform init Secure'
-        uses: 'clouddrove/github-actions@v4.0'
+        uses: 'clouddrove/github-actions@v6.0'
         with:
           actions_subcommand: 'init'
           tf_actions_working_dir: ./_example/secure_example
 
       - name: 'Terraform validate Secure'
-        uses: 'clouddrove/github-actions@v4.0'
+        uses: 'clouddrove/github-actions@v6.0'
         with:
           actions_subcommand: 'validate'
           tf_actions_working_dir: ./_example/secure_example
 
       - name: 'Terraform plan Secure'
-        uses: 'clouddrove/github-actions@v4.0'
+        uses: 'clouddrove/github-actions@v6.0'
         with:
           actions_subcommand: 'plan'
           tf_actions_working_dir: ./_example/secure_example
