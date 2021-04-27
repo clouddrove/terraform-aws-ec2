@@ -10,7 +10,7 @@ module "labels" {
   source = "git::https://github.com/clouddrove/terraform-labels.git?ref=tags/0.14.0"
 
   name        = var.name
-  repository = var.repository
+  repository  = var.repository
   environment = var.environment
   label_order = var.label_order
   managedby   = var.managedby
