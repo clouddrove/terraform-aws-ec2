@@ -38,16 +38,19 @@ output "key_name" {
 
 output "ipv6_addresses" {
   value       = aws_instance.default.*.ipv6_addresses
+  sensitive   = true
   description = "A list of assigned IPv6 addresses."
 }
 
 output "vpc_security_group_ids" {
   value       = aws_instance.default.*.vpc_security_group_ids
+  sensitive   = true
   description = "The associated security groups in non-default VPC."
 }
 
 output "subnet_id" {
   value       = aws_instance.default.*.subnet_id
+  sensitive   = true
   description = "The EC2 subnet ID."
 }
 

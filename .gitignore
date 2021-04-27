@@ -5,3 +5,5 @@
 .idea
 *.iml
 go.sum
+*.terraform.lock.hcl
+crash.log

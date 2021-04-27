@@ -4,24 +4,23 @@ provider "aws" {
 
 module "vpc" {
   source  = "clouddrove/vpc/aws"
-  version = "0.13.0"
+  version = "0.14.0"
 
   name        = "vpc"
-  application = "clouddrove"
   environment = "test"
-  label_order = ["environment", "application", "name"]
+  label_order = ["environment", "name"]
 
   cidr_block = "172.16.0.0/16"
 }
 
 module "public_subnets" {
   source  = "clouddrove/subnet/aws"
-  version = "0.13.0"
+  version = "0.14.0"
 
   name        = "public-subnet"
-  application = "clouddrove"
+  repository  = "https://registry.terraform.io/modules/clouddrove/subnet/aws/0.14.0"
   environment = "test"
-  label_order = ["environment", "application", "name"]
+  label_order = ["environment", "name"]
 
   availability_zones = ["eu-west-1b", "eu-west-1c"]
   vpc_id             = module.vpc.vpc_id
@@ -33,12 +32,11 @@ module "public_subnets" {
 
 module "http-https" {
   source  = "clouddrove/security-group/aws"
-  version = "0.13.0"
+  version = "0.14.0"
 
   name        = "http-https"
-  application = "clouddrove"
   environment = "test"
-  label_order = ["environment", "application", "name"]
+  label_order = ["environment", "name"]
 
   vpc_id        = module.vpc.vpc_id
   allowed_ip    = ["0.0.0.0/0"]
@@ -47,12 +45,11 @@ module "http-https" {
 
 module "ssh" {
   source  = "clouddrove/security-group/aws"
-  version = "0.13.0"
+  version = "0.14.0"
 
   name        = "ssh"
-  application = "clouddrove"
   environment = "test"
-  label_order = ["environment", "application", "name"]
+  label_order = ["environment", "name"]
 
   vpc_id        = module.vpc.vpc_id
   allowed_ip    = [module.vpc.vpc_cidr_block, "0.0.0.0/0"]
@@ -61,12 +58,11 @@ module "ssh" {
 
 module "iam-role" {
   source  = "clouddrove/iam-role/aws"
-  version = "0.13.0"
+  version = "0.14.0"
 
   name               = "iam-role"
-  application        = "clouddrove"
   environment        = "test"
-  label_order        = ["environment", "application", "name"]
+  label_order        = ["environment", "name"]
   assume_role_policy = data.aws_iam_policy_document.default.json
 
   policy_enabled = true
@@ -110,11 +106,10 @@ data "aws_iam_policy_document" "iam-policy" {
 
 module "kms_key" {
   source                  = "clouddrove/kms/aws"
-  version                 = "0.13.0"
+  version                 = "0.14.0"
   name                    = "kms"
-  application             = "clouddrove"
   environment             = "test"
-  label_order             = ["environment", "application", "name"]
+  label_order             = ["environment", "name"]
   enabled                 = true
   description             = "KMS key for ec2"
   deletion_window_in_days = 7
@@ -142,9 +137,9 @@ module "ec2" {
   source = "./../../"
 
   name        = "ec2-instance"
-  application = "clouddrove"
+  repository  = "https://registry.terraform.io/modules/clouddrove/ec2/aws/0.14.0"
   environment = "test"
-  label_order = ["environment", "application", "name"]
+  label_order = ["environment", "name"]
 
   instance_count              = 2
   ami                         = "ami-08d658f84a6d84a80"
