@@ -14,7 +14,7 @@
 <p align="center">
 
 <a href="https://www.terraform.io">
-  <img src="https://img.shields.io/badge/Terraform-v0.13-green" alt="Terraform">
+  <img src="https://img.shields.io/badge/Terraform-v0.14-green" alt="Terraform">
 </a>
 <a href="LICENSE.md">
   <img src="https://img.shields.io/badge/License-MIT-blue.svg" alt="Licence">
@@ -73,10 +73,10 @@ Here is examples of how you can use this module in your inventory structure:
 ```hcl
     module "ec2" {
       source                      = "clouddrove/ec2/aws"
-      version                     = "0.13.0"
-      application                 = "clouddrove"
+      version                     = "0.14.0"
+      repository                  = "https://registry.terraform.io/modules/clouddrove/ec2/aws/0.14.0"
       environment                 = "test"
-      label_order                 = ["environment", "application", "name"]
+      label_order                 = ["name", "environment"]
       instance_count              = 2
       ami                         = "ami-08d658f84a6d84a80"
       instance_type               = "t2.nano"
@@ -103,10 +103,10 @@ Here is examples of how you can use this module in your inventory structure:
 ```hcl
     module "ec2" {
       source                      = "clouddrove/ec2/aws"
-      version                     = "0.13.0"
-      application                 = "clouddrove"
+      version                     = "0.14.0"
+      repository                  = "https://registry.terraform.io/modules/clouddrove/ec2/aws/0.14.0"
       environment                 = "test"
-      label_order                 = ["environment", "application", "name"]
+      label_order                 = ["name", "environment"]
       instance_count              = 2
       ami                         = "ami-08d658f84a6d84a80"
       instance_type               = "t2.nano"
@@ -141,11 +141,10 @@ Here is examples of how you can use this module in your inventory structure:
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
 | ami | The AMI to use for the instance. | `string` | n/a | yes |
-| application | Application (e.g. `cd` or `clouddrove`). | `string` | `""` | no |
 | assign\_eip\_address | Assign an Elastic IP address to the instance. | `bool` | `false` | no |
 | associate\_public\_ip\_address | Associate a public IP address with the instance. | `bool` | `true` | no |
-| attributes | Additional attributes (e.g. `1`). | `list` | `[]` | no |
-| availability\_zone | Availability Zone the instance is launched in. If not set, will be launched in the first AZ of the region. | `list` | `[]` | no |
+| attributes | Additional attributes (e.g. `1`). | `list(any)` | `[]` | no |
+| availability\_zone | Availability Zone the instance is launched in. If not set, will be launched in the first AZ of the region. | `list(any)` | `[]` | no |
 | cpu\_core\_count | Sets the number of CPU cores for an instance. | `string` | `null` | no |
 | cpu\_credits | The credit option for CPU usage. Can be `standard` or `unlimited`. T3 instances are launched as unlimited by default. T2 instances are launched as standard by default. | `string` | `"standard"` | no |
 | delimiter | Delimiter to be used between `organization`, `environment`, `name` and `attributes`. | `string` | `"-"` | no |
@@ -153,7 +152,7 @@ Here is examples of how you can use this module in your inventory structure:
 | disk\_size | Size of the root volume in gigabytes. | `number` | `8` | no |
 | dns\_enabled | Flag to control the dns\_enable. | `bool` | `false` | no |
 | dns\_zone\_id | The Zone ID of Route53. | `string` | `""` | no |
-| ebs\_block\_device | Additional EBS block devices to attach to the instance. | `list` | `[]` | no |
+| ebs\_block\_device | Additional EBS block devices to attach to the instance. | `list(any)` | `[]` | no |
 | ebs\_device\_name | Name of the EBS device to mount. | `list(string)` | <pre>[<br>  "/dev/xvdb",<br>  "/dev/xvdc",<br>  "/dev/xvdd",<br>  "/dev/xvde",<br>  "/dev/xvdf",<br>  "/dev/xvdg",<br>  "/dev/xvdh",<br>  "/dev/xvdi",<br>  "/dev/xvdj",<br>  "/dev/xvdk",<br>  "/dev/xvdl",<br>  "/dev/xvdm",<br>  "/dev/xvdn",<br>  "/dev/xvdo",<br>  "/dev/xvdp",<br>  "/dev/xvdq",<br>  "/dev/xvdr",<br>  "/dev/xvds",<br>  "/dev/xvdt",<br>  "/dev/xvdu",<br>  "/dev/xvdv",<br>  "/dev/xvdw",<br>  "/dev/xvdx",<br>  "/dev/xvdy",<br>  "/dev/xvdz"<br>]</pre> | no |
 | ebs\_iops | Amount of provisioned IOPS. This must be set with a volume\_type of io1. | `number` | `0` | no |
 | ebs\_optimized | If true, the launched EC2 instance will be EBS-optimized. | `bool` | `false` | no |
@@ -162,7 +161,7 @@ Here is examples of how you can use this module in your inventory structure:
 | ebs\_volume\_type | The type of EBS volume. Can be standard, gp2 or io1. | `string` | `"gp2"` | no |
 | encrypted | If true, the disk will be encrypted. | `bool` | `false` | no |
 | environment | Environment (e.g. `prod`, `dev`, `staging`). | `string` | `""` | no |
-| ephemeral\_block\_device | Customize Ephemeral (also known as Instance Store) volumes on the instance. | `list` | `[]` | no |
+| ephemeral\_block\_device | Customize Ephemeral (also known as Instance Store) volumes on the instance. | `list(any)` | `[]` | no |
 | host\_id | The Id of a dedicated host that the instance will be assigned to. Use when an instance is to be launched on a specific dedicated host. | `string` | `null` | no |
 | hostname | DNS records to create. | `string` | `""` | no |
 | iam\_instance\_profile | The IAM Instance Profile to launch the instance with. Specified as the name of the Instance Profile. | `string` | `""` | no |
@@ -170,23 +169,24 @@ Here is examples of how you can use this module in your inventory structure:
 | instance\_enabled | Flag to control the instance creation. | `bool` | `true` | no |
 | instance\_initiated\_shutdown\_behavior | Shutdown behavior for the instance. | `string` | `""` | no |
 | instance\_profile\_enabled | Flag to control the instance profile creation. | `bool` | `false` | no |
-| instance\_tags | Instance tags. | `map` | `{}` | no |
+| instance\_tags | Instance tags. | `map(any)` | `{}` | no |
 | instance\_type | The type of instance to start. Updates to this field will trigger a stop/start of the EC2 instance. | `string` | n/a | yes |
 | ipv6\_address\_count | Number of IPv6 addresses to associate with the primary network interface. Amazon EC2 chooses the IPv6 addresses from the range of your subnet. | `number` | `0` | no |
-| ipv6\_addresses | List of IPv6 addresses from the range of the subnet to associate with the primary network interface. | `list` | `[]` | no |
+| ipv6\_addresses | List of IPv6 addresses from the range of the subnet to associate with the primary network interface. | `list(any)` | `[]` | no |
 | key\_name | The key name to use for the instance. | `string` | `""` | no |
 | kms\_key\_id | The ARN for the KMS encryption key. When specifying kms\_key\_id, encrypted needs to be set to true. | `string` | `""` | no |
-| label\_order | Label order, e.g. `name`,`application`. | `list` | `[]` | no |
-| managedby | ManagedBy, eg 'CloudDrove' or 'AnmolNagpal'. | `string` | `"anmol@clouddrove.com"` | no |
+| label\_order | Label order, e.g. `name`,`application`. | `list(any)` | `[]` | no |
+| managedby | ManagedBy, eg 'CloudDrove'. | `string` | `"hello@clouddrove.com"` | no |
 | monitoring | If true, the launched EC2 instance will have detailed monitoring enabled. (Available since v0.6.0). | `bool` | `false` | no |
 | name | Name  (e.g. `app` or `cluster`). | `string` | `""` | no |
 | network\_interface | Customize network interfaces to be attached at instance boot time. | `list(map(string))` | `[]` | no |
 | placement\_group | The Placement Group to start the instance in. | `string` | `""` | no |
-| root\_block\_device | Customize details about the root block device of the instance. See Block Devices below for details. | `list` | `[]` | no |
+| repository | Terraform current module repo | `string` | `"https://registry.terraform.io/modules/clouddrove/ec2/aws/0.14.0"` | no |
+| root\_block\_device | Customize details about the root block device of the instance. See Block Devices below for details. | `list(any)` | `[]` | no |
 | source\_dest\_check | Controls if traffic is routed to the instance when the destination address does not match the instance. Used for NAT or VPNs. | `bool` | `true` | no |
 | subnet | VPC Subnet ID the instance is launched in. | `string` | `null` | no |
 | subnet\_ids | A list of VPC Subnet IDs to launch in. | `list(string)` | `[]` | no |
-| tags | Additional tags (e.g. map(`BusinessUnit`,`XYZ`). | `map` | `{}` | no |
+| tags | Additional tags (e.g. map(`BusinessUnit`,`XYZ`). | `map(any)` | `{}` | no |
 | tenancy | The tenancy of the instance (if the instance is running in a VPC). An instance with a tenancy of dedicated runs on single-tenant hardware. The host tenancy is not supported for the import-instance command. | `string` | `""` | no |
 | ttl | The TTL of the record to add to the DNS zone to complete certificate validation. | `string` | `"300"` | no |
 | type | Type of DNS records to create. | `string` | `"CNAME"` | no |
