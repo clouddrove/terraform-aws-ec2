@@ -80,7 +80,7 @@ variable "key_name" {
 
 variable "monitoring" {
   type        = bool
-  default     = false
+  default     = true
   description = "If true, the launched EC2 instance will have detailed monitoring enabled. (Available since v0.6.0)."
 }
 
