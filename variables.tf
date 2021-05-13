@@ -326,6 +326,6 @@ variable "kms_key_id" {
 
 variable "encrypted" {
   type        = bool
-  default     = false
+  default     = true
   description = "If true, the disk will be encrypted."
 }
