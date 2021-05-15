@@ -159,7 +159,7 @@ Here is examples of how you can use this module in your inventory structure:
 | ebs\_volume\_enabled | Flag to control the ebs creation. | `bool` | `false` | no |
 | ebs\_volume\_size | Size of the EBS volume in gigabytes. | `number` | `30` | no |
 | ebs\_volume\_type | The type of EBS volume. Can be standard, gp2 or io1. | `string` | `"gp2"` | no |
-| encrypted | If true, the disk will be encrypted. | `bool` | `false` | no |
+| encrypted | If true, the disk will be encrypted. | `bool` | `true` | no |
 | environment | Environment (e.g. `prod`, `dev`, `staging`). | `string` | `""` | no |
 | ephemeral\_block\_device | Customize Ephemeral (also known as Instance Store) volumes on the instance. | `list(any)` | `[]` | no |
 | host\_id | The Id of a dedicated host that the instance will be assigned to. Use when an instance is to be launched on a specific dedicated host. | `string` | `null` | no |
@@ -177,7 +177,7 @@ Here is examples of how you can use this module in your inventory structure:
 | kms\_key\_id | The ARN for the KMS encryption key. When specifying kms\_key\_id, encrypted needs to be set to true. | `string` | `""` | no |
 | label\_order | Label order, e.g. `name`,`application`. | `list(any)` | `[]` | no |
 | managedby | ManagedBy, eg 'CloudDrove'. | `string` | `"hello@clouddrove.com"` | no |
-| monitoring | If true, the launched EC2 instance will have detailed monitoring enabled. (Available since v0.6.0). | `bool` | `false` | no |
+| monitoring | If true, the launched EC2 instance will have detailed monitoring enabled. (Available since v0.6.0). | `bool` | `true` | no |
 | name | Name  (e.g. `app` or `cluster`). | `string` | `""` | no |
 | network\_interface | Customize network interfaces to be attached at instance boot time. | `list(map(string))` | `[]` | no |
 | placement\_group | The Placement Group to start the instance in. | `string` | `""` | no |
