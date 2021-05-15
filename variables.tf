@@ -80,7 +80,7 @@ variable "key_name" {
 
 variable "monitoring" {
   type        = bool
-  default     = false
+  default     = true
   description = "If true, the launched EC2 instance will have detailed monitoring enabled. (Available since v0.6.0)."
 }
 
@@ -326,6 +326,6 @@ variable "kms_key_id" {
 
 variable "encrypted" {
   type        = bool
-  default     = false
+  default     = true
   description = "If true, the disk will be encrypted."
 }
