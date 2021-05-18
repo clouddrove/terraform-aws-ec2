@@ -63,7 +63,7 @@ variable "ami" {
 
 variable "ebs_optimized" {
   type        = bool
-  default     = false
+  default     = true
   description = "If true, the launched EC2 instance will be EBS-optimized."
 }
 
