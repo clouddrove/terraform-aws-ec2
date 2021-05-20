@@ -160,7 +160,6 @@ module "ec2" {
   ebs_volume_enabled = true
   ebs_volume_type    = "gp2"
   ebs_volume_size    = 30
-  encrypted          = true
   kms_key_id         = module.kms_key.key_arn
   instance_tags      = { "snapshot" = true }
   dns_zone_id        = "Z1XJD7SSBKXLC1"

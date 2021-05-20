@@ -323,9 +323,3 @@ variable "kms_key_id" {
   description = "The ARN for the KMS encryption key. When specifying kms_key_id, encrypted needs to be set to true."
   sensitive   = true
 }
-
-variable "encrypted" {
-  type        = bool
-  default     = true
-  description = "If true, the disk will be encrypted."
-}
