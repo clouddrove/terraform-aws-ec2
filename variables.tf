@@ -329,3 +329,9 @@ variable "encrypted" {
   default     = true
   description = "If true, the disk will be encrypted."
 }
+
+variable "network_interface_id" {
+  type = string
+  default = null
+  description = "ID of the network interface to attach"
+}

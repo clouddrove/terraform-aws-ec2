@@ -29,10 +29,10 @@ resource "aws_instance" "default" {
   count = var.instance_enabled == true ? var.instance_count : 0
 
   ami                                  = var.ami
-  ebs_optimized                        = var.ebs_optimized
+  ebs_optimized                        = true
   instance_type                        = var.instance_type
   key_name                             = var.key_name
-  monitoring                           = var.monitoring
+  monitoring                           = true
   vpc_security_group_ids               = var.vpc_security_group_ids_list
   subnet_id                            = element(distinct(compact(concat(var.subnet_ids))), count.index)
   associate_public_ip_address          = var.associate_public_ip_address
@@ -50,12 +50,17 @@ resource "aws_instance" "default" {
   root_block_device {
     volume_size           = var.disk_size
     delete_on_termination = true
-    encrypted             = var.encrypted
+    encrypted             = true
     kms_key_id            = var.kms_key_id
   }
 
   credit_specification {
     cpu_credits = var.cpu_credits
+  }
+
+  network_interface {
+    network_interface_id = var.network_interface_id
+    device_index         = 0
   }
 
   tags = merge(
