@@ -61,11 +61,6 @@ variable "ami" {
   description = "The AMI to use for the instance."
 }
 
-variable "ebs_optimized" {
-  type        = bool
-  default     = true
-  description = "If true, the launched EC2 instance will be EBS-optimized."
-}
 
 variable "instance_type" {
   type        = string
@@ -78,11 +73,6 @@ variable "key_name" {
   description = "The key name to use for the instance."
 }
 
-variable "monitoring" {
-  type        = bool
-  default     = true
-  description = "If true, the launched EC2 instance will have detailed monitoring enabled. (Available since v0.6.0)."
-}
 
 variable "vpc_security_group_ids_list" {
   type        = list(string)
