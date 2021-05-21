@@ -111,7 +111,7 @@ resource "aws_ebs_volume" "default" {
   size              = var.ebs_volume_size
   iops              = local.ebs_iops
   type              = var.ebs_volume_type
-  encrypted         = var.encrypted
+  encrypted         = true
   kms_key_id        = var.kms_key_id
   tags = merge(
     module.labels.tags,
