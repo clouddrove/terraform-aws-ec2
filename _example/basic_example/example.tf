@@ -108,7 +108,6 @@ module "ec2" {
   ami                         = "ami-08d658f84a6d84a80"
   instance_type               = "t2.nano"
   monitoring                  = false
-  encrypted                   = false
   tenancy                     = "default"
   vpc_security_group_ids_list = [module.ssh.security_group_ids, module.http-https.security_group_ids]
   subnet_ids                  = tolist(module.public_subnets.public_subnet_id)

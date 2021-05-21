@@ -324,8 +324,3 @@ variable "kms_key_id" {
   sensitive   = true
 }
 
-variable "encrypted" {
-  type        = bool
-  default     = true
-  description = "If true, the disk will be encrypted."
-}
