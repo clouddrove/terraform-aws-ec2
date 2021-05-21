@@ -32,7 +32,7 @@ resource "aws_instance" "default" {
   ebs_optimized                        = var.ebs_optimized
   instance_type                        = var.instance_type
   key_name                             = var.key_name
-  monitoring                           = true
+  monitoring                           = var.monitoring
   vpc_security_group_ids               = var.vpc_security_group_ids_list
   subnet_id                            = element(distinct(compact(concat(var.subnet_ids))), count.index)
   associate_public_ip_address          = var.associate_public_ip_address
