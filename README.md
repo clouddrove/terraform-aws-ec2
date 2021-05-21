@@ -159,7 +159,6 @@ Here is examples of how you can use this module in your inventory structure:
 | ebs\_volume\_enabled | Flag to control the ebs creation. | `bool` | `false` | no |
 | ebs\_volume\_size | Size of the EBS volume in gigabytes. | `number` | `30` | no |
 | ebs\_volume\_type | The type of EBS volume. Can be standard, gp2 or io1. | `string` | `"gp2"` | no |
-| encrypted | If true, the disk will be encrypted. | `bool` | `true` | no |
 | environment | Environment (e.g. `prod`, `dev`, `staging`). | `string` | `""` | no |
 | ephemeral\_block\_device | Customize Ephemeral (also known as Instance Store) volumes on the instance. | `list(any)` | `[]` | no |
 | host\_id | The Id of a dedicated host that the instance will be assigned to. Use when an instance is to be launched on a specific dedicated host. | `string` | `null` | no |
