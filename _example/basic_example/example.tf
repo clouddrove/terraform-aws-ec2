@@ -71,6 +71,36 @@ module "iam-role" {
   policy         = data.aws_iam_policy_document.iam-policy.json
 }
 
+module "kms_key" {
+  source                  = "clouddrove/kms/aws"
+  version                 = "0.14.0"
+  name                    = "kms"
+  environment             = "test"
+  label_order             = ["environment", "name"]
+  enabled                 = true
+  description             = "KMS key for ec2"
+  deletion_window_in_days = 7
+  enable_key_rotation     = true
+  alias                   = "alias/ec2"
+  policy                  = data.aws_iam_policy_document.kms.json
+}
+
+
+data "aws_iam_policy_document" "kms" {
+  version = "2012-10-17"
+  statement {
+    sid    = "Enable IAM User Permissions"
+    effect = "Allow"
+    principals {
+      type        = "AWS"
+      identifiers = ["*"]
+    }
+    actions   = ["kms:*"]
+    resources = ["*"]
+  }
+
+}
+
 data "aws_iam_policy_document" "default" {
   statement {
     effect  = "Allow"
@@ -108,7 +138,6 @@ module "ec2" {
   ami                         = "ami-08d658f84a6d84a80"
   instance_type               = "t2.nano"
   monitoring                  = false
-  encrypted                   = false
   tenancy                     = "default"
   vpc_security_group_ids_list = [module.ssh.security_group_ids, module.http-https.security_group_ids]
   subnet_ids                  = tolist(module.public_subnets.public_subnet_id)
@@ -128,4 +157,5 @@ module "ec2" {
   instance_tags = { "snapshot" = true }
   dns_zone_id   = "Z1XJD7SSBKXLC1"
   hostname      = "ec2"
+  kms_key_id    = module.kms_key.key_arn
 }
