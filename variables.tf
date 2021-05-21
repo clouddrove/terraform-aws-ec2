@@ -331,7 +331,7 @@ variable "encrypted" {
 }
 
 variable "network_interface_id" {
-  type = string
-  default = null
+  type        = string
+  default     = null
   description = "ID of the network interface to attach"
 }
