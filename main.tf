@@ -29,7 +29,7 @@ resource "aws_instance" "default" {
   count = var.instance_enabled == true ? var.instance_count : 0
 
   ami                                  = var.ami
-  ebs_optimized                        = true
+  ebs_optimized                        = var.ebs_optimized
   instance_type                        = var.instance_type
   key_name                             = var.key_name
   monitoring                           = true
