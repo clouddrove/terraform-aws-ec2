@@ -109,7 +109,6 @@ variable "ebs_block_device" {
   type        = list(any)
   default     = []
   description = "Additional EBS block devices to attach to the instance."
-  sensitive   = true
 }
 
 variable "ephemeral_block_device" {
@@ -125,9 +124,8 @@ variable "disable_api_termination" {
 }
 
 variable "instance_initiated_shutdown_behavior" {
-  type        = string
-  default     = ""
-  description = "Shutdown behavior for the instance." # https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/terminating-instances.html#Using_ChangingInstanceInitiatedShutdownBehavior
+  type    = string
+  default = ""
 }
 
 variable "placement_group" {
@@ -138,7 +136,7 @@ variable "placement_group" {
 
 variable "tenancy" {
   type        = string
-  default     = ""
+  default     = "default"
   description = "The tenancy of the instance (if the instance is running in a VPC). An instance with a tenancy of dedicated runs on single-tenant hardware. The host tenancy is not supported for the import-instance command."
 }
 
@@ -249,11 +247,11 @@ variable "ipv6_addresses" {
 }
 
 variable "network_interface" {
+  description = "Customize network interfaces to be attached at instance boot time"
   type        = list(map(string))
   default     = []
-  description = "Customize network interfaces to be attached at instance boot time."
-  sensitive   = true
 }
+
 
 variable "host_id" {
   type        = string
@@ -322,4 +320,28 @@ variable "kms_key_id" {
   default     = ""
   description = "The ARN for the KMS encryption key. When specifying kms_key_id, encrypted needs to be set to true."
   sensitive   = true
+}
+
+variable "metadata_http_tokens_required" {
+  type        = bool
+  default     = true
+  description = "Whether or not the metadata service requires session tokens, also referred to as Instance Metadata Service Version 2."
+}
+
+variable "metadata_http_endpoint_enabled" {
+  type        = bool
+  default     = true
+  description = "Whether the metadata service is available"
+}
+
+variable "metadata_http_put_response_hop_limit" {
+  type        = number
+  default     = 2
+  description = "The desired HTTP PUT response hop limit (between 1 and 64) for instance metadata requests."
+}
+
+variable "delete_on_termination" {
+  type        = bool
+  default     = true
+  description = "Whether the volume should be destroyed on instance termination. Defaults to true."
 }

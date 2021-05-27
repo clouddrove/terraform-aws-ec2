@@ -15,8 +15,9 @@ module "vpc" {
 }
 
 module "public_subnets" {
-  source  = "clouddrove/subnet/aws"
-  version = "0.14.0"
+  # source  = "clouddrove/subnet/aws"
+  # version = "0.14.0"
+  source = "git::https://github.com/clouddrove/terraform-aws-subnet.git?ref=0.15"
 
   name        = "public-subnet"
   repository  = "https://registry.terraform.io/modules/clouddrove/subnet/aws/0.14.0"
@@ -148,14 +149,17 @@ module "ec2" {
   instance_profile_enabled = true
   iam_instance_profile     = module.iam-role.name
 
-  disk_size          = 8
-  ebs_optimized      = false
-  ebs_volume_enabled = true
-  ebs_volume_type    = "gp2"
-  ebs_volume_size    = 30
-
-  instance_tags = { "snapshot" = true }
-  dns_zone_id   = "Z1XJD7SSBKXLC1"
-  hostname      = "ec2"
-  kms_key_id    = module.kms_key.key_arn
+  disk_size                            = 8
+  ebs_optimized                        = false
+  ebs_volume_enabled                   = true
+  ebs_volume_type                      = "gp2"
+  ebs_volume_size                      = 30
+  instance_tags                        = { "snapshot" = true }
+  dns_zone_id                          = "Z1XJD7SSBKXLC1"
+  hostname                             = "ec2"
+  kms_key_id                           = module.kms_key.key_arn
+  metadata_http_tokens_required        = true
+  metadata_http_endpoint_enabled       = true
+  metadata_http_put_response_hop_limit = "2"
+  delete_on_termination                = false
 }

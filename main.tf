@@ -7,14 +7,13 @@
 #              tags for resources. You can use terraform-labels to implement a strict
 #              naming convention.
 module "labels" {
-  source = "git::https://github.com/clouddrove/terraform-labels.git?ref=tags/0.14.0"
+  source = "git::https://github.com/clouddrove/terraform-labels.git?ref=0.15"
 
   name        = var.name
   repository  = var.repository
   environment = var.environment
   label_order = var.label_order
   managedby   = var.managedby
-  enabled     = var.instance_enabled
 }
 
 locals {
@@ -47,15 +46,60 @@ resource "aws_instance" "default" {
   source_dest_check                    = var.source_dest_check
   ipv6_address_count                   = var.ipv6_address_count
   ipv6_addresses                       = var.ipv6_addresses
-  root_block_device {
-    volume_size           = var.disk_size
-    delete_on_termination = true
-    encrypted             = true
-    kms_key_id            = var.kms_key_id
+
+  dynamic "root_block_device" {
+    for_each = var.root_block_device
+    content {
+      delete_on_termination = lookup(root_block_device.value, "delete_on_termination", null)
+      encrypted             = lookup(root_block_device.value, "encrypted", null)
+      iops                  = lookup(root_block_device.value, "iops", null)
+      kms_key_id            = lookup(root_block_device.value, "kms_key_id", null)
+      volume_size           = lookup(root_block_device.value, "volume_size", null)
+      volume_type           = lookup(root_block_device.value, "volume_type", null)
+      tags                  = lookup(root_block_device.value, "tags", null)
+    }
+  }
+
+  dynamic "ebs_block_device" {
+    for_each = var.ebs_block_device
+    content {
+      delete_on_termination = lookup(ebs_block_device.value, "delete_on_termination", null)
+      device_name           = ebs_block_device.value.device_name
+      encrypted             = lookup(ebs_block_device.value, "encrypted", null)
+      iops                  = lookup(ebs_block_device.value, "iops", null)
+      kms_key_id            = lookup(ebs_block_device.value, "kms_key_id", null)
+      snapshot_id           = lookup(ebs_block_device.value, "snapshot_id", null)
+      volume_size           = lookup(ebs_block_device.value, "volume_size", null)
+      volume_type           = lookup(ebs_block_device.value, "volume_type", null)
+    }
+  }
+
+  dynamic "ephemeral_block_device" {
+    for_each = var.ephemeral_block_device
+    content {
+      device_name  = ephemeral_block_device.value.device_name
+      no_device    = lookup(ephemeral_block_device.value, "no_device", null)
+      virtual_name = lookup(ephemeral_block_device.value, "virtual_name", null)
+    }
+  }
+
+  metadata_options {
+    http_endpoint               = var.metadata_http_endpoint_enabled ? "enabled" : "disabled"
+    http_put_response_hop_limit = var.metadata_http_put_response_hop_limit
+    http_tokens                 = var.metadata_http_tokens_required ? "required" : "optional"
   }
 
   credit_specification {
     cpu_credits = var.cpu_credits
+  }
+
+  dynamic "network_interface" {
+    for_each = var.network_interface
+    content {
+      device_index          = network_interface.value.device_index
+      network_interface_id  = lookup(network_interface.value, "network_interface_id", null)
+      delete_on_termination = lookup(network_interface.value, "delete_on_termination", false)
+    }
   }
 
   tags = merge(
@@ -73,7 +117,6 @@ resource "aws_instance" "default" {
       "Name" = format("%s%s%s", module.labels.id, var.delimiter, (count.index))
     }
   )
-
   lifecycle {
     # Due to several known issues in Terraform AWS provider related to arguments of aws_instance:
     # (eg, https://github.com/terraform-providers/terraform-provider-aws/issues/2036)

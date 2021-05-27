@@ -16,7 +16,7 @@ github_repo: clouddrove/terraform-aws-ec2
 # Badges to display
 badges:
   - name: "Terraform"
-    image: "https://img.shields.io/badge/Terraform-v0.14-green"
+    image: "https://img.shields.io/badge/Terraform-v0.15-green"
     url: "https://www.terraform.io"
   - name: "Licence"
     image: "https://img.shields.io/badge/License-MIT-blue.svg"
@@ -39,8 +39,8 @@ usage: |-
   ```hcl
       module "ec2" {
         source                      = "clouddrove/ec2/aws"
-        version                     = "0.14.0"
-        repository                  = "https://registry.terraform.io/modules/clouddrove/ec2/aws/0.14.0"
+        version                     = "0.15.0"
+        repository                  = "https://registry.terraform.io/modules/clouddrove/ec2/aws/0.15.0"
         environment                 = "test"
         label_order                 = ["name", "environment"]
         instance_count              = 2
@@ -69,8 +69,8 @@ usage: |-
   ```hcl
       module "ec2" {
         source                      = "clouddrove/ec2/aws"
-        version                     = "0.14.0"
-        repository                  = "https://registry.terraform.io/modules/clouddrove/ec2/aws/0.14.0"
+        version                     = "0.15.0"
+        repository                  = "https://registry.terraform.io/modules/clouddrove/ec2/aws/0.15.0"
         environment                 = "test"
         label_order                 = ["name", "environment"]
         instance_count              = 2
