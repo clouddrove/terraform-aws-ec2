@@ -125,7 +125,7 @@ variable "disable_api_termination" {
 
 variable "instance_initiated_shutdown_behavior" {
   type    = string
-  default = ""
+  default = "terminate"
 }
 
 variable "placement_group" {
