@@ -59,11 +59,6 @@ jobs:
           actions_subcommand: 'validate'
           tf_actions_working_dir: ./_example/secure_example
 
-      - name: 'Terraform plan Secure'
-        uses: 'clouddrove/github-actions@v7.0'
-        with:
-          actions_subcommand: 'plan'
-          tf_actions_working_dir: ./_example/secure_example
 
       - name: 'Slack Notification'
         uses: clouddrove/action-slack@v2
