@@ -109,8 +109,7 @@ jobs:
           tf_actions_working_dir: ./_example
 
   plan:
-    name: 'Terraform Plan'
-    needs: fmt
+    name: 'terraform plan'
     runs-on: ubuntu-latest
     steps:
       - name: 'Checkout'
@@ -122,10 +121,12 @@ jobs:
           actions_subcommand: 'init'
           tf_actions_working_dir: ./_example
 
+      - name: 'Configure AWS Credentials'
+        uses: clouddrove/configure-aws-credentials@v1
+        with:
           aws-access-key-id: ${{ secrets.TEST_AWS_ACCESS_KEY }}
           aws-secret-access-key: ${{ secrets.TEST_AWS_ACCESS_SECRET_KEY }}
           aws-region: us-east-2
-
 
       - name: 'Terraform plan'
         uses: 'clouddrove/github-actions@v7.0'
