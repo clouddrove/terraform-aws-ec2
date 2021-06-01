@@ -97,6 +97,11 @@ jobs:
           actions_subcommand: 'init'
           tf_actions_working_dir: ./_example
 
+          aws-access-key-id: ${{ secrets.TEST_AWS_ACCESS_KEY }}
+          aws-secret-access-key: ${{ secrets.TEST_AWS_ACCESS_SECRET_KEY }}
+          aws-region: us-east-2
+
+
       - name: 'Terraform validate'
         uses: 'clouddrove/github-actions@v7.0'
         with:
@@ -116,6 +121,11 @@ jobs:
         with:
           actions_subcommand: 'init'
           tf_actions_working_dir: ./_example
+
+          aws-access-key-id: ${{ secrets.TEST_AWS_ACCESS_KEY }}
+          aws-secret-access-key: ${{ secrets.TEST_AWS_ACCESS_SECRET_KEY }}
+          aws-region: us-east-2
+
 
       - name: 'Terraform plan'
         uses: 'clouddrove/github-actions@v7.0'
