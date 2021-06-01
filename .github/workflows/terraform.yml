@@ -100,13 +100,13 @@ jobs:
         uses: 'clouddrove/github-actions@v7.0'
         with:
           actions_subcommand: 'init'
-          tf_actions_working_dir: ./_example
+          tf_actions_working_dir: ./_example/basic_example
 
       - name: 'Terraform validate'
         uses: 'clouddrove/github-actions@v7.0'
         with:
           actions_subcommand: 'validate'
-          tf_actions_working_dir: ./_example
+          tf_actions_working_dir: ./_example/basic_example
 
   plan:
     name: 'terraform plan'
@@ -119,7 +119,7 @@ jobs:
         uses: 'clouddrove/github-actions@v7.0'
         with:
           actions_subcommand: 'init'
-          tf_actions_working_dir: ./_example
+          tf_actions_working_dir: ./_example/basic_example
 
       - name: 'Configure AWS Credentials'
         uses: clouddrove/configure-aws-credentials@v1
@@ -132,7 +132,7 @@ jobs:
         uses: 'clouddrove/github-actions@v7.0'
         with:
           actions_subcommand: 'plan'
-          tf_actions_working_dir: ./_example
+          tf_actions_working_dir: ./_example/basic_example
 
 
   pre-commit:
