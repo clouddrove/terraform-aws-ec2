@@ -58,6 +58,7 @@ variable "managedby" {
 # Description : Terraform EC2 module variables.
 variable "ami" {
   type        = string
+  default     = ""
   description = "The AMI to use for the instance."
 }
 

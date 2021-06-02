@@ -20,6 +20,27 @@ locals {
   ebs_iops = var.ebs_volume_type == "io1" ? var.ebs_iops : 0
 }
 
+data "aws_ami" "amazon_linux" {
+  most_recent = true
+
+  owners = ["amazon"]
+
+  filter {
+    name = "name"
+
+    values = [
+      "amzn-ami-hvm-*-x86_64-gp2",
+    ]
+  }
+
+  filter {
+    name = "owner-alias"
+
+    values = [
+      "amazon",
+    ]
+  }
+}
 
 #Module      : EC2
 #Description : Terraform module to create an EC2 resource on AWS with Elastic IP Addresses
@@ -27,7 +48,7 @@ locals {
 resource "aws_instance" "default" {
   count = var.instance_enabled == true ? var.instance_count : 0
 
-  ami                                  = var.ami
+  ami                                  = var.ami == "" ? data.aws_ami.amazon_linux.id : var.ami
   ebs_optimized                        = var.ebs_optimized
   instance_type                        = var.instance_type
   key_name                             = var.key_name
