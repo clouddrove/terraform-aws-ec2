@@ -126,7 +126,6 @@ data "aws_iam_policy_document" "iam-policy" {
   }
 }
 
-
 module "ec2" {
   source = "./../../"
 
@@ -143,12 +142,10 @@ module "ec2" {
   vpc_security_group_ids_list = [module.ssh.security_group_ids, module.http-https.security_group_ids]
   subnet_ids                  = tolist(module.public_subnets.public_subnet_id)
 
-  assign_eip_address          = true
-  associate_public_ip_address = true
-
-  instance_profile_enabled = true
-  iam_instance_profile     = module.iam-role.name
-
+  assign_eip_address                   = true
+  associate_public_ip_address          = true
+  instance_profile_enabled             = true
+  iam_instance_profile                 = module.iam-role.name
   disk_size                            = 8
   ebs_optimized                        = false
   ebs_volume_enabled                   = true
@@ -162,4 +159,6 @@ module "ec2" {
   metadata_http_endpoint_enabled       = true
   metadata_http_put_response_hop_limit = "2"
   delete_on_termination                = false
+  user_data                            = file("user-data.sh")
+
 }

@@ -150,8 +150,7 @@ variable "root_block_device" {
 variable "user_data" {
   type        = string
   default     = ""
-  description = "The Base64-encoded user data to provide when launching the instances."
-  sensitive   = true
+  description = "(Optional) A string of the desired User Data for the ec2."
 }
 
 variable "assign_eip_address" {

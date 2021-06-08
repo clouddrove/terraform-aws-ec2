@@ -170,4 +170,5 @@ module "ec2" {
   metadata_http_endpoint_enabled       = true
   metadata_http_put_response_hop_limit = "2"
   delete_on_termination                = false
+  user_data                            = file("user-data.sh")
 }

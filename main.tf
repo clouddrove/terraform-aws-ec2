@@ -20,27 +20,22 @@ locals {
   ebs_iops = var.ebs_volume_type == "io1" ? var.ebs_iops : 0
 }
 
-data "aws_ami" "amazon_linux" {
-  most_recent = true
-
-  owners = ["amazon"]
+data "aws_ami" "ubuntu" {
+  most_recent = "true"
 
   filter {
-    name = "name"
-
-    values = [
-      "amzn-ami-hvm-*-x86_64-gp2",
-    ]
+    name   = "name"
+    values = ["ubuntu/images/hvm-ssd/ubuntu-focal-20.04-amd64-server-*"]
   }
 
-  filter {
-    name = "owner-alias"
 
-    values = [
-      "amazon",
-    ]
-  }
+  owners = ["099720109477"]
 }
+
+resource "template_file" "userdata" {
+  template = "userdata.sh"
+}
+
 
 #Module      : EC2
 #Description : Terraform module to create an EC2 resource on AWS with Elastic IP Addresses
@@ -48,7 +43,7 @@ data "aws_ami" "amazon_linux" {
 resource "aws_instance" "default" {
   count = var.instance_enabled == true ? var.instance_count : 0
 
-  ami                                  = var.ami == "" ? data.aws_ami.amazon_linux.id : var.ami
+  ami                                  = var.ami == "" ? data.aws_ami.ubuntu.id : var.ami
   ebs_optimized                        = var.ebs_optimized
   instance_type                        = var.instance_type
   key_name                             = var.key_name
@@ -62,7 +57,7 @@ resource "aws_instance" "default" {
   tenancy                              = var.tenancy
   host_id                              = var.host_id
   cpu_core_count                       = var.cpu_core_count
-  user_data                            = var.user_data != "" ? base64encode(file(var.user_data)) : ""
+  user_data                            = var.user_data
   iam_instance_profile                 = join("", aws_iam_instance_profile.default.*.name)
   source_dest_check                    = var.source_dest_check
   ipv6_address_count                   = var.ipv6_address_count
