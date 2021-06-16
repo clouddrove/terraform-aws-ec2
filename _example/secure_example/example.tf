@@ -4,7 +4,7 @@ provider "aws" {
 
 module "vpc" {
   source  = "clouddrove/vpc/aws"
-  version = "0.14.0"
+  version = "0.15.0"
 
   name        = "vpc"
   environment = "test"
@@ -14,9 +14,8 @@ module "vpc" {
 }
 
 module "public_subnets" {
-  # source  = "clouddrove/subnet/aws"
-  # version = "0.14.0"
-  source = "git::https://github.com/clouddrove/terraform-aws-subnet.git?ref=0.15"
+   source  = "clouddrove/subnet/aws"
+   version = "0.15.0"
 
 
   name        = "public-subnet"
@@ -34,7 +33,7 @@ module "public_subnets" {
 
 module "http-https" {
   source  = "clouddrove/security-group/aws"
-  version = "0.14.0"
+  version = "0.15.0"
 
   name        = "http-https"
   environment = "test"
@@ -47,7 +46,7 @@ module "http-https" {
 
 module "ssh" {
   source  = "clouddrove/security-group/aws"
-  version = "0.14.0"
+  version = "0.15.0"
 
   name        = "ssh"
   environment = "test"
@@ -108,7 +107,7 @@ data "aws_iam_policy_document" "iam-policy" {
 
 module "kms_key" {
   source                  = "clouddrove/kms/aws"
-  version                 = "0.14.0"
+  version                 = "0.15.0"
   name                    = "kms"
   environment             = "test"
   label_order             = ["environment", "name"]

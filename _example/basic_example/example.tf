@@ -4,7 +4,7 @@ provider "aws" {
 
 module "vpc" {
   source  = "clouddrove/vpc/aws"
-  version = "0.14.0"
+  version = "0.15.0"
 
   name        = "vpc"
   repository  = "https://registry.terraform.io/modules/clouddrove/vpc/aws/0.14.0"
@@ -15,9 +15,8 @@ module "vpc" {
 }
 
 module "public_subnets" {
-  # source  = "clouddrove/subnet/aws"
-  # version = "0.14.0"
-  source = "git::https://github.com/clouddrove/terraform-aws-subnet.git?ref=0.15"
+  source  = "clouddrove/subnet/aws"
+  version = "0.15.0"
 
   name        = "public-subnet"
   repository  = "https://registry.terraform.io/modules/clouddrove/subnet/aws/0.14.0"
@@ -34,7 +33,7 @@ module "public_subnets" {
 
 module "http-https" {
   source      = "clouddrove/security-group/aws"
-  version     = "0.14.0"
+  version     = "0.15.0"
   name        = "http-https"
   repository  = "https://registry.terraform.io/modules/security-group/ec2/aws/0.14.0"
   environment = "test"
@@ -47,7 +46,7 @@ module "http-https" {
 
 module "ssh" {
   source      = "clouddrove/security-group/aws"
-  version     = "0.14.0"
+  version     = "0.15.0"
   name        = "ssh"
   repository  = "https://registry.terraform.io/modules/clouddrove/security-group/aws/0.14.0"
   environment = "test"
@@ -60,7 +59,7 @@ module "ssh" {
 
 module "iam-role" {
   source  = "clouddrove/iam-role/aws"
-  version = "0.14.0"
+  version = "0.15.0"
 
   name               = "iam-role"
   repository         = "https://registry.terraform.io/modules/clouddrove/iam-role/aws/0.14.0"
@@ -74,7 +73,7 @@ module "iam-role" {
 
 module "kms_key" {
   source                  = "clouddrove/kms/aws"
-  version                 = "0.14.0"
+  version                 = "0.15.0"
   name                    = "kms"
   environment             = "test"
   label_order             = ["environment", "name"]
