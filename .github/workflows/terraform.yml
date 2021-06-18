@@ -51,7 +51,7 @@ jobs:
         uses: 'clouddrove/github-actions@v7.0'
         with:
           actions_subcommand: 'plan'
-          tf_actions_working_dir: ./_example/basic_exapmle
+          tf_actions_working_dir: ./_example/basic_example
 
   secure_example:
     name: 'secure_example'
