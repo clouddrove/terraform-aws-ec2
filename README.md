@@ -7,14 +7,14 @@
     Terraform AWS EC2
 </h1>
 
-<p align="center" style="font-size: 1.2rem;">
+<p align="center" style="font-size: 1.2rem;"> 
     Terraform module to create an EC2 resource on AWS with ElasticC IP Addresses and Elastic Block Store.
      </p>
 
 <p align="center">
 
 <a href="https://www.terraform.io">
-  <img src="https://img.shields.io/badge/Terraform-v0.14-green" alt="Terraform">
+  <img src="https://img.shields.io/badge/Terraform-v0.15-green" alt="Terraform">
 </a>
 <a href="LICENSE.md">
   <img src="https://img.shields.io/badge/License-MIT-blue.svg" alt="Licence">
@@ -38,7 +38,7 @@
 <hr>
 
 
-We eat, drink, sleep and most importantly love **DevOps**. We are working towards strategies for standardizing architecture while ensuring security for the infrastructure. We are strong believer of the philosophy <b>Bigger problems are always solved by breaking them into smaller manageable problems</b>. Resonating with microservices architecture, it is considered best-practice to run database, cluster, storage in smaller <b>connected yet manageable pieces</b> within the infrastructure.
+We eat, drink, sleep and most importantly love **DevOps**. We are working towards strategies for standardizing architecture while ensuring security for the infrastructure. We are strong believer of the philosophy <b>Bigger problems are always solved by breaking them into smaller manageable problems</b>. Resonating with microservices architecture, it is considered best-practice to run database, cluster, storage in smaller <b>connected yet manageable pieces</b> within the infrastructure. 
 
 This module is basically combination of [Terraform open source](https://www.terraform.io/) and includes automatation tests and examples. It also helps to create and improve your infrastructure with minimalistic code instead of maintaining the whole infrastructure code yourself.
 
@@ -49,7 +49,7 @@ We have [*fifty plus terraform modules*][terraform_modules]. A few of them are c
 
 ## Prerequisites
 
-This module has a few dependencies:
+This module has a few dependencies: 
 
 - [Terraform 0.13](https://learn.hashicorp.com/terraform/getting-started/install.html)
 - [Go](https://golang.org/doc/install)
@@ -73,8 +73,7 @@ Here is examples of how you can use this module in your inventory structure:
 ```hcl
     module "ec2" {
       source                      = "clouddrove/ec2/aws"
-      version                     = "0.14.0"
-      repository                  = "https://registry.terraform.io/modules/clouddrove/ec2/aws/0.14.0"
+      version                     = "0.15.0"
       environment                 = "test"
       label_order                 = ["name", "environment"]
       instance_count              = 2
@@ -103,8 +102,7 @@ Here is examples of how you can use this module in your inventory structure:
 ```hcl
     module "ec2" {
       source                      = "clouddrove/ec2/aws"
-      version                     = "0.14.0"
-      repository                  = "https://registry.terraform.io/modules/clouddrove/ec2/aws/0.14.0"
+      version                     = "0.15.0"
       environment                 = "test"
       label_order                 = ["name", "environment"]
       instance_count              = 2
@@ -140,13 +138,14 @@ Here is examples of how you can use this module in your inventory structure:
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
-| ami | The AMI to use for the instance. | `string` | n/a | yes |
+| ami | The AMI to use for the instance. | `string` | `""` | no |
 | assign\_eip\_address | Assign an Elastic IP address to the instance. | `bool` | `false` | no |
 | associate\_public\_ip\_address | Associate a public IP address with the instance. | `bool` | `true` | no |
 | attributes | Additional attributes (e.g. `1`). | `list(any)` | `[]` | no |
 | availability\_zone | Availability Zone the instance is launched in. If not set, will be launched in the first AZ of the region. | `list(any)` | `[]` | no |
 | cpu\_core\_count | Sets the number of CPU cores for an instance. | `string` | `null` | no |
 | cpu\_credits | The credit option for CPU usage. Can be `standard` or `unlimited`. T3 instances are launched as unlimited by default. T2 instances are launched as standard by default. | `string` | `"standard"` | no |
+| delete\_on\_termination | Whether the volume should be destroyed on instance termination. Defaults to true. | `bool` | `true` | no |
 | delimiter | Delimiter to be used between `organization`, `environment`, `name` and `attributes`. | `string` | `"-"` | no |
 | disable\_api\_termination | If true, enables EC2 Instance Termination Protection. | `bool` | `false` | no |
 | disk\_size | Size of the root volume in gigabytes. | `number` | `8` | no |
@@ -166,7 +165,7 @@ Here is examples of how you can use this module in your inventory structure:
 | iam\_instance\_profile | The IAM Instance Profile to launch the instance with. Specified as the name of the Instance Profile. | `string` | `""` | no |
 | instance\_count | Number of instances to launch. | `number` | `1` | no |
 | instance\_enabled | Flag to control the instance creation. | `bool` | `true` | no |
-| instance\_initiated\_shutdown\_behavior | Shutdown behavior for the instance. | `string` | `""` | no |
+| instance\_initiated\_shutdown\_behavior | n/a | `string` | `"terminate"` | no |
 | instance\_profile\_enabled | Flag to control the instance profile creation. | `bool` | `false` | no |
 | instance\_tags | Instance tags. | `map(any)` | `{}` | no |
 | instance\_type | The type of instance to start. Updates to this field will trigger a stop/start of the EC2 instance. | `string` | n/a | yes |
@@ -176,20 +175,23 @@ Here is examples of how you can use this module in your inventory structure:
 | kms\_key\_id | The ARN for the KMS encryption key. When specifying kms\_key\_id, encrypted needs to be set to true. | `string` | `""` | no |
 | label\_order | Label order, e.g. `name`,`application`. | `list(any)` | `[]` | no |
 | managedby | ManagedBy, eg 'CloudDrove'. | `string` | `"hello@clouddrove.com"` | no |
+| metadata\_http\_endpoint\_enabled | Whether the metadata service is available | `bool` | `true` | no |
+| metadata\_http\_put\_response\_hop\_limit | The desired HTTP PUT response hop limit (between 1 and 64) for instance metadata requests. | `number` | `2` | no |
+| metadata\_http\_tokens\_required | Whether or not the metadata service requires session tokens, also referred to as Instance Metadata Service Version 2. | `bool` | `true` | no |
 | monitoring | If true, the launched EC2 instance will have detailed monitoring enabled. (Available since v0.6.0). | `bool` | `true` | no |
 | name | Name  (e.g. `app` or `cluster`). | `string` | `""` | no |
-| network\_interface | Customize network interfaces to be attached at instance boot time. | `list(map(string))` | `[]` | no |
+| network\_interface | Customize network interfaces to be attached at instance boot time | `list(map(string))` | `[]` | no |
 | placement\_group | The Placement Group to start the instance in. | `string` | `""` | no |
-| repository | Terraform current module repo | `string` | `"https://registry.terraform.io/modules/clouddrove/ec2/aws/0.14.0"` | no |
+| repository | Terraform current module repo | `string` | `"https://github.com/clouddrove/terraform-aws-ec2"` | no |
 | root\_block\_device | Customize details about the root block device of the instance. See Block Devices below for details. | `list(any)` | `[]` | no |
 | source\_dest\_check | Controls if traffic is routed to the instance when the destination address does not match the instance. Used for NAT or VPNs. | `bool` | `true` | no |
 | subnet | VPC Subnet ID the instance is launched in. | `string` | `null` | no |
 | subnet\_ids | A list of VPC Subnet IDs to launch in. | `list(string)` | `[]` | no |
 | tags | Additional tags (e.g. map(`BusinessUnit`,`XYZ`). | `map(any)` | `{}` | no |
-| tenancy | The tenancy of the instance (if the instance is running in a VPC). An instance with a tenancy of dedicated runs on single-tenant hardware. The host tenancy is not supported for the import-instance command. | `string` | `""` | no |
+| tenancy | The tenancy of the instance (if the instance is running in a VPC). An instance with a tenancy of dedicated runs on single-tenant hardware. The host tenancy is not supported for the import-instance command. | `string` | `"default"` | no |
 | ttl | The TTL of the record to add to the DNS zone to complete certificate validation. | `string` | `"300"` | no |
 | type | Type of DNS records to create. | `string` | `"CNAME"` | no |
-| user\_data | The Base64-encoded user data to provide when launching the instances. | `string` | `""` | no |
+| user\_data | (Optional) A string of the desired User Data for the ec2. | `string` | `""` | no |
 | vpc\_security\_group\_ids\_list | A list of security group IDs to associate with. | `list(string)` | `[]` | no |
 
 ## Outputs
@@ -212,7 +214,7 @@ Here is examples of how you can use this module in your inventory structure:
 
 
 ## Testing
-In this module testing is performed with [terratest](https://github.com/gruntwork-io/terratest) and it creates a small piece of infrastructure, matches the output like ARN, ID and Tags name etc and destroy infrastructure in your AWS account. This testing is written in GO, so you need a [GO environment](https://golang.org/doc/install) in your system.
+In this module testing is performed with [terratest](https://github.com/gruntwork-io/terratest) and it creates a small piece of infrastructure, matches the output like ARN, ID and Tags name etc and destroy infrastructure in your AWS account. This testing is written in GO, so you need a [GO environment](https://golang.org/doc/install) in your system. 
 
 You need to run the following command in the testing folder:
 ```hcl
@@ -221,7 +223,7 @@ You need to run the following command in the testing folder:
 
 
 
-## Feedback
+## Feedback 
 If you come accross a bug or have any feedback, please log it in our [issue tracker](https://github.com/clouddrove/terraform-aws-ec2/issues), or feel free to drop us an email at [hello@clouddrove.com](mailto:hello@clouddrove.com).
 
 If you have found it worth your time, go ahead and give us a ★ on [our GitHub](https://github.com/clouddrove/terraform-aws-ec2)!
