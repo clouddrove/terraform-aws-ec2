@@ -8,7 +8,7 @@ variable "name" {
 
 variable "repository" {
   type        = string
-  default     = "https://registry.terraform.io/modules/clouddrove/ec2/aws/0.14.0"
+  default     = "https://github.com/clouddrove/terraform-aws-ec2"
   description = "Terraform current module repo"
 
   validation {

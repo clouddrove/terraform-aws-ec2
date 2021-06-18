@@ -40,7 +40,6 @@ usage: |-
       module "ec2" {
         source                      = "clouddrove/ec2/aws"
         version                     = "0.15.0"
-        repository                  = "https://registry.terraform.io/modules/clouddrove/ec2/aws/0.15.0"
         environment                 = "test"
         label_order                 = ["name", "environment"]
         instance_count              = 2
@@ -70,7 +69,6 @@ usage: |-
       module "ec2" {
         source                      = "clouddrove/ec2/aws"
         version                     = "0.15.0"
-        repository                  = "https://registry.terraform.io/modules/clouddrove/ec2/aws/0.15.0"
         environment                 = "test"
         label_order                 = ["name", "environment"]
         instance_count              = 2

@@ -7,7 +7,6 @@ module "vpc" {
   version = "0.15.0"
 
   name        = "vpc"
-  repository  = "https://registry.terraform.io/modules/clouddrove/vpc/aws/0.14.0"
   environment = "test"
   label_order = ["name", "environment"]
 
@@ -19,7 +18,6 @@ module "public_subnets" {
   version = "0.15.0"
 
   name        = "public-subnet"
-  repository  = "https://registry.terraform.io/modules/clouddrove/subnet/aws/0.14.0"
   environment = "test"
   label_order = ["name", "environment"]
 
@@ -35,7 +33,6 @@ module "http-https" {
   source      = "clouddrove/security-group/aws"
   version     = "0.15.0"
   name        = "http-https"
-  repository  = "https://registry.terraform.io/modules/security-group/ec2/aws/0.14.0"
   environment = "test"
   label_order = ["name", "environment"]
 
@@ -48,7 +45,6 @@ module "ssh" {
   source      = "clouddrove/security-group/aws"
   version     = "0.15.0"
   name        = "ssh"
-  repository  = "https://registry.terraform.io/modules/clouddrove/security-group/aws/0.14.0"
   environment = "test"
   label_order = ["name", "environment"]
 
@@ -62,7 +58,6 @@ module "iam-role" {
   version = "0.15.0"
 
   name               = "iam-role"
-  repository         = "https://registry.terraform.io/modules/clouddrove/iam-role/aws/0.14.0"
   environment        = "test"
   label_order        = ["name", "environment"]
   assume_role_policy = data.aws_iam_policy_document.default.json
@@ -129,7 +124,6 @@ module "ec2" {
   source = "./../../"
 
   name        = "ec2-instance"
-  repository  = "https://registry.terraform.io/modules/clouddrove/ec2/aws/0.14.0"
   environment = "test"
   label_order = ["name", "environment"]
 

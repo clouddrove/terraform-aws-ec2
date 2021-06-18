@@ -19,7 +19,6 @@ module "public_subnets" {
 
 
   name        = "public-subnet"
-  repository  = "https://registry.terraform.io/modules/clouddrove/subnet/aws/0.14.0"
   environment = "test"
   label_order = ["environment", "name"]
 
@@ -59,7 +58,7 @@ module "ssh" {
 
 module "iam-role" {
   source  = "clouddrove/iam-role/aws"
-  version = "0.14.0"
+  version = "0.15.0"
 
   name               = "iam-role"
   environment        = "test"
@@ -138,7 +137,6 @@ module "ec2" {
   source = "./../../"
 
   name        = "ec2-instance"
-  repository  = "https://registry.terraform.io/modules/clouddrove/ec2/aws/0.14.0"
   environment = "test"
   label_order = ["environment", "name"]
 
