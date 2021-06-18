@@ -7,18 +7,34 @@
 #              tags for resources. You can use terraform-labels to implement a strict
 #              naming convention.
 module "labels" {
-  source = "git::https://github.com/clouddrove/terraform-labels.git?ref=tags/0.14.0"
+  source  = "clouddrove/labels/aws"
+  version = "0.15.0"
 
   name        = var.name
   repository  = var.repository
   environment = var.environment
-  label_order = var.label_order
   managedby   = var.managedby
-  enabled     = var.instance_enabled
+  label_order = var.label_order
 }
 
 locals {
   ebs_iops = var.ebs_volume_type == "io1" ? var.ebs_iops : 0
+}
+
+data "aws_ami" "ubuntu" {
+  most_recent = "true"
+
+  filter {
+    name   = "name"
+    values = ["ubuntu/images/hvm-ssd/ubuntu-focal-20.04-amd64-server-*"]
+  }
+
+
+  owners = ["099720109477"]
+}
+
+resource "template_file" "userdata" {
+  template = "userdata.sh"
 }
 
 
@@ -28,7 +44,7 @@ locals {
 resource "aws_instance" "default" {
   count = var.instance_enabled == true ? var.instance_count : 0
 
-  ami                                  = var.ami
+  ami                                  = var.ami == "" ? data.aws_ami.ubuntu.id : var.ami
   ebs_optimized                        = var.ebs_optimized
   instance_type                        = var.instance_type
   key_name                             = var.key_name
@@ -42,20 +58,65 @@ resource "aws_instance" "default" {
   tenancy                              = var.tenancy
   host_id                              = var.host_id
   cpu_core_count                       = var.cpu_core_count
-  user_data                            = var.user_data != "" ? base64encode(file(var.user_data)) : ""
+  user_data                            = var.user_data
   iam_instance_profile                 = join("", aws_iam_instance_profile.default.*.name)
   source_dest_check                    = var.source_dest_check
   ipv6_address_count                   = var.ipv6_address_count
   ipv6_addresses                       = var.ipv6_addresses
-  root_block_device {
-    volume_size           = var.disk_size
-    delete_on_termination = true
-    encrypted             = true
-    kms_key_id            = var.kms_key_id
+
+  dynamic "root_block_device" {
+    for_each = var.root_block_device
+    content {
+      delete_on_termination = lookup(root_block_device.value, "delete_on_termination", null)
+      encrypted             = lookup(root_block_device.value, "encrypted", null)
+      iops                  = lookup(root_block_device.value, "iops", null)
+      kms_key_id            = lookup(root_block_device.value, "kms_key_id", null)
+      volume_size           = lookup(root_block_device.value, "volume_size", null)
+      volume_type           = lookup(root_block_device.value, "volume_type", null)
+      tags                  = lookup(root_block_device.value, "tags", null)
+    }
+  }
+
+  dynamic "ebs_block_device" {
+    for_each = var.ebs_block_device
+    content {
+      delete_on_termination = lookup(ebs_block_device.value, "delete_on_termination", null)
+      device_name           = ebs_block_device.value.device_name
+      encrypted             = lookup(ebs_block_device.value, "encrypted", null)
+      iops                  = lookup(ebs_block_device.value, "iops", null)
+      kms_key_id            = lookup(ebs_block_device.value, "kms_key_id", null)
+      snapshot_id           = lookup(ebs_block_device.value, "snapshot_id", null)
+      volume_size           = lookup(ebs_block_device.value, "volume_size", null)
+      volume_type           = lookup(ebs_block_device.value, "volume_type", null)
+    }
+  }
+
+  dynamic "ephemeral_block_device" {
+    for_each = var.ephemeral_block_device
+    content {
+      device_name  = ephemeral_block_device.value.device_name
+      no_device    = lookup(ephemeral_block_device.value, "no_device", null)
+      virtual_name = lookup(ephemeral_block_device.value, "virtual_name", null)
+    }
+  }
+
+  metadata_options {
+    http_endpoint               = var.metadata_http_endpoint_enabled ? "enabled" : "disabled"
+    http_put_response_hop_limit = var.metadata_http_put_response_hop_limit
+    http_tokens                 = var.metadata_http_tokens_required ? "required" : "optional"
   }
 
   credit_specification {
     cpu_credits = var.cpu_credits
+  }
+
+  dynamic "network_interface" {
+    for_each = var.network_interface
+    content {
+      device_index          = network_interface.value.device_index
+      network_interface_id  = lookup(network_interface.value, "network_interface_id", null)
+      delete_on_termination = lookup(network_interface.value, "delete_on_termination", false)
+    }
   }
 
   tags = merge(
@@ -73,7 +134,6 @@ resource "aws_instance" "default" {
       "Name" = format("%s%s%s", module.labels.id, var.delimiter, (count.index))
     }
   )
-
   lifecycle {
     # Due to several known issues in Terraform AWS provider related to arguments of aws_instance:
     # (eg, https://github.com/terraform-providers/terraform-provider-aws/issues/2036)

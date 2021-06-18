@@ -5,60 +5,104 @@ on:
       - master
 
 jobs:
-  terraform:
-    name: 'Terraform'
+  fmt:
+    name: 'terraform fmt'
     runs-on: ubuntu-latest
     steps:
       - name: 'Checkout'
-        uses: actions/checkout@master
+        uses: actions/checkout@v2.3.4
 
-      - name: Configure AWS Credentials
+      - name: 'Terraform Format'
+        uses: 'clouddrove/github-actions@v7.0'
+        with:
+          actions_subcommand: 'fmt'
+      - name: 'Terraform Format'
+        uses: 'clouddrove/github-actions@v7.0'
+        with:
+          actions_subcommand: 'fmt'
+
+  basic_example:
+    name: 'basic_example'
+    runs-on: ubuntu-latest
+    steps:
+      - name: 'Checkout'
+        uses: actions/checkout@v2.3.4
+
+      - name: 'Configure AWS Credentials'
         uses: clouddrove/configure-aws-credentials@v1
         with:
           aws-access-key-id: ${{ secrets.TEST_AWS_ACCESS_KEY }}
           aws-secret-access-key: ${{ secrets.TEST_AWS_ACCESS_SECRET_KEY }}
           aws-region: us-east-2
 
-      - name: 'Terraform Format'
-        uses: 'clouddrove/github-actions@v6.0'
-        with:
-          actions_subcommand: 'fmt'
-
-      - name: 'Terraform init Basic'
-        uses: 'clouddrove/github-actions@v6.0'
+      - name: 'Terraform init'
+        uses: 'clouddrove/github-actions@v7.0'
         with:
           actions_subcommand: 'init'
           tf_actions_working_dir: ./_example/basic_example
 
-      - name: 'Terraform validate Basic'
-        uses: 'clouddrove/github-actions@v6.0'
+      - name: 'Terraform validate'
+        uses: 'clouddrove/github-actions@v7.0'
         with:
           actions_subcommand: 'validate'
           tf_actions_working_dir: ./_example/basic_example
 
-      - name: 'Terraform plan Basic'
-        uses: 'clouddrove/github-actions@v6.0'
+      - name: 'Terraform plan for basic_example'
+        uses: 'clouddrove/github-actions@v7.0'
         with:
           actions_subcommand: 'plan'
           tf_actions_working_dir: ./_example/basic_example
 
-      - name: 'Terraform init Secure'
-        uses: 'clouddrove/github-actions@v6.0'
+  secure_example:
+    name: 'secure_example'
+    runs-on: ubuntu-latest
+    steps:
+      - name: 'Checkout'
+        uses: actions/checkout@v2.3.4
+
+      - name: 'Configure AWS Credentials'
+        uses: clouddrove/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.TEST_AWS_ACCESS_KEY }}
+          aws-secret-access-key: ${{ secrets.TEST_AWS_ACCESS_SECRET_KEY }}
+          aws-region: us-east-2
+
+      - name: 'Terraform init'
+        uses: 'clouddrove/github-actions@v7.0'
         with:
           actions_subcommand: 'init'
           tf_actions_working_dir: ./_example/secure_example
 
-      - name: 'Terraform validate Secure'
-        uses: 'clouddrove/github-actions@v6.0'
+      - name: 'Terraform validate'
+        uses: 'clouddrove/github-actions@v7.0'
         with:
           actions_subcommand: 'validate'
           tf_actions_working_dir: ./_example/secure_example
 
-      - name: 'Terraform plan Secure'
-        uses: 'clouddrove/github-actions@v6.0'
+      - name: 'Terraform plan for secure_example'
+        uses: 'clouddrove/github-actions@v7.0'
         with:
           actions_subcommand: 'plan'
           tf_actions_working_dir: ./_example/secure_example
+
+  pre-commit:
+    name: 'Pre-Commit'
+    needs:
+      - fmt
+      - basic_example
+      - secure_example
+    runs-on: ubuntu-latest
+    steps:
+      - name: 'Checkout'
+        uses: actions/checkout@v2.3.4
+
+      - name: 'Install Tflint'
+        run: |
+          curl https://raw.githubusercontent.com/terraform-linters/tflint/master/install_linux.sh | bash
+
+      - name: 'Pre-Commit 🔎'
+        uses: pre-commit/action@v2.0.3
+        continue-on-error: true
 
       - name: 'Slack Notification'
         uses: clouddrove/action-slack@v2

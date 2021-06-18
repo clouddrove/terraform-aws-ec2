@@ -4,10 +4,9 @@ provider "aws" {
 
 module "vpc" {
   source  = "clouddrove/vpc/aws"
-  version = "0.14.0"
+  version = "0.15.0"
 
   name        = "vpc"
-  repository  = "https://registry.terraform.io/modules/clouddrove/vpc/aws/0.14.0"
   environment = "test"
   label_order = ["name", "environment"]
 
@@ -16,10 +15,9 @@ module "vpc" {
 
 module "public_subnets" {
   source  = "clouddrove/subnet/aws"
-  version = "0.14.0"
+  version = "0.15.0"
 
   name        = "public-subnet"
-  repository  = "https://registry.terraform.io/modules/clouddrove/subnet/aws/0.14.0"
   environment = "test"
   label_order = ["name", "environment"]
 
@@ -33,9 +31,8 @@ module "public_subnets" {
 
 module "http-https" {
   source      = "clouddrove/security-group/aws"
-  version     = "0.14.0"
+  version     = "0.15.0"
   name        = "http-https"
-  repository  = "https://registry.terraform.io/modules/security-group/ec2/aws/0.14.0"
   environment = "test"
   label_order = ["name", "environment"]
 
@@ -46,9 +43,8 @@ module "http-https" {
 
 module "ssh" {
   source      = "clouddrove/security-group/aws"
-  version     = "0.14.0"
+  version     = "0.15.0"
   name        = "ssh"
-  repository  = "https://registry.terraform.io/modules/clouddrove/security-group/aws/0.14.0"
   environment = "test"
   label_order = ["name", "environment"]
 
@@ -59,10 +55,9 @@ module "ssh" {
 
 module "iam-role" {
   source  = "clouddrove/iam-role/aws"
-  version = "0.14.0"
+  version = "0.15.0"
 
   name               = "iam-role"
-  repository         = "https://registry.terraform.io/modules/clouddrove/iam-role/aws/0.14.0"
   environment        = "test"
   label_order        = ["name", "environment"]
   assume_role_policy = data.aws_iam_policy_document.default.json
@@ -73,7 +68,7 @@ module "iam-role" {
 
 module "kms_key" {
   source                  = "clouddrove/kms/aws"
-  version                 = "0.14.0"
+  version                 = "0.15.0"
   name                    = "kms"
   environment             = "test"
   label_order             = ["environment", "name"]
@@ -125,12 +120,10 @@ data "aws_iam_policy_document" "iam-policy" {
   }
 }
 
-
 module "ec2" {
   source = "./../../"
 
   name        = "ec2-instance"
-  repository  = "https://registry.terraform.io/modules/clouddrove/ec2/aws/0.14.0"
   environment = "test"
   label_order = ["name", "environment"]
 
@@ -142,20 +135,23 @@ module "ec2" {
   vpc_security_group_ids_list = [module.ssh.security_group_ids, module.http-https.security_group_ids]
   subnet_ids                  = tolist(module.public_subnets.public_subnet_id)
 
-  assign_eip_address          = true
-  associate_public_ip_address = true
+  assign_eip_address                   = true
+  associate_public_ip_address          = true
+  instance_profile_enabled             = true
+  iam_instance_profile                 = module.iam-role.name
+  disk_size                            = 8
+  ebs_optimized                        = false
+  ebs_volume_enabled                   = true
+  ebs_volume_type                      = "gp2"
+  ebs_volume_size                      = 30
+  instance_tags                        = { "snapshot" = true }
+  dns_zone_id                          = "Z1XJD7SSBKXLC1"
+  hostname                             = "ec2"
+  kms_key_id                           = module.kms_key.key_arn
+  metadata_http_tokens_required        = true
+  metadata_http_endpoint_enabled       = true
+  metadata_http_put_response_hop_limit = "2"
+  delete_on_termination                = false
+  user_data                            = file("user-data.sh")
 
-  instance_profile_enabled = true
-  iam_instance_profile     = module.iam-role.name
-
-  disk_size          = 8
-  ebs_optimized      = false
-  ebs_volume_enabled = true
-  ebs_volume_type    = "gp2"
-  ebs_volume_size    = 30
-
-  instance_tags = { "snapshot" = true }
-  dns_zone_id   = "Z1XJD7SSBKXLC1"
-  hostname      = "ec2"
-  kms_key_id    = module.kms_key.key_arn
 }
