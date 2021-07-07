@@ -60,7 +60,7 @@ module "iam-role" {
   source  = "clouddrove/iam-role/aws"
   version = "0.15.0"
 
-  name               = "iam-role"
+  name               = "iam-role-ec2"
   environment        = "test"
   label_order        = ["environment", "name"]
   assume_role_policy = data.aws_iam_policy_document.default.json

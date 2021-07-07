@@ -5,5 +5,5 @@ output "instance_id" {
 
 output "tags" {
   value       = module.ec2.tags
-  description = "The instance ID."
+  description = "The instance tags."
 }
