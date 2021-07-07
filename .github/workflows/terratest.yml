@@ -23,7 +23,7 @@ jobs:
 
       - name: 'Terratest Basic'
         if: ${{ github.event.label.name == 'terratest' }}
-        uses: 'clouddrove/github-actions@v6.0'
+        uses: 'clouddrove/github-actions@v8.0'
         with:
           actions_subcommand: 'terratest'
           tf_actions_working_dir: '_test/basic_example'
@@ -32,7 +32,7 @@ jobs:
 
       - name: 'Terratest Secure'
         if: ${{ github.event.label.name == 'terratest' }}
-        uses: 'clouddrove/github-actions@v6.0'
+        uses: 'clouddrove/github-actions@v8.0'
         with:
           actions_subcommand: 'terratest'
           tf_actions_working_dir: '_test/secure_example'
