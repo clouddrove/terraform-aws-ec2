@@ -58,3 +58,8 @@ output "instance_count" {
   value       = var.instance_count
   description = "The count of instances."
 }
+
+output "tags" {
+  value       = module.labels.tags
+  description = "The instance ID."
+}

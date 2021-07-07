@@ -123,11 +123,11 @@ data "aws_iam_policy_document" "iam-policy" {
 module "ec2" {
   source = "./../../"
 
-  name        = "ec2-instance"
+  name        = "ec2"
   environment = "test"
   label_order = ["name", "environment"]
 
-  instance_count              = 2
+  instance_count              = 1
   ami                         = "ami-08d658f84a6d84a80"
   instance_type               = "t2.nano"
   monitoring                  = false

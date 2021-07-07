@@ -136,9 +136,9 @@ data "aws_iam_policy_document" "kms" {
 module "ec2" {
   source = "./../../"
 
-  name        = "ec2-instance"
+  name        = "ec2"
   environment = "test"
-  label_order = ["environment", "name"]
+  label_order = ["name", "environment"]
 
   instance_count              = 2
   ami                         = "ami-08d658f84a6d84a80"
