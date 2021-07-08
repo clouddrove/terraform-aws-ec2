@@ -156,7 +156,7 @@ module "ec2" {
   key_name = module.keypair.name
 
   #IAM
-  instance_profile_enabled = false
+  instance_profile_enabled = true
   iam_instance_profile     = module.iam-role.name
 
   #Root Volume
