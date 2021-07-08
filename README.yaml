@@ -64,7 +64,7 @@ usage: |-
       }
   ```
 
-  ### Secure Example
+  ### ebs_mount
   ```hcl
       module "ec2" {
         source                      = "clouddrove/ec2/aws"
