@@ -87,7 +87,7 @@ module "kms_key" {
   description             = "KMS key for ec2"
   deletion_window_in_days = 7
   enable_key_rotation     = true
-  alias                   = "alias/ec2-instance"
+  alias                   = "alias/ec2"
   policy                  = data.aws_iam_policy_document.kms.json
 }
 
@@ -156,7 +156,7 @@ module "ec2" {
   associate_public_ip_address = true
 
   #IAM
-  instance_profile_enabled = false
+  instance_profile_enabled = true
   iam_instance_profile     = module.iam-role.name
 
   #Root Volume
