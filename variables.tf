@@ -191,11 +191,6 @@ variable "ebs_volume_type" {
   description = "The type of EBS volume. Can be standard, gp2 or io1."
 }
 
-variable "disk_size" {
-  type        = number
-  default     = 8
-  description = "Size of the root volume in gigabytes."
-}
 
 variable "instance_enabled" {
   type        = bool

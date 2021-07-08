@@ -41,6 +41,18 @@ module "http-https" {
   allowed_ports = [80, 443]
 }
 
+module "keypair" {
+  source  = "clouddrove/keypair/aws"
+  version = "0.15.0"
+
+  public_key      = "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAAD9QDxGN5VCED4YkSYTdhzlBsztM0U/5sw7eCjbjO5d20kqCTdvcW+XJzKv8ofRWMOUnYayAkKDQbyU1PBz0uIwOaBydx22Iu/h1EGxmXZb3gU2NlGb9YcCnHX48ZQwsNcmdSbvWQpbVzbBHk2mdiZd8eOEtlMpuhiQVKRV4eb3fzpHWHcbumfF5Y2X7V7bY7/J0J+LbhnOX3CmnB5541kiMn0WiXt0yQNZ0ViII8ygq+mRiGHZULA0FysjNrK3wqqawb91/aamIoacfXxnS0vLgt3CRHIKneiIyei6WtTMw57QPPilctw93OIE3WvYOPcuWhkELrVSRpiRR9/saHkXGjQHm0pueiAODiqSoM3u3MGJb2qX5o/CFtFlPZWLqVLlk1q+zeb/yWOWV42zsQ+X+Glh7ynqnYfIzyQT7Bs0xBv95RBQabsjhYfi9OgImLyN6OZtpMev2T1l90DW2DjZp1iqAXvXQuFLJu0ygNpMlK4Ot6ZhahzgBCPy6oVvaPIHzWpRGt7iBiSZB1QYXnlYQ0VcN6LHZk2oq1Jjjd0yDMzO71onIcd8P7qCwlUhis7Yeq5B+3nzZce9G3lSptwHnKG3CDByemUdXp4WKhYpsixQHImgrZjXvLJVyMDP5RSJp57BxxAw1CbjmWAbuAAR6BpOceLxYwsEscmYPyPISZMFLhge56TX4mqTSSX+fBtBEPC4hbqMdZAW9boHqoBChqffOdnUe3NFT0BuxqwsUbqBCx/AWBop5ASSds4rN6cdROml+UvlSrrAp3htSaBafrE+9x1sLG7P9R97xZGFTTlfZoJcXHZ/405EdsOcU8k2WZOJOrrf3R4995AQsotSB6vqia/rFaXtzDPGLaJqUkluzH7RPRYYKG2PqVJuXkMOLA0i/JNTGwNO14UDK+qBnWiwQeZzfJeHqJXy1eNMMZJVMDLn/qEUezhJjuCOIF1kYJclHmCZtd07y4R4B3/vOYdknuwughecV3iBxF+pAzy8MckPaZVaR+dHoyNoD4ua9eIVDF71aXnqBHd2B3n1o4+3Jd2axyOV1uFP8jhpMeVaesTA+K+/oW8Bq+52c+1rpdySU5aozOJEncyolC+DLEgRYGuAaiXNIR/IZFsDJHD+GByMtopPzu4kvGbyRZp/I0u43MMDlcjCTZJLhVntrI1spgTMElFcFepS5piL062xwY8S/gFAB3TJH4Rx+fcOkYsRh9wb4gJ0Wy+d7sHVu2qLYgBCeeSYBR4DLRTv57gcgE9hdaBo7b2AXPevPV3LbUGuqDkF+pEHOdMPCTgW4lOFxfl6vpitP+o8kErNdt8T8ftwJccHv5x6NLI82lUMfdo8qIV devops"
+  key_name        = "devops"
+  environment     = "test"
+  label_order     = ["name", "environment"]
+  enable_key_pair = true
+}
+
+
 module "ssh" {
   source      = "clouddrove/security-group/aws"
   version     = "0.15.0"
@@ -140,6 +152,9 @@ module "ec2" {
   assign_eip_address          = true
   associate_public_ip_address = true
 
+  #Keypair
+  key_name = module.keypair.name
+
   #IAM
   instance_profile_enabled = false
   iam_instance_profile     = module.iam-role.name
@@ -169,7 +184,7 @@ module "ec2" {
   instance_tags = { "snapshot" = true }
 
   # Metadata
-  metadata_http_tokens_required        = "required"
+  metadata_http_tokens_required        = "optional"
   metadata_http_endpoint_enabled       = "enabled"
   metadata_http_put_response_hop_limit = 2
 
