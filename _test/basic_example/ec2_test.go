@@ -25,8 +25,8 @@ func Test(t *testing.T) {
 	defer terraform.Destroy(t, terraformOptions)
 
 	// To get the value of an output variable, run 'terraform output'
-	Id := terraform.Output(t, terraformOptions, "instance_id")
+	Tags := terraform.OutputMap(t, terraformOptions, "tags")
 
 	// Check that we get back the outputs that we expect
-	assert.Contains(t, Id, "i-")
+	assert.Equal(t, "ec2-test", Tags["Name"])
 }

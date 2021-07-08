@@ -33,7 +33,8 @@ data "aws_ami" "ubuntu" {
   owners = ["099720109477"]
 }
 
-resource "template_file" "userdata" {
+data "template_file" "userdata" {
+  count    = var.instance_enabled ? 1 : 0
   template = "userdata.sh"
 }
 
@@ -68,26 +69,17 @@ resource "aws_instance" "default" {
     for_each = var.root_block_device
     content {
       delete_on_termination = lookup(root_block_device.value, "delete_on_termination", null)
-      encrypted             = lookup(root_block_device.value, "encrypted", null)
+      encrypted             = true
       iops                  = lookup(root_block_device.value, "iops", null)
       kms_key_id            = lookup(root_block_device.value, "kms_key_id", null)
       volume_size           = lookup(root_block_device.value, "volume_size", null)
       volume_type           = lookup(root_block_device.value, "volume_type", null)
-      tags                  = lookup(root_block_device.value, "tags", null)
-    }
-  }
-
-  dynamic "ebs_block_device" {
-    for_each = var.ebs_block_device
-    content {
-      delete_on_termination = lookup(ebs_block_device.value, "delete_on_termination", null)
-      device_name           = ebs_block_device.value.device_name
-      encrypted             = lookup(ebs_block_device.value, "encrypted", null)
-      iops                  = lookup(ebs_block_device.value, "iops", null)
-      kms_key_id            = lookup(ebs_block_device.value, "kms_key_id", null)
-      snapshot_id           = lookup(ebs_block_device.value, "snapshot_id", null)
-      volume_size           = lookup(ebs_block_device.value, "volume_size", null)
-      volume_type           = lookup(ebs_block_device.value, "volume_type", null)
+      tags = merge(module.labels.tags,
+        {
+          "Name" = format("%s-root-volume%s%s", module.labels.id, var.delimiter, (count.index))
+        },
+        var.tags
+      )
     }
   }
 
@@ -101,9 +93,9 @@ resource "aws_instance" "default" {
   }
 
   metadata_options {
-    http_endpoint               = var.metadata_http_endpoint_enabled ? "enabled" : "disabled"
+    http_endpoint               = var.metadata_http_endpoint_enabled
     http_put_response_hop_limit = var.metadata_http_put_response_hop_limit
-    http_tokens                 = var.metadata_http_tokens_required ? "required" : "optional"
+    http_tokens                 = var.metadata_http_tokens_required
   }
 
   credit_specification {
@@ -128,20 +120,12 @@ resource "aws_instance" "default" {
     var.instance_tags
   )
 
-  volume_tags = merge(
-    module.labels.tags,
-    {
-      "Name" = format("%s%s%s", module.labels.id, var.delimiter, (count.index))
-    }
-  )
   lifecycle {
     # Due to several known issues in Terraform AWS provider related to arguments of aws_instance:
     # (eg, https://github.com/terraform-providers/terraform-provider-aws/issues/2036)
     # we have to ignore changes in the following arguments
     ignore_changes = [
       private_ip,
-      root_block_device,
-      ebs_block_device,
     ]
   }
 }
@@ -173,11 +157,10 @@ resource "aws_ebs_volume" "default" {
   type              = var.ebs_volume_type
   encrypted         = true
   kms_key_id        = var.kms_key_id
-  tags = merge(
-    module.labels.tags,
-    {
-      "Name" = format("%s%s%s", module.labels.id, var.delimiter, (count.index))
-    }
+  tags = merge(module.labels.tags,
+    { "Name" = format("%s-ebs-volume%s%s", module.labels.id, var.delimiter, (count.index))
+    },
+    var.tags
   )
 }
 
