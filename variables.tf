@@ -19,13 +19,13 @@ variable "environment" {
 }
 
 variable "label_order" {
-  type        = list
+  type        = list(any)
   default     = []
   description = "Label order, e.g. `name`,`application`."
 }
 
 variable "attributes" {
-  type        = list
+  type        = list(any)
   default     = []
   description = "Additional attributes (e.g. `1`)."
 }
@@ -37,7 +37,7 @@ variable "delimiter" {
 }
 
 variable "tags" {
-  type        = map
+  type        = map(any)
   default     = {}
   description = "Additional tags (e.g. map(`BusinessUnit`,`XYZ`)."
 }
@@ -91,13 +91,13 @@ variable "associate_public_ip_address" {
 }
 
 variable "ebs_block_device" {
-  type        = list
+  type        = list(any)
   default     = []
   description = "Additional EBS block devices to attach to the instance."
 }
 
 variable "ephemeral_block_device" {
-  type        = list
+  type        = list(any)
   default     = []
   description = "Customize Ephemeral (also known as Instance Store) volumes on the instance."
 }
@@ -127,7 +127,7 @@ variable "tenancy" {
 }
 
 variable "root_block_device" {
-  type        = list
+  type        = list(any)
   default     = []
   description = "Customize details about the root block device of the instance. See Block Devices below for details."
 }
@@ -151,7 +151,7 @@ variable "ebs_iops" {
 }
 
 variable "availability_zone" {
-  type        = list
+  type        = list(any)
   default     = []
   description = "Availability Zone the instance is launched in. If not set, will be launched in the first AZ of the region."
 }
@@ -222,7 +222,7 @@ variable "ipv6_address_count" {
 }
 
 variable "ipv6_addresses" {
-  type        = list
+  type        = list(any)
   default     = []
   description = "List of IPv6 addresses from the range of the subnet to associate with the primary network interface."
 }
@@ -258,9 +258,15 @@ variable "cpu_credits" {
 }
 
 variable "instance_tags" {
-  type        = map
+  type        = map(any)
   default     = {}
   description = "Instance tags."
+}
+
+variable "volume_tags" {
+  type        = map(any)
+  default     = {}
+  description = "Volume tags."
 }
 
 variable "dns_zone_id" {
