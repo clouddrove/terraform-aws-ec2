@@ -39,7 +39,7 @@ resource "aws_instance" "default" {
   host_id                              = var.host_id
   cpu_core_count                       = var.cpu_core_count
   user_data                            = var.user_data != "" ? base64encode(file(var.user_data)) : ""
-  iam_instance_profile                 = join("", aws_iam_instance_profile.default.*.name)
+  iam_instance_profile                 = var.instance_profile_count == "" ? join("", aws_iam_instance_profile.default.*.name) : var.instance_profile
   source_dest_check                    = var.source_dest_check
   ipv6_address_count                   = var.ipv6_address_count
   ipv6_addresses                       = var.ipv6_addresses
