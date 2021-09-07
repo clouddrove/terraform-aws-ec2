@@ -263,6 +263,12 @@ variable "instance_tags" {
   description = "Instance tags."
 }
 
+variable "volume_tags" {
+  type        = map(any)
+  default     = {}
+  description = "Volume tags."
+}
+
 variable "dns_zone_id" {
   type        = string
   default     = ""

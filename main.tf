@@ -65,7 +65,8 @@ resource "aws_instance" "default" {
     module.labels.tags,
     {
       "Name" = format("%s%s%s", module.labels.id, var.delimiter, (count.index))
-    }
+    },
+    var.volume_tags
   )
 
   lifecycle {
