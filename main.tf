@@ -42,6 +42,7 @@ data "template_file" "userdata" {
 #Module      : EC2
 #Description : Terraform module to create an EC2 resource on AWS with Elastic IP Addresses
 #              and Elastic Block Store.
+#tfsec:ignore:aws-ec2-enforce-http-token-imds
 resource "aws_instance" "default" {
   count = var.instance_enabled == true ? var.instance_count : 0
 
@@ -95,7 +96,7 @@ resource "aws_instance" "default" {
   metadata_options {
     http_endpoint               = var.metadata_http_endpoint_enabled
     http_put_response_hop_limit = var.metadata_http_put_response_hop_limit
-    http_tokens                 = var.metadata_http_tokens_required #tfsec:ignore:aws-ec2-enforce-http-token-imds
+    http_tokens                 = var.metadata_http_tokens_required
   }
 
   credit_specification {
