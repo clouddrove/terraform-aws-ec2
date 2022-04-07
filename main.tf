@@ -95,7 +95,7 @@ resource "aws_instance" "default" {
   metadata_options {
     http_endpoint               = var.metadata_http_endpoint_enabled
     http_put_response_hop_limit = var.metadata_http_put_response_hop_limit
-    http_tokens                 = var.metadata_http_tokens_required
+    http_tokens                 = var.metadata_http_tokens_required #tfsec:ignore:aws-ec2-enforce-http-token-imds
   }
 
   credit_specification {

@@ -319,7 +319,7 @@ variable "kms_key_id" {
 
 variable "metadata_http_tokens_required" {
   type        = string
-  default     = "required"
+  default     = "optional"
   description = "Whether or not the metadata service requires session tokens, also referred to as Instance Metadata Service Version 2 (IMDSv2). Valid values include optional or required. Defaults to optional."
 }
 
