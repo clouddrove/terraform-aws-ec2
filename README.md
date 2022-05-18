@@ -14,10 +14,16 @@
 <p align="center">
 
 <a href="https://www.terraform.io">
-  <img src="https://img.shields.io/badge/Terraform-v0.15-green" alt="Terraform">
+  <img src="https://img.shields.io/badge/Terraform-v1.1.7-green" alt="Terraform">
 </a>
 <a href="LICENSE.md">
-  <img src="https://img.shields.io/badge/License-MIT-blue.svg" alt="Licence">
+  <img src="https://img.shields.io/badge/License-APACHE-blue.svg" alt="Licence">
+</a>
+<a href="https://github.com/clouddrove/terraform-aws-ec2/actions/workflows/tfsec.yml">
+  <img src="https://github.com/clouddrove/terraform-aws-ec2/actions/workflows/tfsec.yml/badge.svg" alt="tfsec">
+</a>
+<a href="https://github.com/clouddrove/terraform-aws-ec2/actions/workflows/terraform.yml">
+  <img src="https://github.com/clouddrove/terraform-aws-ec2/actions/workflows/terraform.yml/badge.svg" alt="static-checks">
 </a>
 
 
@@ -51,7 +57,7 @@ We have [*fifty plus terraform modules*][terraform_modules]. A few of them are c
 
 This module has a few dependencies: 
 
-- [Terraform 0.13](https://learn.hashicorp.com/terraform/getting-started/install.html)
+- [Terraform 1.x.x](https://learn.hashicorp.com/terraform/getting-started/install.html)
 - [Go](https://golang.org/doc/install)
 - [github.com/stretchr/testify/assert](https://github.com/stretchr/testify)
 - [github.com/gruntwork-io/terratest/modules/terraform](https://github.com/gruntwork-io/terratest)
@@ -231,8 +237,8 @@ Here is examples of how you can use this module in your inventory structure:
 | instance\_profile\_enabled | Flag to control the instance profile creation. | `bool` | `false` | no |
 | instance\_tags | Instance tags. | `map(any)` | `{}` | no |
 | instance\_type | The type of instance to start. Updates to this field will trigger a stop/start of the EC2 instance. | `string` | n/a | yes |
-| ipv6\_address\_count | Number of IPv6 addresses to associate with the primary network interface. Amazon EC2 chooses the IPv6 addresses from the range of your subnet. | `number` | `0` | no |
-| ipv6\_addresses | List of IPv6 addresses from the range of the subnet to associate with the primary network interface. | `list(any)` | `[]` | no |
+| ipv6\_address\_count | Number of IPv6 addresses to associate with the primary network interface. Amazon EC2 chooses the IPv6 addresses from the range of your subnet. | `number` | `null` | no |
+| ipv6\_addresses | List of IPv6 addresses from the range of the subnet to associate with the primary network interface. | `list(any)` | `null` | no |
 | key\_name | The key name to use for the instance. | `string` | `""` | no |
 | kms\_key\_id | The ARN for the KMS encryption key. When specifying kms\_key\_id, encrypted needs to be set to true. | `string` | `""` | no |
 | label\_order | Label order, e.g. `name`,`application`. | `list(any)` | `[]` | no |
