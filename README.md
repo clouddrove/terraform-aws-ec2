@@ -228,6 +228,7 @@ Here is examples of how you can use this module in your inventory structure:
 | ebs\_volume\_type | The type of EBS volume. Can be standard, gp2 or io1. | `string` | `"gp2"` | no |
 | environment | Environment (e.g. `prod`, `dev`, `staging`). | `string` | `""` | no |
 | ephemeral\_block\_device | Customize Ephemeral (also known as Instance Store) volumes on the instance. | `list(any)` | `[]` | no |
+| hibernation | hibernate an instance, Amazon EC2 signals the operating system to perform hibernation. | `bool` | `false` | no |
 | host\_id | The Id of a dedicated host that the instance will be assigned to. Use when an instance is to be launched on a specific dedicated host. | `string` | `null` | no |
 | hostname | DNS records to create. | `string` | `""` | no |
 | iam\_instance\_profile | The IAM Instance Profile to launch the instance with. Specified as the name of the Instance Profile. | `string` | `""` | no |
