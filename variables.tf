@@ -334,3 +334,9 @@ variable "metadata_http_put_response_hop_limit" {
   default     = 2
   description = "The desired HTTP PUT response hop limit (between 1 and 64) for instance metadata requests."
 }
+
+variable "hibernation" {
+  type        = bool
+  default     = false
+  description = "hibernate an instance, Amazon EC2 signals the operating system to perform hibernation."
+}
