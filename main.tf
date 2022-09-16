@@ -65,6 +65,7 @@ resource "aws_instance" "default" {
   source_dest_check                    = var.source_dest_check
   ipv6_address_count                   = var.ipv6_address_count
   ipv6_addresses                       = var.ipv6_addresses
+  hibernation                          = var.hibernation
 
   dynamic "root_block_device" {
     for_each = var.root_block_device

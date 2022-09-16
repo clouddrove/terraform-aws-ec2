@@ -145,6 +145,7 @@ module "ec2" {
   instance_type    = "t2.nano"
   monitoring       = false
   tenancy          = "default"
+  hibernation      = false
 
   #Networking
   vpc_security_group_ids_list = [module.ssh.security_group_ids, module.http-https.security_group_ids]
