@@ -45,7 +45,7 @@ module "keypair" {
   source  = "clouddrove/keypair/aws"
   version = "1.0.1"
 
-  public_key      = "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQDePaKOIIBqWYSGXfs0KgwaIJayIRtFVTgvJthcoX0geFCnDqmYcTw0/Cl6ooX2UtT2yAQ3BLdSIHKXKxxxBU4jxQUvKHGEIS6/7CC6DhNsaE7HolqC7lgrHglaHiGyin/l5NtLjGxgZ+v5qEJ1k2ZRcCpIikmK9ny6VYEF9pvjk7qe1rtSpVIexrn59ncaA3anQnfeqogWvyOTrK6uTOw9i+r10vwRamtwtLVCF1cFEaYLB6EvZ1Oh7PeeaqAivEwJVxKPdj/WgCju7cdfJ/H/WBKbs1/bonSNsapVl2Co/fwoKN8SdLHPwTw+Sqkkdz4GIho0tiCY0jXflVKHX96HA/ccV2sb6lQDds+sP+NrpPravJv0nXw3rhIG06joouZ28niQzQ8Cyizs+osxi+M2FM5CtriAMH7vcxXozVN59fpd66YEi0Iy9+LCyTxSO/QWdmQla4Fr/cEVqRuRbCrHzRfDlt+8Ht33ia2nVC0PclUCdMb13lACm4Ku7FVc4Xc= ubuntu@DESKTOP-9F28BVU"
+  public_key      = "ssh-rsa AAAAxcv/Cl6ooX2UtT2yAQ3BLdSIHKXKxxxBU4jxQUvKHGEIS6/7CC6DhNsaE7HolqC7lgrHglaHiGyin/l5NtLjGxgZ+v5qEJ1k2ZRcCpIikmK9ny6VYEF9pvjk7qe1rtSpVIexrn59ncaA3anQnfeqogWvyOTrK6uTOw9i+r10vwRamtwtLVCF1cFEaYLB6EvZ1Oh7PeeaqAivEwJVxKPdj/WgCju7cdfJ/H/WBKbs1/bonSNsapVl2Co/fwoKN8SdLHPwTw+Sqkkdz4GIho0tiCY0jXflVKHX96HA/ccV2sb6lQDds+sP+NrpPravJv0nXw3rhIG06joouZ28niQzQ8Cyizs+osxi+M2FM5CtriAMH7vcxXozVN59fpd66YEi0Iy9+LCyTxSO/QWdmQla4Fr/cEVqRuRbCrHzRfDlt+8Ht33ia2nVC0PclUCdMb13lACm4Ku7FVc4Xc= ubuntu@DESKTOP-9F28BVU"
   key_name        = "devops"
   environment     = "test"
   label_order     = ["name", "environment"]
