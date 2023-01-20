@@ -248,6 +248,7 @@ Here is examples of how you can use this module in your inventory structure:
 | metadata\_http\_put\_response\_hop\_limit | The desired HTTP PUT response hop limit (between 1 and 64) for instance metadata requests. | `number` | `2` | no |
 | metadata\_http\_tokens\_required | Whether or not the metadata service requires session tokens, also referred to as Instance Metadata Service Version 2 (IMDSv2). Valid values include optional or required. Defaults to optional. | `string` | `"optional"` | no |
 | monitoring | If true, the launched EC2 instance will have detailed monitoring enabled. (Available since v0.6.0). | `bool` | `true` | no |
+| multi\_attach\_enabled | Specifies whether to enable Amazon EBS Multi-Attach. Multi-Attach is supported on io1 and io2 volumes. | `bool` | `true` | no |
 | name | Name  (e.g. `app` or `cluster`). | `string` | `""` | no |
 | network\_interface | Customize network interfaces to be attached at instance boot time | `list(map(string))` | `[]` | no |
 | placement\_group | The Placement Group to start the instance in. | `string` | `""` | no |
