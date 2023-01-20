@@ -4,7 +4,7 @@ provider "aws" {
 
 module "vpc" {
   source  = "clouddrove/vpc/aws"
-  version = "0.15.1"
+  version = "1.3.0"
 
   name        = "vpc"
   environment = "test"
@@ -15,7 +15,7 @@ module "vpc" {
 
 module "public_subnets" {
   source  = "clouddrove/subnet/aws"
-  version = "0.15.3"
+  version = "1.3.0"
 
   name        = "public-subnet"
   environment = "test"
@@ -31,7 +31,7 @@ module "public_subnets" {
 
 module "http-https" {
   source      = "clouddrove/security-group/aws"
-  version     = "1.0.1"
+  version     = "1.3.0"
   name        = "http-https"
   environment = "test"
   label_order = ["name", "environment"]
@@ -43,9 +43,9 @@ module "http-https" {
 
 module "keypair" {
   source  = "clouddrove/keypair/aws"
-  version = "1.0.1"
+  version = "1.3.0"
 
-  public_key      = "ssh-rsa AAAAB3NzaC1yc2EAAAADAQgvJthcoX0geFCnDqmYcTw0/Cl6ooX2UtT2yAQ3BLdSIHQUvKHGEIS6/saE7HolqC7lgrHglaHiGyin/l5NtLjGxgZ+v5qEJ1k2ZRcCpIikmK9ny6VYEF9pvjk7qe1rtSpVIexrn59ncaA3anQnfeqogWvyOTrK6uTOw9i+r10vwRamtwtLVCF1cFEaYLB6EvZ1Oh7PeeaqAivEwJVxKPdj/WgCju7cdfJ/H/WBKbs1/bonSNsapVl2Co/fwoKN8SdLHPwTw+Sqkkdz4GIho0tiCY0jXflVKHX96HA/ccV2sb6lQDds+sP+NrpPravJv0nXw3rhIG06joouZ28niQzQ8Cyizs+osxi+M2FM5CtriAMH7vcxXozVN59fpd66YEi0Iy9+LCyTxSO/QWdmQla4Fr/cEVqRuRbCrHzRfDlt+8Ht33ia2nVC0PclUCdMb13lACm4Ku7FVc4Xc="
+  public_key      = "ssh-rsa 2U2K8norJh5/gxz7sbSSseLd+ldHEOM3+lajUSGqWk3Bw/NgygEf1Kgw7gyK3jsTVVcokhK3TDuR3pi4u2QDR2tvLXddPKd37a2S7Lwpog8CvslYEDV1Vf9HNeh9A3yOS6Pkjq6gDMrsUVF89ps3zuLmdVBIlCOnJDkwHK71lKihGKdkeXEtAj0aOQzAJsIpDFXz7vob9OiA/fb2T3t4R1EwEsPEnYVczKMsqUyqa+EE36bItcZHQyCPVN7+bRJyJpPcrfrsAa4yMtiHUUiecPdL/6HYwGHxA5rUX3uD2UBm6sbGBH00ZCj6yUxl2UQR5NE4NR35NI86Q+q1kNOc5VctxxQOTHBwKHaGvKLk4c5gHXaEl8yyYL0wVkL"
   key_name        = "devops"
   environment     = "test"
   label_order     = ["name", "environment"]
@@ -55,7 +55,7 @@ module "keypair" {
 
 module "ssh" {
   source      = "clouddrove/security-group/aws"
-  version     = "1.0.1"
+  version     = "1.3.0"
   name        = "ssh"
   environment = "test"
   label_order = ["name", "environment"]
@@ -67,7 +67,7 @@ module "ssh" {
 
 module "iam-role" {
   source  = "clouddrove/iam-role/aws"
-  version = "1.0.1"
+  version = "1.3.0"
 
   name               = "iam-role"
   environment        = "test"
@@ -80,7 +80,7 @@ module "iam-role" {
 
 module "kms_key" {
   source                  = "clouddrove/kms/aws"
-  version                 = "1.0.1"
+  version                 = "1.3.0"
   name                    = "kms"
   environment             = "test"
   label_order             = ["environment", "name"]

@@ -191,7 +191,6 @@ variable "ebs_volume_type" {
   description = "The type of EBS volume. Can be standard, gp2 or io1."
 }
 
-
 variable "instance_enabled" {
   type        = bool
   default     = true
