@@ -170,6 +170,7 @@ module "ec2" {
   ]
 
   #EBS Volume
+  multi_attach_enabled = false
   ebs_optimized      = false
   ebs_volume_enabled = true
   ebs_volume_type    = "gp2"

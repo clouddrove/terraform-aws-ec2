@@ -339,3 +339,9 @@ variable "hibernation" {
   default     = false
   description = "hibernate an instance, Amazon EC2 signals the operating system to perform hibernation."
 }
+
+variable "multi_attach_enabled" {
+  type        = bool
+  default     = true
+  description = "Specifies whether to enable Amazon EBS Multi-Attach. Multi-Attach is supported on io1 and io2 volumes."
+}
