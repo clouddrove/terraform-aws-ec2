@@ -1,0 +1,14 @@
+name: changelog
+permissions: write-all
+
+on:
+  push:
+    tags:
+      - "*"
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+jobs:
+  call-workflow-changelog:
+    uses: clouddrove/github-shared-workflows/.github/workflows/changelog.yml@master
+    with:
+      branch: 'master'
