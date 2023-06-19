@@ -38,6 +38,119 @@ data "template_file" "userdata" {
   template = "userdata.sh"
 }
 
+##----------------------------------------------------------------------------------
+## Below resources will create SECURITY-GROUP and its components.
+##----------------------------------------------------------------------------------
+resource "aws_security_group" "default" {
+  count = var.enable_security_group && length(var.sg_ids) < 1 ? 1 : 0
+
+  name        = format("%s-sg", module.labels.id)
+  vpc_id      = var.vpc_id
+  description = var.sg_description
+  tags        = module.labels.tags
+  lifecycle {
+    create_before_destroy = true
+  }
+}
+
+data "aws_security_group" "existing" {
+  count  = var.is_external ? 1 : 0
+  id     = var.existing_sg_id
+  vpc_id = var.vpc_id
+}
+
+##----------------------------------------------------------------------------------
+## Below resources will create SECURITY-GROUP-RULE and its components.
+##----------------------------------------------------------------------------------
+#tfsec:ignore:aws-ec2-no-public-egress-sgr
+resource "aws_security_group_rule" "egress" {
+  count = (var.enable_security_group == true && length(var.sg_ids) < 1 && var.is_external == false && var.egress_rule == true) ? 1 : 0
+
+  description       = var.sg_egress_description
+  type              = "egress"
+  from_port         = 0
+  to_port           = 65535
+  protocol          = "-1"
+  cidr_blocks       = ["0.0.0.0/0"]
+  security_group_id = join("", aws_security_group.default.*.id)
+}
+#tfsec:ignore:aws-ec2-no-public-egress-sgr
+resource "aws_security_group_rule" "egress_ipv6" {
+  count = (var.enable_security_group == true && length(var.sg_ids) < 1 && var.is_external == false) && var.egress_rule == true ? 1 : 0
+
+  description       = var.sg_egress_ipv6_description
+  type              = "egress"
+  from_port         = 0
+  to_port           = 65535
+  protocol          = "-1"
+  ipv6_cidr_blocks  = ["::/0"]
+  security_group_id = join("", aws_security_group.default.*.id)
+}
+resource "aws_security_group_rule" "ssh_ingress" {
+  count = length(var.ssh_allowed_ip) > 0 == true && length(var.sg_ids) < 1 ? length(compact(var.ssh_allowed_ports)) : 0
+
+  description       = var.ssh_sg_ingress_description
+  type              = "ingress"
+  from_port         = element(var.ssh_allowed_ports, count.index)
+  to_port           = element(var.ssh_allowed_ports, count.index)
+  protocol          = var.ssh_protocol
+  cidr_blocks       = var.ssh_allowed_ip
+  security_group_id = join("", aws_security_group.default.*.id)
+}
+
+resource "aws_security_group_rule" "ingress" {
+  count = length(var.allowed_ip) > 0 == true && length(var.sg_ids) < 1 ? length(compact(var.allowed_ports)) : 0
+
+  description       = var.sg_ingress_description
+  type              = "ingress"
+  from_port         = element(var.allowed_ports, count.index)
+  to_port           = element(var.allowed_ports, count.index)
+  protocol          = var.protocol
+  cidr_blocks       = var.allowed_ip
+  security_group_id = join("", aws_security_group.default.*.id)
+}
+
+
+##----------------------------------------------------------------------------------
+## Below resources will create KMS-KEY and its components.
+##----------------------------------------------------------------------------------
+resource "aws_kms_key" "default" {
+  count = var.kms_key_enabled && var.kms_key_id == "" ? 1 : 0
+
+  description              = var.kms_description
+  key_usage                = var.key_usage
+  deletion_window_in_days  = var.deletion_window_in_days
+  is_enabled               = var.is_enabled
+  enable_key_rotation      = var.enable_key_rotation
+  customer_master_key_spec = var.customer_master_key_spec
+  policy                   = data.aws_iam_policy_document.kms.json
+  multi_region             = var.kms_multi_region
+  tags                     = module.labels.tags
+}
+
+resource "aws_kms_alias" "default" {
+  count = var.kms_key_enabled && var.kms_key_id == "" ? 1 : 0
+
+  name          = coalesce(var.alias, format("alias/%v", module.labels.id))
+  target_key_id = var.kms_key_id == "" ? join("", aws_kms_key.default.*.id) : var.kms_key_id
+}
+
+data "aws_iam_policy_document" "kms" {
+  version = "2012-10-17"
+  statement {
+    sid    = "Enable IAM User Permissions"
+    effect = "Allow"
+    principals {
+      type        = "AWS"
+      identifiers = ["*"]
+    }
+    actions   = ["kms:*"]
+    resources = ["*"]
+  }
+
+}
+
+
 
 #Module      : EC2
 #Description : Terraform module to create an EC2 resource on AWS with Elastic IP Addresses
@@ -51,7 +164,7 @@ resource "aws_instance" "default" {
   instance_type                        = var.instance_type
   key_name                             = var.key_name
   monitoring                           = var.monitoring
-  vpc_security_group_ids               = var.vpc_security_group_ids_list
+  vpc_security_group_ids               = length(var.sg_ids) < 1 ? aws_security_group.default.*.id : var.sg_ids
   subnet_id                            = element(distinct(compact(concat(var.subnet_ids))), count.index)
   associate_public_ip_address          = var.associate_public_ip_address
   disable_api_termination              = var.disable_api_termination
@@ -153,13 +266,13 @@ resource "aws_eip" "default" {
 resource "aws_ebs_volume" "default" {
   count = var.instance_enabled == true && var.ebs_volume_enabled == true ? var.instance_count : 0
 
-  availability_zone = element(aws_instance.default.*.availability_zone, count.index)
-  size              = var.ebs_volume_size
-  iops              = local.ebs_iops
-  type              = var.ebs_volume_type
+  availability_zone    = element(aws_instance.default.*.availability_zone, count.index)
+  size                 = var.ebs_volume_size
+  iops                 = local.ebs_iops
+  type                 = var.ebs_volume_type
   multi_attach_enabled = var.multi_attach_enabled
-  encrypted         = true
-  kms_key_id        = var.kms_key_id
+  encrypted            = true
+  kms_key_id           = var.kms_key_id == "" ? join("", aws_kms_key.default.*.arn) : var.kms_key_id
   tags = merge(module.labels.tags,
     { "Name" = format("%s-ebs-volume%s%s", module.labels.id, var.delimiter, (count.index))
     },
