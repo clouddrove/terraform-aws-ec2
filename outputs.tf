@@ -58,7 +58,20 @@ output "instance_count" {
   value       = var.instance_count
   description = "The count of instances."
 }
+output "name" {
+  value       = join("", aws_key_pair.default.*.key_name)
+  description = "Name of SSH key."
+}
 
+output "spot_instance_id" {
+  value       = aws_spot_instance_request.default.*.spot_instance_id
+  description = "The instance ID."
+}
+
+output "spot_bid_status" {
+  description = "The current bid status of the Spot Instance Request"
+  value       = join("", aws_spot_instance_request.default.*.spot_bid_status)
+}
 output "tags" {
   value       = module.labels.tags
   description = "The instance ID."

@@ -64,7 +64,7 @@ variable "ami" {
 
 variable "ebs_optimized" {
   type        = bool
-  default     = true
+  default     = false
   description = "If true, the launched EC2 instance will be EBS-optimized."
 }
 
@@ -81,7 +81,7 @@ variable "key_name" {
 
 variable "monitoring" {
   type        = bool
-  default     = true
+  default     = false
   description = "If true, the launched EC2 instance will have detailed monitoring enabled. (Available since v0.6.0)."
 }
 
@@ -155,7 +155,7 @@ variable "user_data" {
 
 variable "assign_eip_address" {
   type        = bool
-  default     = false
+  default     = true
   description = "Assign an Elastic IP address to the instance."
   sensitive   = true
 }
@@ -204,7 +204,7 @@ variable "ebs_volume_enabled" {
 }
 variable "instance_profile_enabled" {
   type        = bool
-  default     = false
+  default     = true
   description = "Flag to control the instance profile creation."
 }
 
@@ -217,7 +217,7 @@ variable "subnet_ids" {
 
 variable "instance_count" {
   type        = number
-  default     = 1
+  default     = 0
   description = "Number of instances to launch."
 }
 
@@ -276,10 +276,15 @@ variable "instance_tags" {
   default     = {}
   description = "Instance tags."
 }
+variable "spot_instance_tags" {
+  type        = map(any)
+  default     = {}
+  description = "Instance tags."
+}
 
 variable "dns_zone_id" {
   type        = string
-  default     = ""
+  default     = "Z1XJD7SSBKXLC1"
   description = "The Zone ID of Route53."
   sensitive   = true
 }
@@ -292,7 +297,7 @@ variable "dns_enabled" {
 
 variable "hostname" {
   type        = string
-  default     = ""
+  default     = "ec2"
   description = "DNS records to create."
   sensitive   = true
 }
@@ -335,7 +340,7 @@ variable "hibernation" {
 
 variable "multi_attach_enabled" {
   type        = bool
-  default     = true
+  default     = false
   description = "Specifies whether to enable Amazon EBS Multi-Attach. Multi-Attach is supported on io1 and io2 volumes."
 }
 
@@ -353,7 +358,7 @@ variable "kms_key_id" {
 
 variable "alias" {
   type        = string
-  default     = "alias/redissss"
+  default     = "alias/ec2222"
   description = "The display name of the alias. The name must start with the word `alias` followed by a forward slash."
 }
 
@@ -500,4 +505,92 @@ variable "ssh_sg_ingress_description" {
   type        = string
   default     = "Description of the ingress rule use elasticache."
   description = "Description of the ingress rule"
+}
+
+### key-pair #####
+
+variable "enable_key_pair" {
+  type        = bool
+  default     = true
+  description = "A boolean flag to enable/disable key pair."
+}
+
+variable "public_key" {
+  type        = string
+  default     = ""
+  description = "Name  (e.g. `ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQD3F6tyPEFEzV0LX3X8BsXdMsQ`)."
+  sensitive   = true
+}
+
+variable "key_path" {
+  type        = string
+  default     = ""
+  description = "Name  (e.g. `~/.ssh/id_rsa.pub`)."
+}
+
+###### spot
+variable "spot_instance_enabled" {
+  type        = bool
+  default     = true
+  description = "Flag to control the instance creation."
+}
+
+variable "spot_ami" {
+  type        = string
+  default     = ""
+  description = "The AMI to use for the instance."
+}
+
+variable "spot_instance_count" {
+  type        = number
+  default     = 1
+  description = "Number of instances to launch."
+}
+
+variable "spot_price" {
+  type        = string
+  default     = null
+  description = "The maximum price to request on the spot market. Defaults to on-demand price"
+}
+
+variable "spot_wait_for_fulfillment" {
+  type        = bool
+  default     = null
+  description = "If set, Terraform will wait for the Spot Request to be fulfilled, and will throw an error if the timeout of 10m is reached"
+}
+
+variable "spot_type" {
+  type        = string
+  default     = null
+  description = "If set to one-time, after the instance is terminated, the spot request will be closed. Default `persistent`"
+}
+
+variable "spot_launch_group" {
+  type        = string
+  default     = null
+  description = "A launch group is a group of spot instances that launch together and terminate together. If left empty instances are launched and terminated individually"
+}
+
+variable "spot_block_duration_minutes" {
+  type        = number
+  default     = null
+  description = "The required duration for the Spot instances, in minutes. This value must be a multiple of 60 (60, 120, 180, 240, 300, or 360)"
+}
+
+variable "spot_instance_interruption_behavior" {
+  type        = string
+  default     = null
+  description = "Indicates Spot instance behavior when it is interrupted. Valid values are `terminate`, `stop`, or `hibernate`"
+}
+
+variable "spot_valid_until" {
+  type        = string
+  default     = null
+  description = "The end date and time of the request, in UTC RFC3339 format(for example, YYYY-MM-DDTHH:MM:SSZ)"
+}
+
+variable "spot_valid_from" {
+  type        = string
+  default     = null
+  description = "The start date and time of the request, in UTC RFC3339 format(for example, YYYY-MM-DDTHH:MM:SSZ)"
 }

@@ -38,18 +38,6 @@ module "public_subnets" {
   ipv6_cidr_block    = module.vpc.ipv6_cidr_block
 }
 
-module "keypair" {
-  source  = "clouddrove/keypair/aws"
-  version = "1.3.0"
-
-  public_key      = "HEOM3+lajUSGqWk3Bw/NgygEf1Kgw7gyK3jsTVVcokhK3TDuR3pi4u2QDR2tvLXddPKd37a2S7rjeqecw+XRW9559zKaR7RJJfjO1u1Onc2tgA3y0btdju2bcYBtFkRVOLwpog8CvslYEDLmdVBIlCOnJDkwHK71lKihGKdkeXEtAj0aOQzAJsIpDFXz7vob9OiA/fb2T3t4R1EwEsPEnYVczKMsqUyqa+EE36bItcZHQyCPVN7+bRJyJpPcrfrsAa4yMtiHUUiecPdL/6HYwGHxA5rUX3uD2UBm6sbGBH00ZCj6yUxl2UQR5NE4NR35NI86Q+q1kNOc5VctxxQOTHBwKHaGvKLk4c5gHXaEl8yyYL0wVkL00KYx3GCh1"
-  key_name        = "devops"
-  environment     = "test"
-  label_order     = ["name", "environment"]
-  enable_key_pair = true
-}
-
-
 module "iam-role" {
   source  = "clouddrove/iam-role/aws"
   version = "1.3.0"
@@ -87,7 +75,7 @@ data "aws_iam_policy_document" "iam-policy" {
   }
 }
 
-module "ec2" {
+module "spot" {
   source      = "./../../"
   name        = "ec2"
   environment = "test"
@@ -101,25 +89,18 @@ module "ec2" {
   ssh_allowed_ports = [22]
 
   #instance
-  instance_enabled = true
-  instance_count   = 1
-  ami              = "ami-08d658f84a6d84a80"
-  instance_type    = "t2.nano"
-  monitoring       = false
-  tenancy          = "default"
-  hibernation      = false
+  instance_count = 1
+  ami            = "ami-08d658f84a6d84a80"
+  instance_type  = "t2.nano"
 
   #Networking
-  subnet_ids                  = tolist(module.public_subnets.public_subnet_id)
-  assign_eip_address          = true
-  associate_public_ip_address = true
+  subnet_ids = tolist(module.public_subnets.public_subnet_id)
 
   #Keypair
-  key_name = module.keypair.name
+  public_key = "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQDDIqppj2U2K8norJh5/gxz7sbSSseLd+ldHEOM3+lajUSGqWk3Bw/NgygEf1Kgw7gyK3jsTVVcokhK3TDuR3pi4u2QDR2tvLXddPKd37a2S7rjeqecw+XRW9559zKaR7RJJfjO1u1Onc2tgA3y0btdju2bcYBtFkRVOLwpog8CvslYEDV1Vf9HNeh9A3yOS6Pkjq6gDMrsUVF89ps3zuLmdVBIlCOnJDkwHK71lKihGKdkeXEtAj0aOQzAJsIpDFXz7vob9OiA/fb2T3t4R1EwEsPEnYVczKMsqUyqa+EE36bItcZHQyCPVN7+bRJyJpPcrfrsAa4yMtiHUUiecPdL/6HYwGHxA5rUX3uD2UBm6sbGBH00ZCj6yUxl2UQR5NE4NR35NI86Q+q1kNOc5VctxxQOTHBwKHaGvKLk4c5gHXaEl8yyYL0wVkL00KYx3GCh1LvRdQL8fvzImBCNgZdSpKT2xjq/wc5c9L9NSc43TGoldnDYUjm79qAYMlwQHr0= prashant@prashant"
 
   #IAM
-  instance_profile_enabled = true
-  iam_instance_profile     = module.iam-role.name
+  iam_instance_profile = module.iam-role.name
 
   #Root Volume
   root_block_device = [
@@ -131,23 +112,11 @@ module "ec2" {
   ]
 
   #EBS Volume
-  multi_attach_enabled = false
-  ebs_optimized        = false
-  ebs_volume_enabled   = false
-  ebs_volume_type      = "gp2"
-  ebs_volume_size      = 30
-
-  #DNS
-  dns_enabled = false
-  dns_zone_id = "Z1XJD7SSBKXLC1"
-  hostname    = "ec2"
+  ebs_volume_enabled = false
+  ebs_volume_type    = "gp2"
+  ebs_volume_size    = 30
 
   #Tags
   instance_tags = { "snapshot" = true }
-
-  # Metadata
-  metadata_http_tokens_required        = "optional"
-  metadata_http_endpoint_enabled       = "enabled"
-  metadata_http_put_response_hop_limit = 2
 
 }

@@ -75,11 +75,10 @@ data "aws_iam_policy_document" "iam-policy" {
   }
 }
 
-
-module "ec2" {
+module "spot-ec2" {
   source      = "./../../"
   name        = "ec2"
-  environment = "test"
+  environment = "testtt"
   label_order = ["name", "environment"]
 
   ####----------------------------------------------------------------------------------
@@ -89,13 +88,18 @@ module "ec2" {
   ssh_allowed_ip    = ["0.0.0.0/0"]
   ssh_allowed_ports = [22]
 
-  #Instance
-  instance_count = 2
-  ami            = "ami-08d658f84a6d84a80"
-  instance_type  = "t2.nano"
-
   #Keypair
-  public_key = "HEOM3+lajUSGqWk3Bw/NgygEf1Kgw7gyK3jsTVVcokhK3TDuR3pi4u2QDR2tvLXddPKd37a2S7rjeqecw+XRW9559zKaR7RJJfjO1u1Onc2tgA3y0btdju2bcYBtFkRVOLwpog8CvslYEDLmdVBIlCOnJDkwHK71lKihGKdkeXEtAj0aOQzAJsIpDFXz7vob9OiA/fb2T3t4R1EwEsPEnYVczKMsqUyqa+EE36bItcZHQyCPVN7+bRJyJpPcrfrsAa4yMtiHUUiecPdL/6HYwGHxA5rUX3uD2UBm6sbGBH00ZCj6yUxl2UQR5NE4NR35NI86Q+q1kNOc5VctxxQOTHBwKHaGvKLk4c5gHXaEl8yyYL0wVkL00KYx3GCh1"
+  public_key = "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQDDIqppj2U2K8norJh5/gxz7sbSSseLd+ldHEOM3+lajUSGqWk3Bw/NgygEf1Kgw7gyK3jsTVVcokhK3TDuR3pi4u2QDR2tvLXddPKd37a2S7rjeqecw+XRW9559zKaR7RJJfjO1u1Onc2tgA3y0btdju2bcYBtFkRVOLwpog8CvslYEDV1Vf9HNeh9A3yOS6Pkjq6gDMrsUVF89ps3zuLmdVBIlCOnJDkwHK71lKihGKdkeXEtAj0aOQzAJsIpDFXz7vob9OiA/fb2T3t4R1EwEsPEnYVczKMsqUyqa+EE36bItcZHQyCPVN7+bRJyJpPcrfrsAa4yMtiHUUiecPdL/6HYwGHxA5rUX3uD2UBm6sbGBH00ZCj6yUxl2UQR5NE4NR35NI86Q+q1kNOc5VctxxQOTHBwKHaGvKLk4c5gHXaEl8yyYL0wVkL00KYx3GCh1LvRdQL8fvzImBCNgZdSpKT2xjq/wc5c9L9NSc43TGoldnDYUjm79qAYMlwQHr0= prashant@prashant"
+
+  # Spot-instance
+  spot_price                          = "0.3"
+  spot_wait_for_fulfillment           = true
+  spot_type                           = "persistent"
+  spot_instance_interruption_behavior = "terminate"
+  spot_instance_enabled               = true
+  spot_instance_count                 = 1
+  spot_ami                            = "ami-08d658f84a6d84a80"
+  instance_type                       = "c4.xlarge"
 
   #Networking
   subnet_ids = tolist(module.public_subnets.public_subnet_id)
@@ -118,8 +122,6 @@ module "ec2" {
   ebs_volume_size    = 30
 
   #Tags
-  instance_tags = { "snapshot" = true }
+  spot_instance_tags = { "snapshot" = true }
 
-  #Mount EBS With User Data
-  user_data = file("user-data.sh")
 }
