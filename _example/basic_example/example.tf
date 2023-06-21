@@ -75,7 +75,7 @@ data "aws_iam_policy_document" "iam-policy" {
   }
 }
 
-module "spot" {
+module "ec2" {
   source      = "./../../"
   name        = "ec2"
   environment = "test"
@@ -91,7 +91,7 @@ module "spot" {
   #instance
   instance_count = 1
   ami            = "ami-08d658f84a6d84a80"
-  instance_type  = "t2.nano"
+  instance_type  = "c4.xlarge"
 
   #Networking
   subnet_ids = tolist(module.public_subnets.public_subnet_id)

@@ -78,7 +78,7 @@ data "aws_iam_policy_document" "iam-policy" {
 module "spot-ec2" {
   source      = "./../../"
   name        = "ec2"
-  environment = "testtt"
+  environment = "test"
   label_order = ["name", "environment"]
 
   ####----------------------------------------------------------------------------------

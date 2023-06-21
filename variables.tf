@@ -543,7 +543,7 @@ variable "spot_ami" {
 
 variable "spot_instance_count" {
   type        = number
-  default     = 1
+  default     = 0
   description = "Number of instances to launch."
 }
 
@@ -555,7 +555,7 @@ variable "spot_price" {
 
 variable "spot_wait_for_fulfillment" {
   type        = bool
-  default     = null
+  default     = false
   description = "If set, Terraform will wait for the Spot Request to be fulfilled, and will throw an error if the timeout of 10m is reached"
 }
 

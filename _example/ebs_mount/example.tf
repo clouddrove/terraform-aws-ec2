@@ -90,7 +90,7 @@ module "ec2" {
   ssh_allowed_ports = [22]
 
   #Instance
-  instance_count = 2
+  instance_count = 1
   ami            = "ami-08d658f84a6d84a80"
   instance_type  = "t2.nano"
 
