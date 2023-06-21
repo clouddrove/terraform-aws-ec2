@@ -38,6 +38,9 @@ module "public_subnets" {
   ipv6_cidr_block    = module.vpc.ipv6_cidr_block
 }
 
+####----------------------------------------------------------------------------------
+## Terraform module to create IAm role resource on AWS.
+####----------------------------------------------------------------------------------
 module "iam-role" {
   source  = "clouddrove/iam-role/aws"
   version = "1.3.0"
@@ -75,6 +78,9 @@ data "aws_iam_policy_document" "iam-policy" {
   }
 }
 
+####----------------------------------------------------------------------------------
+## Terraform module to create spot instance module on AWS.
+####----------------------------------------------------------------------------------
 module "spot-ec2" {
   source      = "./../../"
   name        = "ec2"

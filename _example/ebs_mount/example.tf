@@ -75,7 +75,9 @@ data "aws_iam_policy_document" "iam-policy" {
   }
 }
 
-
+####----------------------------------------------------------------------------------
+## Terraform module to create ec2 instance module on AWS.
+####----------------------------------------------------------------------------------
 module "ec2" {
   source      = "./../../"
   name        = "ec2"

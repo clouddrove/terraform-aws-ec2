@@ -1,11 +1,6 @@
-# Managed By : CloudDrove
-# Description : This Script is used to create EC2, EIP, EBS VOLUME,  and VOLUME ATTACHMENT.
-# Copyright @ CloudDrove. All Right Reserved.
-
-#Module      : Label
-#Description : This terraform module is designed to generate consistent label names and
-#              tags for resources. You can use terraform-labels to implement a strict
-#              naming convention.
+##----------------------------------------------------------------------------------
+## Labels module callled that will be used for naming and tags.
+##----------------------------------------------------------------------------------
 module "labels" {
   source  = "clouddrove/labels/aws"
   version = "1.3.0"
@@ -161,11 +156,9 @@ data "aws_iam_policy_document" "kms" {
 
 }
 
-
-
-#Module      : EC2
-#Description : Terraform module to create an EC2 resource on AWS with Elastic IP Addresses
-#              and Elastic Block Store.
+##----------------------------------------------------------------------------------
+## Below Terraform module to create an EC2 resource on AWS with Elastic IP Addresses and Elastic Block Store.
+##----------------------------------------------------------------------------------
 #tfsec:ignore:aws-ec2-enforce-http-token-imds
 resource "aws_instance" "default" {
   count = var.instance_enabled == true ? var.instance_count : 0
@@ -256,8 +249,9 @@ resource "aws_instance" "default" {
   }
 }
 
-#Module      : EIP
-#Description : Provides an Elastic IP resource.
+##----------------------------------------------------------------------------------
+## Provides an Elastic IP resource..
+##----------------------------------------------------------------------------------
 resource "aws_eip" "default" {
   count = var.instance_enabled == true && var.assign_eip_address == true ? var.instance_count : 0
 
@@ -272,8 +266,9 @@ resource "aws_eip" "default" {
   )
 }
 
-#Module      : EBS VOLUME
-#Description : Manages a single EBS volume.
+##----------------------------------------------------------------------------------
+## Manages a single EBS volume.
+##----------------------------------------------------------------------------------
 resource "aws_ebs_volume" "default" {
   count = var.instance_enabled == true && var.ebs_volume_enabled == true ? var.instance_count : 0
 
@@ -291,8 +286,9 @@ resource "aws_ebs_volume" "default" {
   )
 }
 
-#Module      : VOLUME ATTACHMENT
-#Description : Provides an AWS EBS Volume Attachment as a top level resource, to attach and detach volumes from AWS Instances.
+##----------------------------------------------------------------------------------
+## Provides an AWS EBS Volume Attachment as a top level resource, to attach and detach volumes from AWS Instances.
+##----------------------------------------------------------------------------------
 resource "aws_volume_attachment" "default" {
   count = var.instance_enabled == true && var.ebs_volume_enabled == true ? var.instance_count : 0
 
@@ -301,16 +297,18 @@ resource "aws_volume_attachment" "default" {
   instance_id = element(aws_instance.default.*.id, count.index)
 }
 
-#Module      : IAM INSTANCE PROFILE
-#Description : Provides an IAM instance profile.
+##----------------------------------------------------------------------------------
+## Provides an IAM instance profile.
+##----------------------------------------------------------------------------------
 resource "aws_iam_instance_profile" "default" {
   count = var.instance_enabled == true && var.instance_profile_enabled ? 1 : 0
   name  = format("%s%sinstance-profile", module.labels.id, var.delimiter)
   role  = var.iam_instance_profile
 }
 
-#Module      : ROUTE53
-#Description : Provides a Route53 record resource.
+##----------------------------------------------------------------------------------
+## Below resource will create ROUTE-53 resource for memcached.
+##----------------------------------------------------------------------------------
 resource "aws_route53_record" "default" {
   count   = var.instance_enabled == true && var.dns_enabled ? var.instance_count : 0
   zone_id = var.dns_zone_id
@@ -320,6 +318,9 @@ resource "aws_route53_record" "default" {
   records = [element(aws_instance.default.*.private_dns, count.index)]
 }
 
+##----------------------------------------------------------------------------------
+## Below Provides an EC2 Spot Instance Request resource. This allows instances to be requested on the spot market..
+##----------------------------------------------------------------------------------
 resource "aws_spot_instance_request" "default" {
   count = var.spot_instance_enabled == true ? var.spot_instance_count : 0
 
