@@ -77,7 +77,7 @@ resource "aws_security_group_rule" "egress" {
   from_port         = 0
   to_port           = 65535
   protocol          = "-1"
-  cidr_blocks       = ["0.0.0.0/0"]
+  cidr_blocks       = ["0.0.0.0/0"] #tfsec:aws-ec2-no-public-ingress-sgr
   security_group_id = join("", aws_security_group.default.*.id)
 }
 #tfsec:ignore:aws-ec2-no-public-egress-sgr
@@ -100,10 +100,10 @@ resource "aws_security_group_rule" "ssh_ingress" {
   from_port         = element(var.ssh_allowed_ports, count.index)
   to_port           = element(var.ssh_allowed_ports, count.index)
   protocol          = var.ssh_protocol
-  cidr_blocks       = var.ssh_allowed_ip
+  cidr_blocks       = var.ssh_allowed_ip #tfsec:aws-ec2-no-public-ingress-sgr
   security_group_id = join("", aws_security_group.default.*.id)
 }
-#tfsec:aws-ec2-no-public-ingress-sgr
+
 resource "aws_security_group_rule" "ingress" {
   count = length(var.allowed_ip) > 0 == true && length(var.sg_ids) < 1 ? length(compact(var.allowed_ports)) : 0
 
@@ -112,7 +112,7 @@ resource "aws_security_group_rule" "ingress" {
   from_port         = element(var.allowed_ports, count.index)
   to_port           = element(var.allowed_ports, count.index)
   protocol          = var.protocol
-  cidr_blocks       = var.allowed_ip
+  cidr_blocks       = var.allowed_ip #tfsec:aws-ec2-no-public-ingress-sgr
   security_group_id = join("", aws_security_group.default.*.id)
 }
 
