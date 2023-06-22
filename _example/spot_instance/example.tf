@@ -83,6 +83,7 @@ data "aws_iam_policy_document" "iam-policy" {
 ####----------------------------------------------------------------------------------
 ## Terraform module to create spot instance module on AWS.
 ####----------------------------------------------------------------------------------
+#tfsec:aws-ec2-no-public-ingress-sgr
 module "spot-ec2" {
   source      = "./../../"
   name        = "ec2"
