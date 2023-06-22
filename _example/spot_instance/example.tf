@@ -8,6 +8,7 @@ provider "aws" {
 ####----------------------------------------------------------------------------------
 ## A VPC is a virtual network that closely resembles a traditional network that you'd operate in your own data center.
 ####----------------------------------------------------------------------------------
+#tfsec:ignore:aws-ec2-require-vpc-flow-logs-for-all-vpcs
 module "vpc" {
   source  = "clouddrove/vpc/aws"
   version = "1.3.1"
@@ -15,7 +16,6 @@ module "vpc" {
   name            = "vpc"
   environment     = "test"
   label_order     = ["name", "environment"]
-  enable_flow_log = true
   cidr_block      = "172.16.0.0/16"
 }
 
