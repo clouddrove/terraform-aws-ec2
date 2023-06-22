@@ -22,22 +22,22 @@ module "vpc" {
 ####----------------------------------------------------------------------------------
 ## A subnet is a range of IP addresses in your VPC.
 ####----------------------------------------------------------------------------------
-module "public_subnets" {
+module "private-subnets" {
   source  = "clouddrove/subnet/aws"
   version = "1.3.0"
 
-  name        = "public-subnet"
+  name        = "subnet"
   environment = "test"
   label_order = ["name", "environment"]
 
-  availability_zones = ["eu-west-1b", "eu-west-1c"]
-  vpc_id             = module.vpc.vpc_id
-  cidr_block         = module.vpc.vpc_cidr_block
-  type               = "public"
-  igw_id             = module.vpc.igw_id
-  ipv6_cidr_block    = module.vpc.ipv6_cidr_block
+  availability_zones              = ["eu-west-1b", "eu-west-1c"]
+  vpc_id                          = module.vpc.vpc_id
+  type                            = "private"
+  cidr_block                      = module.vpc.vpc_cidr_block
+  ipv6_cidr_block                 = module.vpc.ipv6_cidr_block
+  assign_ipv6_address_on_creation = false
+  enable_vpc_endpoint             = false
 }
-
 ####----------------------------------------------------------------------------------
 ## Terraform module to create IAm role resource on AWS.
 ####----------------------------------------------------------------------------------
@@ -108,7 +108,7 @@ module "spot-ec2" {
   instance_type                       = "c4.xlarge"
 
   #Networking
-  subnet_ids = tolist(module.public_subnets.public_subnet_id)
+  subnet_ids = tolist(module.private-subnets.public_subnet_id)
 
   #IAM
   iam_instance_profile = module.iam-role.name
