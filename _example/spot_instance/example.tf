@@ -22,22 +22,20 @@ module "vpc" {
 ####----------------------------------------------------------------------------------
 ## A subnet is a range of IP addresses in your VPC.
 ####----------------------------------------------------------------------------------
-module "private-subnets" {
+module "public_subnets" {
   source  = "clouddrove/subnet/aws"
   version = "1.3.0"
 
-  name        = "subnets"
+  name        = "public-subnet"
   environment = "test"
   label_order = ["name", "environment"]
 
-  availability_zones              = ["eu-west-1b", "eu-west-1c"]
-  nat_gateway_enabled = true
-  vpc_id                          = module.vpc.vpc_id
-  type                            = "private"
-  cidr_block                      = module.vpc.vpc_cidr_block
-  ipv6_cidr_block                 = module.vpc.ipv6_cidr_block
-  assign_ipv6_address_on_creation = false
-  enable_vpc_endpoint = false
+  availability_zones = ["eu-west-1b", "eu-west-1c"]
+  vpc_id             = module.vpc.vpc_id
+  cidr_block         = module.vpc.vpc_cidr_block
+  type               = "public"
+  igw_id             = module.vpc.igw_id
+  ipv6_cidr_block    = module.vpc.ipv6_cidr_block
 }
 
 ####----------------------------------------------------------------------------------
@@ -92,7 +90,6 @@ module "spot-ec2" {
   ####----------------------------------------------------------------------------------
   ## Below A security group controls the traffic that is allowed to reach and leave the resources that it is associated with.
   ####----------------------------------------------------------------------------------
-  #tfsec:aws-ec2-no-public-ingress-sgr
   vpc_id            = module.vpc.vpc_id
   ssh_allowed_ip    = ["0.0.0.0/0"]
   ssh_allowed_ports = [22]
