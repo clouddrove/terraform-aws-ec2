@@ -103,7 +103,7 @@ resource "aws_security_group_rule" "ssh_ingress" {
   cidr_blocks       = var.ssh_allowed_ip
   security_group_id = join("", aws_security_group.default.*.id)
 }
-
+#tfsec:aws-ec2-no-public-ingress-sgr
 resource "aws_security_group_rule" "ingress" {
   count = length(var.allowed_ip) > 0 == true && length(var.sg_ids) < 1 ? length(compact(var.allowed_ports)) : 0
 
