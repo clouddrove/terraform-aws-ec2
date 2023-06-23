@@ -86,7 +86,7 @@ usage: |-
     
       #Tags
       instance_tags = { "snapshot" = true }
-    
+  
     }
   ```
 
