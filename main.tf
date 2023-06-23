@@ -28,10 +28,6 @@ data "aws_ami" "ubuntu" {
   owners = ["099720109477"]
 }
 
-data "template_file" "userdata" {
-  count    = var.instance_enabled ? 1 : 0
-  template = "userdata.sh"
-}
 ##----------------------------------------------------------------------------------
 ## resource for generating or importing an SSH public key file into AWS.
 ##----------------------------------------------------------------------------------

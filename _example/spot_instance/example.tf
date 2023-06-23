@@ -13,10 +13,10 @@ module "vpc" {
   source  = "clouddrove/vpc/aws"
   version = "1.3.1"
 
-  name            = "vpc"
-  environment     = "test"
-  label_order     = ["name", "environment"]
-  cidr_block      = "172.16.0.0/16"
+  name        = "vpc"
+  environment = "test"
+  label_order = ["name", "environment"]
+  cidr_block  = "172.16.0.0/16"
 }
 
 ####----------------------------------------------------------------------------------
