@@ -79,6 +79,7 @@ Here is examples of how you can use this module in your inventory structure:
 ```hcl
     module "ec2" {
     source      = "clouddrove/ec2/aws"
+    version     = "1.3.1"
 
     name        = "ec2"
     environment = "test"
@@ -119,7 +120,7 @@ Here is examples of how you can use this module in your inventory structure:
   
     #Tags
     instance_tags = { "snapshot" = true }
-  
+
   }
 ```
 
@@ -127,6 +128,8 @@ Here is examples of how you can use this module in your inventory structure:
 ```hcl
     module "ec2" {
     source        = "clouddrove/ec2/aws"
+    version       = "1.3.1"
+
     name          = "ec2"
     environment   = "test"
     label_order   = ["name", "environment"]
@@ -175,7 +178,9 @@ Here is examples of how you can use this module in your inventory structure:
 ### spot-instance
 ```hcl
     module "spot-ec2" {
-    source      = "./../../"
+    source      = "clouddrove/ec2/aws"
+    version     = "1.3.1"
+
     name        = "ec2"
     environment = "test"
     label_order = ["name", "environment"]
