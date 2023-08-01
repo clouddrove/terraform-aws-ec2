@@ -15,21 +15,17 @@ github_repo: clouddrove/terraform-aws-ec2
 
 # Badges to display
 badges:
-  - name: "Terraform"
-    image: "https://img.shields.io/badge/Terraform-v1.1.7-green"
-    url: "https://www.terraform.io"
-  - name: "Licence"
-    image: "https://img.shields.io/badge/License-APACHE-blue.svg"
-    url: "LICENSE.md"
+  - name: "Latest Release"
+    image: "https://img.shields.io/github/release/clouddrove/terraform-aws-ec2.svg"
+    url: "https://github.com/clouddrove/terraform-aws-ec2/releases/latest"
   - name: "tfsec"
     image: "https://github.com/clouddrove/terraform-aws-ec2/actions/workflows/tfsec.yml/badge.svg"
     url: "https://github.com/clouddrove/terraform-aws-ec2/actions/workflows/tfsec.yml"
-  - name: "static-checks"
-    image: "https://github.com/clouddrove/terraform-aws-ec2/actions/workflows/terraform.yml/badge.svg"
-    url: "https://github.com/clouddrove/terraform-aws-ec2/actions/workflows/terraform.yml"
+  - name: "Licence"
+    image: "https://img.shields.io/badge/License-APACHE-blue.svg"
+    url: "LICENSE.md"
 
 #  description of this project
-# yamllint disable rule:line-length
 description: |-
   Terraform module to create an EC2 resource on AWS with ElasticC IP Addresses and Elastic Block Store.
 
@@ -38,7 +34,7 @@ include:
   - "terraform.md"
 
 # How to use this project
-# yamllint disable rule:line-length
+# How to use this project
 usage: |-
   Here is examples of how you can use this module in your inventory structure:
   ### Basic Example

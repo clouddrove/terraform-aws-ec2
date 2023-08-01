@@ -30,12 +30,6 @@ variable "label_order" {
   description = "Label order, e.g. `name`,`application`."
 }
 
-variable "attributes" {
-  type        = list(any)
-  default     = []
-  description = "Additional attributes (e.g. `1`)."
-}
-
 variable "delimiter" {
   type        = string
   default     = "-"
@@ -73,30 +67,10 @@ variable "instance_type" {
   description = "The type of instance to start. Updates to this field will trigger a stop/start of the EC2 instance."
 }
 
-variable "key_name" {
-  type        = string
-  default     = ""
-  description = "The key name to use for the instance."
-}
-
 variable "monitoring" {
   type        = bool
   default     = false
   description = "If true, the launched EC2 instance will have detailed monitoring enabled. (Available since v0.6.0)."
-}
-
-variable "vpc_security_group_ids_list" {
-  type        = list(string)
-  default     = []
-  description = "A list of security group IDs to associate with."
-  sensitive   = true
-}
-
-variable "subnet" {
-  type        = string
-  default     = null
-  description = "VPC Subnet ID the instance is launched in."
-  sensitive   = true
 }
 
 variable "associate_public_ip_address" {
@@ -104,12 +78,6 @@ variable "associate_public_ip_address" {
   default     = true
   description = "Associate a public IP address with the instance."
   sensitive   = true
-}
-
-variable "ebs_block_device" {
-  type        = list(any)
-  default     = []
-  description = "Additional EBS block devices to attach to the instance."
 }
 
 variable "ephemeral_block_device" {
@@ -164,13 +132,6 @@ variable "ebs_iops" {
   type        = number
   default     = 0
   description = "Amount of provisioned IOPS. This must be set with a volume_type of io1."
-}
-
-variable "availability_zone" {
-  type        = list(any)
-  default     = []
-  description = "Availability Zone the instance is launched in. If not set, will be launched in the first AZ of the region."
-  sensitive   = true
 }
 
 variable "ebs_device_name" {
@@ -436,12 +397,6 @@ variable "enable_security_group" {
   description = "Enable default Security Group with only Egress traffic allowed."
 }
 
-variable "existing_sg_id" {
-  type        = string
-  default     = null
-  description = "Provide existing security group id for updating existing rule"
-}
-
 variable "egress_rule" {
   type        = bool
   default     = true
@@ -533,12 +488,6 @@ variable "spot_instance_enabled" {
   type        = bool
   default     = true
   description = "Flag to control the instance creation."
-}
-
-variable "spot_ami" {
-  type        = string
-  default     = ""
-  description = "The AMI to use for the instance."
 }
 
 variable "spot_instance_count" {
