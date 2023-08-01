@@ -104,7 +104,6 @@ module "spot-ec2" {
   spot_instance_interruption_behavior = "terminate"
   spot_instance_enabled               = true
   spot_instance_count                 = 1
-  spot_ami                            = "ami-08d658f84a6d84a80"
   instance_type                       = "c4.xlarge"
 
   #Networking
