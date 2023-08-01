@@ -24,7 +24,7 @@ module "vpc" {
 ####----------------------------------------------------------------------------------
 module "public_subnets" {
   source  = "clouddrove/subnet/aws"
-  version = "1.3.0"
+  version = "2.0.0"
 
   name        = "public-subnet"
   environment = "test"
@@ -76,7 +76,7 @@ data "aws_iam_policy_document" "iam-policy" {
 }
 
 ####----------------------------------------------------------------------------------
-## Terraform module to create ec2 instance module on AWS.
+## Terraform module to create instance module on AWS.
 ####----------------------------------------------------------------------------------
 module "ec2" {
   source      = "./../../"
@@ -92,16 +92,16 @@ module "ec2" {
   ssh_allowed_ip    = ["0.0.0.0/0"]
   ssh_allowed_ports = [22]
 
-  #Instance
+  #instance
   instance_count = 1
   ami            = "ami-08d658f84a6d84a80"
-  instance_type  = "t2.nano"
-
-  #Keypair
-  public_key = "HEOM3+lajUSGqWk3Bw/NgygEf1Kgw7gyK3jsTVVcokhK3TDuR3pi4u2QDR2tvLXddPKd37a2S7rjeqecw+XRW9559zKaR7RJJfjO1u1Onc2tgA3y0btdju2bcYBtFkRVOLwpog8CvslYEDLmdVBIlCOnJDkwHK71lKihGKdkeXEtAj0aOQzAJsIpDFXz7vob9OiA/fb2T3t4R1EwEsPEnYVczKMsqUyqa+EE36bItcZHQyCPVN7+bRJyJpPcrfrsAa4yMtiHUUiecPdL/6HYwGHxA5rUX3uD2UBm6sbGBH00ZCj6yUxl2UQR5NE4NR35NI86Q+q1kNOc5VctxxQOTHBwKHaGvKLk4c5gHXaEl8yyYL0wVkL00KYx3GCh1"
+  instance_type  = "c4.xlarge"
 
   #Networking
   subnet_ids = tolist(module.public_subnets.public_subnet_id)
+
+  #Keypair
+  public_key = "ssh-rsa ArJh5/gxz7sbSSseLd+ldHEOM3+lajUSGqWk3Bw/NgygEf1Kgw7gyK3jsTVVcokhK3TDuR3pi4u2QDR2tvLXddPKd37a2S7rjeqecw+XRW9559zKaR7RJJfjO1u1Onc2tgA3y0btdju2bcYBtFkRVOLwpog8CvslYEDV1Vf9HNeh9A3yOS6Pkjq6gDMrsUVF89ps3zuLmdVBIlCOnJDkwHK71lKihGKdkeXEtAj0aOQzAJsIpDFXz7vob9OiA/fb2T3t4R1EwEsPEnYVczKMsqUyqa+EE36bItcZHQyCPVN7+bRJyJpPcrfrsAa4yMtiHUUiecPdL/6HYwGHxxl2UQR5NE4NR35NI86Q+q1kNOc5VctxxQOTHBwKHaGvKLk4c5gHXaEl8yyYL0wVkL00KYx3GCh1LvRdQ"
 
   #IAM
   iam_instance_profile = module.iam-role.name
@@ -116,13 +116,11 @@ module "ec2" {
   ]
 
   #EBS Volume
-  ebs_volume_enabled = true
+  ebs_volume_enabled = false
   ebs_volume_type    = "gp2"
   ebs_volume_size    = 30
 
   #Tags
   instance_tags = { "snapshot" = true }
 
-  #Mount EBS With User Data
-  user_data = file("user-data.sh")
 }

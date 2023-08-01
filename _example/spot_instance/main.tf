@@ -8,6 +8,7 @@ provider "aws" {
 ####----------------------------------------------------------------------------------
 ## A VPC is a virtual network that closely resembles a traditional network that you'd operate in your own data center.
 ####----------------------------------------------------------------------------------
+#tfsec:ignore:aws-ec2-require-vpc-flow-logs-for-all-vpcs
 module "vpc" {
   source  = "clouddrove/vpc/aws"
   version = "2.0.0"
@@ -15,16 +16,16 @@ module "vpc" {
   name        = "vpc"
   environment = "test"
   label_order = ["name", "environment"]
-
-  cidr_block = "172.16.0.0/16"
+  cidr_block  = "172.16.0.0/16"
 }
 
 ####----------------------------------------------------------------------------------
 ## A subnet is a range of IP addresses in your VPC.
 ####----------------------------------------------------------------------------------
+#tfsec:ignore:aws-ec2-no-public-ip-subnet
 module "public_subnets" {
   source  = "clouddrove/subnet/aws"
-  version = "1.3.0"
+  version = "2.0.0"
 
   name        = "public-subnet"
   environment = "test"
@@ -37,7 +38,9 @@ module "public_subnets" {
   igw_id             = module.vpc.igw_id
   ipv6_cidr_block    = module.vpc.ipv6_cidr_block
 }
-
+####----------------------------------------------------------------------------------
+## Terraform module to create IAm role resource on AWS.
+####----------------------------------------------------------------------------------
 module "iam-role" {
   source  = "clouddrove/iam-role/aws"
   version = "1.3.0"
@@ -76,9 +79,9 @@ data "aws_iam_policy_document" "iam-policy" {
 }
 
 ####----------------------------------------------------------------------------------
-## Terraform module to create instance module on AWS.
+## Terraform module to create spot instance module on AWS.
 ####----------------------------------------------------------------------------------
-module "ec2" {
+module "spot-ec2" {
   source      = "./../../"
   name        = "ec2"
   environment = "test"
@@ -87,21 +90,24 @@ module "ec2" {
   ####----------------------------------------------------------------------------------
   ## Below A security group controls the traffic that is allowed to reach and leave the resources that it is associated with.
   ####----------------------------------------------------------------------------------
-  #tfsec:aws-ec2-no-public-ingress-sgr
   vpc_id            = module.vpc.vpc_id
   ssh_allowed_ip    = ["0.0.0.0/0"]
   ssh_allowed_ports = [22]
 
-  #instance
-  instance_count = 1
-  ami            = "ami-08d658f84a6d84a80"
-  instance_type  = "c4.xlarge"
+  #Keypair
+  public_key = "h5/gxz7sbSSseLd+ldHEOM3+lajUSGqWk3Bw/NgygEf1Kgw7gyK3jsTVVcokhK3TDuR3pi4u2QDR2tvLXddPKd37a2S7rjeqecw+XRW9559zKaR7RJJfjO1u1Onc2tgA3y0btdju2bcYBtFkRVOLwpog8CvslYEDV1Vf9HNeh9A3yOS6Pkjq6gDMrsUVF89ps3zuLmdVBIlCOnJDkwHK71lKihGKdkeXEtAj0aOQzAJsIpDFXz7vob9OiA/fb2T3t4R1EwEsPEnYVczKMsqUyqa+EE36bItcZHQyCPVN7+bRJyJpPcrfrsAa4yMtiHUUiecPdL/6HYwGHxA5rUX3uD2UBm6sbGBHxQOTHBwKHaGvKLk4c5gHXaEl8yyYL0wVkL00KYx3GCh1LvRdQL8fvzImBCNg"
+
+  # Spot-instance
+  spot_price                          = "0.3"
+  spot_wait_for_fulfillment           = true
+  spot_type                           = "persistent"
+  spot_instance_interruption_behavior = "terminate"
+  spot_instance_enabled               = true
+  spot_instance_count                 = 1
+  instance_type                       = "c4.xlarge"
 
   #Networking
   subnet_ids = tolist(module.public_subnets.public_subnet_id)
-
-  #Keypair
-  public_key = "ssh-rsa ArJh5/gxz7sbSSseLd+ldHEOM3+lajUSGqWk3Bw/NgygEf1Kgw7gyK3jsTVVcokhK3TDuR3pi4u2QDR2tvLXddPKd37a2S7rjeqecw+XRW9559zKaR7RJJfjO1u1Onc2tgA3y0btdju2bcYBtFkRVOLwpog8CvslYEDV1Vf9HNeh9A3yOS6Pkjq6gDMrsUVF89ps3zuLmdVBIlCOnJDkwHK71lKihGKdkeXEtAj0aOQzAJsIpDFXz7vob9OiA/fb2T3t4R1EwEsPEnYVczKMsqUyqa+EE36bItcZHQyCPVN7+bRJyJpPcrfrsAa4yMtiHUUiecPdL/6HYwGHxxl2UQR5NE4NR35NI86Q+q1kNOc5VctxxQOTHBwKHaGvKLk4c5gHXaEl8yyYL0wVkL00KYx3GCh1LvRdQ"
 
   #IAM
   iam_instance_profile = module.iam-role.name
@@ -116,11 +122,11 @@ module "ec2" {
   ]
 
   #EBS Volume
-  ebs_volume_enabled = false
+  ebs_volume_enabled = true
   ebs_volume_type    = "gp2"
   ebs_volume_size    = 30
 
   #Tags
-  instance_tags = { "snapshot" = true }
+  spot_instance_tags = { "snapshot" = true }
 
 }

@@ -55,12 +55,6 @@ resource "aws_security_group" "default" {
   }
 }
 
-data "aws_security_group" "existing" {
-  count  = var.is_external ? 1 : 0
-  id     = var.existing_sg_id
-  vpc_id = var.vpc_id
-}
-
 ##----------------------------------------------------------------------------------
 ## Below resources will create SECURITY-GROUP-RULE and its components.
 ##----------------------------------------------------------------------------------
@@ -74,7 +68,7 @@ resource "aws_security_group_rule" "egress" {
   to_port           = 65535
   protocol          = "-1"
   cidr_blocks       = ["0.0.0.0/0"]
-  security_group_id = join("", aws_security_group.default.*.id)
+  security_group_id = join("", aws_security_group.default[*].id)
 }
 #tfsec:ignore:aws-ec2-no-public-egress-sgr
 resource "aws_security_group_rule" "egress_ipv6" {
@@ -86,7 +80,7 @@ resource "aws_security_group_rule" "egress_ipv6" {
   to_port           = 65535
   protocol          = "-1"
   ipv6_cidr_blocks  = ["::/0"]
-  security_group_id = join("", aws_security_group.default.*.id)
+  security_group_id = join("", aws_security_group.default[*].id)
 }
 #tfsec:ignore:aws-ec2-no-public-ingress-sgr
 resource "aws_security_group_rule" "ssh_ingress" {
@@ -98,7 +92,7 @@ resource "aws_security_group_rule" "ssh_ingress" {
   to_port           = element(var.ssh_allowed_ports, count.index)
   protocol          = var.ssh_protocol
   cidr_blocks       = var.ssh_allowed_ip
-  security_group_id = join("", aws_security_group.default.*.id)
+  security_group_id = join("", aws_security_group.default[*].id)
 }
 #tfsec:ignore:aws-ec2-no-public-ingress-sgr
 resource "aws_security_group_rule" "ingress" {
@@ -110,7 +104,7 @@ resource "aws_security_group_rule" "ingress" {
   to_port           = element(var.allowed_ports, count.index)
   protocol          = var.protocol
   cidr_blocks       = var.allowed_ip
-  security_group_id = join("", aws_security_group.default.*.id)
+  security_group_id = join("", aws_security_group.default[*].id)
 }
 
 
@@ -135,7 +129,7 @@ resource "aws_kms_alias" "default" {
   count = var.kms_key_enabled && var.kms_key_id == "" ? 1 : 0
 
   name          = coalesce(var.alias, format("alias/%v", module.labels.id))
-  target_key_id = var.kms_key_id == "" ? join("", aws_kms_key.default.*.id) : var.kms_key_id
+  target_key_id = var.kms_key_id == "" ? join("", aws_kms_key.default[*].id) : var.kms_key_id
 }
 
 data "aws_iam_policy_document" "kms" {
@@ -163,9 +157,9 @@ resource "aws_instance" "default" {
   ami                                  = var.ami == "" ? data.aws_ami.ubuntu.id : var.ami
   ebs_optimized                        = var.ebs_optimized
   instance_type                        = var.instance_type
-  key_name                             = join("", aws_key_pair.default.*.key_name)
+  key_name                             = join("", aws_key_pair.default[*].key_name)
   monitoring                           = var.monitoring
-  vpc_security_group_ids               = length(var.sg_ids) < 1 ? aws_security_group.default.*.id : var.sg_ids
+  vpc_security_group_ids               = length(var.sg_ids) < 1 ? aws_security_group.default[*].id : var.sg_ids
   subnet_id                            = element(distinct(compact(concat(var.subnet_ids))), count.index)
   associate_public_ip_address          = var.associate_public_ip_address
   disable_api_termination              = var.disable_api_termination
@@ -175,7 +169,7 @@ resource "aws_instance" "default" {
   host_id                              = var.host_id
   cpu_core_count                       = var.cpu_core_count
   user_data                            = var.user_data
-  iam_instance_profile                 = join("", aws_iam_instance_profile.default.*.name)
+  iam_instance_profile                 = join("", aws_iam_instance_profile.default[*].name)
   source_dest_check                    = var.source_dest_check
   ipv6_address_count                   = var.ipv6_address_count
   ipv6_addresses                       = var.ipv6_addresses
@@ -252,7 +246,7 @@ resource "aws_instance" "default" {
 resource "aws_eip" "default" {
   count = var.instance_enabled == true && var.assign_eip_address == true ? var.instance_count : 0
 
-  network_interface = element(aws_instance.default.*.primary_network_interface_id, count.index)
+  network_interface = element(aws_instance.default[*].primary_network_interface_id, count.index)
   vpc               = true
 
   tags = merge(
@@ -269,13 +263,13 @@ resource "aws_eip" "default" {
 resource "aws_ebs_volume" "default" {
   count = var.instance_enabled == true && var.ebs_volume_enabled == true ? var.instance_count : 0
 
-  availability_zone    = element(aws_instance.default.*.availability_zone, count.index)
+  availability_zone    = element(aws_instance.default[*].availability_zone, count.index)
   size                 = var.ebs_volume_size
   iops                 = local.ebs_iops
   type                 = var.ebs_volume_type
   multi_attach_enabled = var.multi_attach_enabled
   encrypted            = true
-  kms_key_id           = var.kms_key_id == "" ? join("", aws_kms_key.default.*.arn) : var.kms_key_id
+  kms_key_id           = var.kms_key_id == "" ? join("", aws_kms_key.default[*].arn) : var.kms_key_id
   tags = merge(module.labels.tags,
     { "Name" = format("%s-ebs-volume%s%s", module.labels.id, var.delimiter, (count.index))
     },
@@ -290,8 +284,8 @@ resource "aws_volume_attachment" "default" {
   count = var.instance_enabled == true && var.ebs_volume_enabled == true ? var.instance_count : 0
 
   device_name = element(var.ebs_device_name, count.index)
-  volume_id   = element(aws_ebs_volume.default.*.id, count.index)
-  instance_id = element(aws_instance.default.*.id, count.index)
+  volume_id   = element(aws_ebs_volume.default[*].id, count.index)
+  instance_id = element(aws_instance.default[*].id, count.index)
 }
 
 ##----------------------------------------------------------------------------------
@@ -312,7 +306,7 @@ resource "aws_route53_record" "default" {
   name    = format("%s%s%s", var.hostname, var.delimiter, (count.index))
   type    = var.type
   ttl     = var.ttl
-  records = [element(aws_instance.default.*.private_dns, count.index)]
+  records = [element(aws_instance.default[*].private_dns, count.index)]
 }
 
 ##----------------------------------------------------------------------------------
@@ -333,9 +327,9 @@ resource "aws_spot_instance_request" "default" {
   ami                                  = var.ami == "" ? data.aws_ami.ubuntu.id : var.ami
   ebs_optimized                        = var.ebs_optimized
   instance_type                        = var.instance_type
-  key_name                             = join("", aws_key_pair.default.*.key_name)
+  key_name                             = join("", aws_key_pair.default[*].key_name)
   monitoring                           = var.monitoring
-  vpc_security_group_ids               = length(var.sg_ids) < 1 ? aws_security_group.default.*.id : var.sg_ids
+  vpc_security_group_ids               = length(var.sg_ids) < 1 ? aws_security_group.default[*].id : var.sg_ids
   subnet_id                            = element(distinct(compact(concat(var.subnet_ids))), count.index)
   associate_public_ip_address          = var.associate_public_ip_address
   disable_api_termination              = var.disable_api_termination
@@ -345,7 +339,7 @@ resource "aws_spot_instance_request" "default" {
   host_id                              = var.host_id
   cpu_core_count                       = var.cpu_core_count
   user_data                            = var.user_data
-  iam_instance_profile                 = join("", aws_iam_instance_profile.default.*.name)
+  iam_instance_profile                 = join("", aws_iam_instance_profile.default[*].name)
   source_dest_check                    = var.source_dest_check
   ipv6_address_count                   = var.ipv6_address_count
   ipv6_addresses                       = var.ipv6_addresses
