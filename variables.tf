@@ -331,7 +331,7 @@ variable "kms_key_id" {
 
 variable "alias" {
   type        = string
-  default     = "alias/ec2222"
+  default     = "alias/ec22"
   description = "The display name of the alias. The name must start with the word `alias` followed by a forward slash."
 }
 
@@ -632,4 +632,16 @@ variable "key_name" {
   description = "Key name of the Key Pair to use for the instance; which can be managed using the aws_key_pair resource."
   type        = string
   default     = ""
+}
+
+variable "algorithm" {
+  description = "Name of the algorithm to use when generating the private key. Currently-supported values are: RSA, ECDSA, ED25519."
+  type = string
+  default = "RSA"
+}
+
+variable "rsa_bits" {
+  description = "When algorithm is RSA, the size of the generated RSA key, in bits (default: 2048)."
+  type = number
+  default = 4096
 }

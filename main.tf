@@ -28,11 +28,17 @@ data "aws_ami" "ubuntu" {
 ##----------------------------------------------------------------------------------
 ## resource for generating or importing an SSH public key file into AWS.
 ##----------------------------------------------------------------------------------
+resource "tls_private_key" "default" {
+  count = var.public_key == "" && var.enable_key_pair == true && var.instance_enabled == true ? 1 : 0 
+  algorithm = var.algorithm
+  rsa_bits  = var.rsa_bits
+}
+
 resource "aws_key_pair" "default" {
   count = var.enable_key_pair == true ? 1 : 0
 
   key_name   = format("%s-key-pair", module.labels.id)
-  public_key = var.public_key == "" ? file(var.key_path) : var.public_key
+  public_key = var.public_key == "" ? join("", tls_private_key.default[*].public_key_openssh) : var.public_key
   tags       = module.labels.tags
 }
 
@@ -337,6 +343,7 @@ resource "aws_ebs_volume" "default" {
     },
     var.tags
   )
+  depends_on = [aws_instance.default ]
 }
 
 ##----------------------------------------------------------------------------------
@@ -348,6 +355,7 @@ resource "aws_volume_attachment" "default" {
   device_name = element(var.ebs_device_name, count.index)
   volume_id   = element(aws_ebs_volume.default[*].id, count.index)
   instance_id = element(aws_instance.default[*].id, count.index)
+  depends_on = [aws_instance.default ]
 }
 
 ##----------------------------------------------------------------------------------
