@@ -9,7 +9,7 @@ module "spot-ec2" {
   ####----------------------------------------------------------------------------------
   ## Below A security group controls the traffic that is allowed to reach and leave the resources that it is associated with.
   ####----------------------------------------------------------------------------------
-  vpc_id            = var.vpc_id
+  vpc_id            = "vpc-xxxxxxxx"
   ssh_allowed_ip    = ["0.0.0.0/0"]
   ssh_allowed_ports = [22]
 
@@ -26,10 +26,10 @@ module "spot-ec2" {
   instance_type                       = "c4.xlarge"
 
   #Networking
-  subnet_ids = var.subnet_ids
+  subnet_ids = "subnet-xxxxxxxx"
 
   #IAM
-  iam_instance_profile = var.iam_instance_profile
+  iam_instance_profile = "iam-profile-xxxxxxxxx"
 
   #Root Volume
   root_block_device = [
