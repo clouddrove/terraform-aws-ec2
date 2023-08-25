@@ -26,7 +26,7 @@ module "spot-ec2" {
   instance_type                       = "c4.xlarge"
 
   #Networking
-  subnet_ids = "subnet-xxxxxxxx"
+  subnet_ids = ["subnet-xxxxxxxx"]
 
   #IAM
   iam_instance_profile = "iam-profile-xxxxxxxxx"
