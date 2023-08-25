@@ -2,8 +2,8 @@
 ## Labels module callled that will be used for naming and tags.
 ##----------------------------------------------------------------------------------
 module "labels" {
-  source  = "clouddrove/labels/aws"
-  version = "1.3.0"
+  source = "clouddrove/labels/aws"
+  # version = "1.3.0"
 
   name        = var.name
   repository  = var.repository
@@ -13,18 +13,15 @@ module "labels" {
 }
 
 locals {
-  ebs_iops = var.ebs_volume_type == "io1" ? var.ebs_iops : 0
+  ebs_iops = var.ebs_volume_type == "io1" || var.ebs_volume_type == "io2" || var.ebs_volume_type == "gp3" ? var.ebs_iops : 0
 }
 
 data "aws_ami" "ubuntu" {
   most_recent = "true"
-
   filter {
     name   = "name"
     values = ["ubuntu/images/hvm-ssd/ubuntu-focal-20.04-amd64-server-*"]
   }
-
-
   owners = ["099720109477"]
 }
 
@@ -107,7 +104,6 @@ resource "aws_security_group_rule" "ingress" {
   security_group_id = join("", aws_security_group.default[*].id)
 }
 
-
 ##----------------------------------------------------------------------------------
 ## Below resources will create KMS-KEY and its components.
 ##----------------------------------------------------------------------------------
@@ -157,7 +153,7 @@ resource "aws_instance" "default" {
   ami                                  = var.ami == "" ? data.aws_ami.ubuntu.id : var.ami
   ebs_optimized                        = var.ebs_optimized
   instance_type                        = var.instance_type
-  key_name                             = join("", aws_key_pair.default[*].key_name)
+  key_name                             = var.key_name == "" ? join("", aws_key_pair.default[*].key_name) : var.key_name
   monitoring                           = var.monitoring
   vpc_security_group_ids               = length(var.sg_ids) < 1 ? aws_security_group.default[*].id : var.sg_ids
   subnet_id                            = element(distinct(compact(concat(var.subnet_ids))), count.index)
@@ -168,12 +164,41 @@ resource "aws_instance" "default" {
   tenancy                              = var.tenancy
   host_id                              = var.host_id
   cpu_core_count                       = var.cpu_core_count
+  cpu_threads_per_core                 = var.cpu_threads_per_core
   user_data                            = var.user_data
+  user_data_base64                     = var.user_data_base64
+  user_data_replace_on_change          = var.user_data_replace_on_change
+  availability_zone                    = var.availability_zone
+  get_password_data                    = var.get_password_data
+  private_ip                           = var.private_ip
+  secondary_private_ips                = var.secondary_private_ips
   iam_instance_profile                 = join("", aws_iam_instance_profile.default[*].name)
   source_dest_check                    = var.source_dest_check
   ipv6_address_count                   = var.ipv6_address_count
   ipv6_addresses                       = var.ipv6_addresses
   hibernation                          = var.hibernation
+  dynamic "cpu_options" {
+    for_each = length(var.cpu_options) > 0 ? [var.cpu_options] : []
+    content {
+      core_count       = lookup(cpu_options, "core_count", null)
+      threads_per_core = lookup(cpu_options, "threads_per_core", null)
+      amd_sev_snp      = lookup(cpu_options, "amd_sev_snp", null)
+    }
+  }
+
+  dynamic "capacity_reservation_specification" {
+    for_each = length(var.capacity_reservation_specification) > 0 ? [var.capacity_reservation_specification] : []
+    content {
+      capacity_reservation_preference = lookup(capacity_reservation_specification, "capacity_reservation_preference", null)
+      dynamic "capacity_reservation_target" {
+        for_each = lookup(capacity_reservation_specification, "capacity_reservation_target", [])
+        content {
+          capacity_reservation_id                 = try(capacity_reservation_target, "capacity_reservation_id", null)
+          capacity_reservation_resource_group_arn = try(capacity_reservation_target, "capacity_reservation_resource_group_arn", null)
+        }
+      }
+    }
+  }
 
   dynamic "root_block_device" {
     for_each = var.root_block_device
@@ -181,7 +206,7 @@ resource "aws_instance" "default" {
       delete_on_termination = lookup(root_block_device.value, "delete_on_termination", null)
       encrypted             = true
       iops                  = lookup(root_block_device.value, "iops", null)
-      kms_key_id            = lookup(root_block_device.value, "kms_key_id", null)
+      kms_key_id            = var.kms_key_id == "" ? join("", aws_kms_key.default[*].arn) : lookup(root_block_device.value, "kms_key_id", null)
       volume_size           = lookup(root_block_device.value, "volume_size", null)
       volume_type           = lookup(root_block_device.value, "volume_type", null)
       tags = merge(module.labels.tags,
@@ -189,6 +214,27 @@ resource "aws_instance" "default" {
           "Name" = format("%s-root-volume%s%s", module.labels.id, var.delimiter, (count.index))
         },
         var.tags
+      )
+    }
+  }
+
+  dynamic "ebs_block_device" {
+    for_each = var.ebs_block_device
+    content {
+      delete_on_termination = lookup(ebs_block_device.value, "delete_on_termination", null)
+      device_name           = ebs_block_device.value.device_name
+      encrypted             = lookup(ebs_block_device.value, "encrypted", null)
+      iops                  = lookup(ebs_block_device.value, "iops", null)
+      kms_key_id            = var.kms_key_id == "" ? join("", aws_kms_key.default[*].arn) : lookup(root_block_device.value, "kms_key_id", null)
+      snapshot_id           = lookup(ebs_block_device.value, "snapshot_id", null)
+      volume_size           = lookup(ebs_block_device.value, "volume_size", null)
+      volume_type           = lookup(ebs_block_device.value, "volume_type", null)
+      throughput            = lookup(ebs_block_device.value, "throughput", null)
+      tags = merge(module.labels.tags,
+        {
+          "Name" = format("%s%s%s", module.labels.id, var.delimiter, (count.index))
+        }, { "device_name" = ebs_block_device.value.device_name },
+        var.instance_tags
       )
     }
   }
@@ -204,6 +250,7 @@ resource "aws_instance" "default" {
 
   metadata_options {
     http_endpoint               = var.metadata_http_endpoint_enabled
+    instance_metadata_tags      = var.instance_metadata_tags_enabled
     http_put_response_hop_limit = var.metadata_http_put_response_hop_limit
     http_tokens                 = var.metadata_http_tokens_required
   }
@@ -221,10 +268,27 @@ resource "aws_instance" "default" {
     }
   }
 
+  dynamic "launch_template" {
+    for_each = length(var.launch_template) > 0 ? [var.launch_template] : []
+    content {
+      id      = lookup(var.launch_template, "id", null)
+      name    = lookup(var.launch_template, "name", null)
+      version = lookup(var.launch_template, "version", null)
+    }
+  }
+
+  timeouts {
+    create = lookup(var.timeouts, "create", null)
+    delete = lookup(var.timeouts, "delete", null)
+  }
+
+  enclave_options {
+    enabled = var.enclave_options_enabled
+  }
+
   tags = merge(
     module.labels.tags,
     {
-
       "Name" = format("%s%s%s", module.labels.id, var.delimiter, (count.index))
     },
     var.instance_tags
@@ -247,8 +311,6 @@ resource "aws_eip" "default" {
   count = var.instance_enabled == true && var.assign_eip_address == true ? var.instance_count : 0
 
   network_interface = element(aws_instance.default[*].primary_network_interface_id, count.index)
-  vpc               = true
-
   tags = merge(
     module.labels.tags,
     {
@@ -327,7 +389,7 @@ resource "aws_spot_instance_request" "default" {
   ami                                  = var.ami == "" ? data.aws_ami.ubuntu.id : var.ami
   ebs_optimized                        = var.ebs_optimized
   instance_type                        = var.instance_type
-  key_name                             = join("", aws_key_pair.default[*].key_name)
+  key_name                             = var.key_name == "" ? join("", aws_key_pair.default[*].key_name) : var.key_name
   monitoring                           = var.monitoring
   vpc_security_group_ids               = length(var.sg_ids) < 1 ? aws_security_group.default[*].id : var.sg_ids
   subnet_id                            = element(distinct(compact(concat(var.subnet_ids))), count.index)
@@ -338,12 +400,42 @@ resource "aws_spot_instance_request" "default" {
   tenancy                              = var.tenancy
   host_id                              = var.host_id
   cpu_core_count                       = var.cpu_core_count
+  cpu_threads_per_core                 = var.cpu_threads_per_core
   user_data                            = var.user_data
+  user_data_base64                     = var.user_data_base64
+  user_data_replace_on_change          = var.user_data_replace_on_change
+  availability_zone                    = var.availability_zone
+  get_password_data                    = var.get_password_data
+  private_ip                           = var.private_ip
+  secondary_private_ips                = var.secondary_private_ips
   iam_instance_profile                 = join("", aws_iam_instance_profile.default[*].name)
   source_dest_check                    = var.source_dest_check
   ipv6_address_count                   = var.ipv6_address_count
   ipv6_addresses                       = var.ipv6_addresses
   hibernation                          = var.hibernation
+
+  dynamic "cpu_options" {
+    for_each = length(var.cpu_options) > 0 ? [var.cpu_options] : []
+    content {
+      core_count       = lookup(cpu_options, "core_count", null)
+      threads_per_core = lookup(cpu_options, "threads_per_core", null)
+      amd_sev_snp      = lookup(cpu_options, "amd_sev_snp", null)
+    }
+  }
+
+  dynamic "capacity_reservation_specification" {
+    for_each = length(var.capacity_reservation_specification) > 0 ? [var.capacity_reservation_specification] : []
+    content {
+      capacity_reservation_preference = lookup(capacity_reservation_specification, "capacity_reservation_preference", null)
+      dynamic "capacity_reservation_target" {
+        for_each = lookup(capacity_reservation_specification, "capacity_reservation_target", [])
+        content {
+          capacity_reservation_id                 = try(capacity_reservation_target, "capacity_reservation_id", null)
+          capacity_reservation_resource_group_arn = try(capacity_reservation_target, "capacity_reservation_resource_group_arn", null)
+        }
+      }
+    }
+  }
 
   dynamic "root_block_device" {
     for_each = var.root_block_device
@@ -351,7 +443,7 @@ resource "aws_spot_instance_request" "default" {
       delete_on_termination = lookup(root_block_device.value, "delete_on_termination", null)
       encrypted             = true
       iops                  = lookup(root_block_device.value, "iops", null)
-      kms_key_id            = lookup(root_block_device.value, "kms_key_id", null)
+      kms_key_id            = var.kms_key_id == "" ? join("", aws_kms_key.default[*].arn) : lookup(root_block_device.value, "kms_key_id", null)
       volume_size           = lookup(root_block_device.value, "volume_size", null)
       volume_type           = lookup(root_block_device.value, "volume_type", null)
       tags = merge(module.labels.tags,
@@ -359,6 +451,27 @@ resource "aws_spot_instance_request" "default" {
           "Name" = format("%s-root-volume%s%s", module.labels.id, var.delimiter, (count.index))
         },
         var.tags
+      )
+    }
+  }
+
+  dynamic "ebs_block_device" {
+    for_each = var.ebs_block_device
+    content {
+      delete_on_termination = lookup(ebs_block_device.value, "delete_on_termination", null)
+      device_name           = ebs_block_device.value.device_name
+      encrypted             = lookup(ebs_block_device.value, "encrypted", null)
+      iops                  = lookup(ebs_block_device.value, "iops", null)
+      kms_key_id            = var.kms_key_id == "" ? join("", aws_kms_key.default[*].arn) : lookup(root_block_device.value, "kms_key_id", null)
+      snapshot_id           = lookup(ebs_block_device.value, "snapshot_id", null)
+      volume_size           = lookup(ebs_block_device.value, "volume_size", null)
+      volume_type           = lookup(ebs_block_device.value, "volume_type", null)
+      throughput            = lookup(ebs_block_device.value, "throughput", null)
+      tags = merge(module.labels.tags,
+        {
+          "Name" = format("%s%s%s", module.labels.id, var.delimiter, (count.index))
+        }, { "device_name" = ebs_block_device.value.device_name },
+        var.instance_tags
       )
     }
   }
@@ -374,6 +487,7 @@ resource "aws_spot_instance_request" "default" {
 
   metadata_options {
     http_endpoint               = var.metadata_http_endpoint_enabled
+    instance_metadata_tags      = var.instance_metadata_tags_enabled
     http_put_response_hop_limit = var.metadata_http_put_response_hop_limit
     http_tokens                 = var.metadata_http_tokens_required
   }
@@ -389,6 +503,24 @@ resource "aws_spot_instance_request" "default" {
       network_interface_id  = lookup(network_interface.value, "network_interface_id", null)
       delete_on_termination = lookup(network_interface.value, "delete_on_termination", false)
     }
+  }
+
+  dynamic "launch_template" {
+    for_each = length(var.launch_template) > 0 ? [var.launch_template] : []
+    content {
+      id      = lookup(var.launch_template, "id", null)
+      name    = lookup(var.launch_template, "name", null)
+      version = lookup(var.launch_template, "version", null)
+    }
+  }
+
+  enclave_options {
+    enabled = var.enclave_options_enabled
+  }
+
+  timeouts {
+    create = try(var.timeouts.create, null)
+    delete = try(var.timeouts.delete, null)
   }
 
   tags = merge(

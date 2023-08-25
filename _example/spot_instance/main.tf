@@ -1,91 +1,10 @@
 ####----------------------------------------------------------------------------------
-## Provider block added, Use the Amazon Web Services (AWS) provider to interact with the many resources supported by AWS.
-####----------------------------------------------------------------------------------
-provider "aws" {
-  region = "eu-west-1"
-}
-
-####----------------------------------------------------------------------------------
-## A VPC is a virtual network that closely resembles a traditional network that you'd operate in your own data center.
-####----------------------------------------------------------------------------------
-#tfsec:ignore:aws-ec2-require-vpc-flow-logs-for-all-vpcs
-module "vpc" {
-  source  = "clouddrove/vpc/aws"
-  version = "2.0.0"
-
-  name        = "vpc"
-  environment = "test"
-  label_order = ["name", "environment"]
-  cidr_block  = "172.16.0.0/16"
-}
-
-####----------------------------------------------------------------------------------
-## A subnet is a range of IP addresses in your VPC.
-####----------------------------------------------------------------------------------
-#tfsec:ignore:aws-ec2-no-public-ip-subnet
-module "public_subnets" {
-  source  = "clouddrove/subnet/aws"
-  version = "2.0.0"
-
-  name        = "public-subnet"
-  environment = "test"
-  label_order = ["name", "environment"]
-
-  availability_zones = ["eu-west-1b", "eu-west-1c"]
-  vpc_id             = module.vpc.vpc_id
-  cidr_block         = module.vpc.vpc_cidr_block
-  type               = "public"
-  igw_id             = module.vpc.igw_id
-  ipv6_cidr_block    = module.vpc.ipv6_cidr_block
-}
-####----------------------------------------------------------------------------------
-## Terraform module to create IAm role resource on AWS.
-####----------------------------------------------------------------------------------
-module "iam-role" {
-  source  = "clouddrove/iam-role/aws"
-  version = "1.3.0"
-
-  name               = "iam-role"
-  environment        = "test"
-  label_order        = ["name", "environment"]
-  assume_role_policy = data.aws_iam_policy_document.default.json
-
-  policy_enabled = true
-  policy         = data.aws_iam_policy_document.iam-policy.json
-}
-
-data "aws_iam_policy_document" "default" {
-  statement {
-    effect  = "Allow"
-    actions = ["sts:AssumeRole"]
-    principals {
-      type        = "Service"
-      identifiers = ["ec2.amazonaws.com"]
-    }
-  }
-}
-
-data "aws_iam_policy_document" "iam-policy" {
-  statement {
-    actions = [
-      "ssm:UpdateInstanceInformation",
-      "ssmmessages:CreateControlChannel",
-      "ssmmessages:CreateDataChannel",
-      "ssmmessages:OpenControlChannel",
-    "ssmmessages:OpenDataChannel"]
-    effect    = "Allow"
-    resources = ["*"]
-  }
-}
-
-####----------------------------------------------------------------------------------
 ## Terraform module to create spot instance module on AWS.
 ####----------------------------------------------------------------------------------
 module "spot-ec2" {
   source      = "./../../"
   name        = "ec2"
   environment = "test"
-  label_order = ["name", "environment"]
 
   ####----------------------------------------------------------------------------------
   ## Below A security group controls the traffic that is allowed to reach and leave the resources that it is associated with.
@@ -95,7 +14,7 @@ module "spot-ec2" {
   ssh_allowed_ports = [22]
 
   #Keypair
-  public_key = "h5/gxz7sbSSseLd+ldHEOM3+lajUSGqWk3Bw/NgygEf1Kgw7gyK3jsTVVcokhK3TDuR3pi4u2QDR2tvLXddPKd37a2S7rjeqecw+XRW9559zKaR7RJJfjO1u1Onc2tgA3y0btdju2bcYBtFkRVOLwpog8CvslYEDV1Vf9HNeh9A3yOS6Pkjq6gDMrsUVF89ps3zuLmdVBIlCOnJDkwHK71lKihGKdkeXEtAj0aOQzAJsIpDFXz7vob9OiA/fb2T3t4R1EwEsPEnYVczKMsqUyqa+EE36bItcZHQyCPVN7+bRJyJpPcrfrsAa4yMtiHUUiecPdL/6HYwGHxA5rUX3uD2UBm6sbGBHxQOTHBwKHaGvKLk4c5gHXaEl8yyYL0wVkL00KYx3GCh1LvRdQL8fvzImBCNg"
+  public_key = "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQCm63Yf1+E6Fkts7LcAdOalvdUrZE0oA1A6pJUkx9c/V8ZFuclg7uNdnXV98iHWlA6tcvV69HsdBJZU3w66+6rxGgM0dbwSalRz60IGM40HwRTYZNn0e/1xwL3O0tvsIiSdapLDjPXIm4zZGQL7KXT98f6LJzDfDBF67ZEAVoeOxIl/a1k+DOTRuFtg7dtvPhJQpDCh685EtiC/+HH4vpHcw3LcNfP2WaifQpCG4Pxgj6KWf1bGVJhhpN26lbJYfN4n+GZJYDKDS+Tc4eF4aC1s1JnOtKC2z1bb+FI7Y4ZdYfIsdf0P1Fo751JLp7fjTqckBgxYd+iXAhKO6dPjbVp3L56pxTJbbSgi5Cw29+Ef8AcK9WOGCgbnma7XmCpFF0NxSSLim74p2y+oyjt1UmX9UvOKnb1MXlGW4JYo4qQV4M5TL64JcYa5sSRDvMhtpC83YVpKyRb3bTNZySsgkDuxFCNsJ0c9UAWTbqzSmhpPsM9ItfBSxhq0oiogGpvNgXM="
 
   # Spot-instance
   spot_price                          = "0.3"
