@@ -26,7 +26,7 @@ variable "environment" {
 
 variable "label_order" {
   type        = list(any)
-  default     = []
+  default     = ["name", "environment"]
   description = "Label order, e.g. `name`,`application`."
 }
 
@@ -50,6 +50,12 @@ variable "managedby" {
 
 # Module      : EC2 Module
 # Description : Terraform EC2 module variables.
+variable "enable" {
+  type        = bool
+  default     = true
+  description = "Flag to control module creation."
+}
+
 variable "ami" {
   type        = string
   default     = ""
@@ -121,6 +127,12 @@ variable "user_data" {
   description = "(Optional) A string of the desired User Data for the ec2."
 }
 
+variable "user_data_base64" {
+  description = "Can be used instead of user_data to pass base64-encoded binary data directly. Use this instead of user_data whenever the value is not a valid UTF-8 string. For example, gzip-encoded user data must be base64-encoded and passed via this argument to avoid corruption"
+  type        = string
+  default     = null
+}
+
 variable "assign_eip_address" {
   type        = bool
   default     = true
@@ -152,7 +164,7 @@ variable "ebs_volume_type" {
   description = "The type of EBS volume. Can be standard, gp2 or io1."
 }
 
-variable "instance_enabled" {
+variable "default_instance_enabled" {
   type        = bool
   default     = true
   description = "Flag to control the instance creation."
@@ -293,6 +305,12 @@ variable "metadata_http_put_response_hop_limit" {
   description = "The desired HTTP PUT response hop limit (between 1 and 64) for instance metadata requests."
 }
 
+variable "instance_metadata_tags_enabled" {
+  type        = string
+  default     = "disabled"
+  description = "Whether the metadata tag is available. Valid values include enabled or disabled. Defaults to enabled."
+}
+
 variable "hibernation" {
   type        = bool
   default     = false
@@ -319,7 +337,7 @@ variable "kms_key_id" {
 
 variable "alias" {
   type        = string
-  default     = "alias/ec2222"
+  default     = "alias/ec2-test"
   description = "The display name of the alias. The name must start with the word `alias` followed by a forward slash."
 }
 
@@ -543,3 +561,142 @@ variable "spot_valid_from" {
   default     = null
   description = "The start date and time of the request, in UTC RFC3339 format(for example, YYYY-MM-DDTHH:MM:SSZ)"
 }
+
+variable "cpu_threads_per_core" {
+  description = "Sets the number of CPU threads per core for an instance (has no effect unless cpu_core_count is also set)"
+  type        = number
+  default     = null
+}
+
+variable "user_data_replace_on_change" {
+  description = "When used in combination with user_data or user_data_base64 will trigger a destroy and recreate when set to true. Defaults to false if not set"
+  type        = bool
+  default     = null
+}
+
+variable "availability_zone" {
+  description = "AZ to start the instance in"
+  type        = string
+  default     = null
+}
+
+variable "get_password_data" {
+  description = "If true, wait for password data to become available and retrieve it"
+  type        = bool
+  default     = null
+}
+
+variable "private_ip" {
+  description = "Private IP address to associate with the instance in a VPC"
+  type        = string
+  default     = null
+}
+
+variable "secondary_private_ips" {
+  description = "A list of secondary private IPv4 addresses to assign to the instance's primary network interface (eth0) in a VPC. Can only be assigned to the primary network interface (eth0) attached at instance creation, not a pre-existing network interface i.e. referenced in a `network_interface block`"
+  type        = list(string)
+  default     = null
+}
+
+variable "cpu_options" {
+  description = "Defines CPU options to apply to the instance at launch time."
+  type        = any
+  default     = {}
+}
+
+variable "capacity_reservation_specification" {
+  description = "Describes an instance's Capacity Reservation targeting option"
+  type        = any
+  default     = {}
+}
+
+variable "launch_template" {
+  description = "Specifies a Launch Template to configure the instance. Parameters configured on this resource will override the corresponding parameters in the Launch Template"
+  type        = map(string)
+  default     = {}
+}
+
+variable "enclave_options_enabled" {
+  description = "Whether Nitro Enclaves will be enabled on the instance. Defaults to `false`"
+  type        = bool
+  default     = null
+}
+
+variable "timeouts" {
+  description = "Define maximum timeout for creating, updating, and deleting EC2 instance resources"
+  type        = map(string)
+  default     = {}
+}
+
+variable "ebs_block_device" {
+  description = "Additional EBS block devices to attach to the instance"
+  type        = list(any)
+  default     = []
+}
+
+variable "key_name" {
+  description = "Key name of the Key Pair to use for the instance; which can be managed using the aws_key_pair resource."
+  type        = string
+  default     = ""
+}
+
+variable "algorithm" {
+  description = "Name of the algorithm to use when generating the private key. Currently-supported values are: RSA, ECDSA, ED25519."
+  type        = string
+  default     = "RSA"
+}
+
+variable "rsa_bits" {
+  description = "When algorithm is RSA, the size of the generated RSA key, in bits (default: 2048)."
+  type        = number
+  default     = 4096
+}
+
+variable "egress_ipv4_from_port" {
+  description = "Egress Start port (or ICMP type number if protocol is icmp or icmpv6)."
+  type        = number
+  default     = 0
+}
+
+variable "egress_ipv4_to_port" {
+  description = "Egress end port (or ICMP code if protocol is icmp)."
+  type        = number
+  default     = 65535
+}
+
+variable "egress_ipv4_protocol" {
+  description = "Protocol. If not icmp, icmpv6, tcp, udp, or all use the protocol number"
+  type        = string
+  default     = "-1"
+}
+
+variable "egress_ipv4_cidr_block" {
+  description = " List of CIDR blocks. Cannot be specified with source_security_group_id or self."
+  type        = list(string)
+  default     = ["0.0.0.0/0"]
+}
+
+variable "egress_ipv6_from_port" {
+  description = "Egress Start port (or ICMP type number if protocol is icmp or icmpv6)."
+  type        = number
+  default     = 0
+}
+
+variable "egress_ipv6_to_port" {
+  description = "Egress end port (or ICMP code if protocol is icmp)."
+  type        = number
+  default     = 65535
+}
+
+variable "egress_ipv6_protocol" {
+  description = "Protocol. If not icmp, icmpv6, tcp, udp, or all use the protocol number"
+  type        = string
+  default     = "-1"
+}
+
+variable "egress_ipv6_cidr_block" {
+  description = " List of CIDR blocks. Cannot be specified with source_security_group_id or self."
+  type        = list(string)
+  default     = ["::/0"]
+}
+

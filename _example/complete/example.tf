@@ -5,31 +5,32 @@ provider "aws" {
   region = "eu-west-1"
 }
 
+locals {
+  environment = "test-app"
+  label_order = ["name", "environment"]
+}
+
 ####----------------------------------------------------------------------------------
 ## A VPC is a virtual network that closely resembles a traditional network that you'd operate in your own data center.
 ####----------------------------------------------------------------------------------
 module "vpc" {
-  source  = "clouddrove/vpc/aws"
-  version = "2.0.0"
-
+  source      = "clouddrove/vpc/aws"
+  version     = "2.0.0"
   name        = "vpc"
-  environment = "test"
-  label_order = ["name", "environment"]
-
-  cidr_block = "172.16.0.0/16"
+  environment = local.environment
+  label_order = local.label_order
+  cidr_block  = "172.16.0.0/16"
 }
 
 ####----------------------------------------------------------------------------------
 ## A subnet is a range of IP addresses in your VPC.
 ####----------------------------------------------------------------------------------
 module "public_subnets" {
-  source  = "clouddrove/subnet/aws"
-  version = "2.0.0"
-
-  name        = "public-subnet"
-  environment = "test"
-  label_order = ["name", "environment"]
-
+  source             = "clouddrove/subnet/aws"
+  version            = "2.0.0"
+  name               = "public-subnet"
+  environment        = local.environment
+  label_order        = local.label_order
   availability_zones = ["eu-west-1b", "eu-west-1c"]
   vpc_id             = module.vpc.vpc_id
   cidr_block         = module.vpc.vpc_cidr_block
@@ -39,16 +40,14 @@ module "public_subnets" {
 }
 
 module "iam-role" {
-  source  = "clouddrove/iam-role/aws"
-  version = "1.3.0"
-
+  source             = "clouddrove/iam-role/aws"
+  version            = "1.3.0"
   name               = "iam-role"
-  environment        = "test"
-  label_order        = ["name", "environment"]
+  environment        = local.environment
+  label_order        = local.label_order
   assume_role_policy = data.aws_iam_policy_document.default.json
-
-  policy_enabled = true
-  policy         = data.aws_iam_policy_document.iam-policy.json
+  policy_enabled     = true
+  policy             = data.aws_iam_policy_document.iam-policy.json
 }
 
 data "aws_iam_policy_document" "default" {
@@ -75,33 +74,31 @@ data "aws_iam_policy_document" "iam-policy" {
   }
 }
 
-####----------------------------------------------------------------------------------
-## Terraform module to create instance module on AWS.
-####----------------------------------------------------------------------------------
+##----------------------------------------------------------------------------------
+## Terraform module to create ec2 instance module on AWS.
+##----------------------------------------------------------------------------------
 module "ec2" {
   source      = "./../../"
   name        = "ec2"
-  environment = "test"
-  label_order = ["name", "environment"]
+  environment = local.environment
 
-  ####----------------------------------------------------------------------------------
+  ##----------------------------------------------------------------------------------
   ## Below A security group controls the traffic that is allowed to reach and leave the resources that it is associated with.
-  ####----------------------------------------------------------------------------------
+  ##----------------------------------------------------------------------------------
   #tfsec:aws-ec2-no-public-ingress-sgr
   vpc_id            = module.vpc.vpc_id
   ssh_allowed_ip    = ["0.0.0.0/0"]
   ssh_allowed_ports = [22]
-
-  #instance
+  #Instance
   instance_count = 1
   ami            = "ami-08d658f84a6d84a80"
-  instance_type  = "c4.xlarge"
+  instance_type  = "t2.nano"
+
+  #Keypair
+  public_key = ""
 
   #Networking
   subnet_ids = tolist(module.public_subnets.public_subnet_id)
-
-  #Keypair
-  public_key = "ssh-rsa ArJh5/gxz7sbSSseLd+ldHEOM3+lajUSGqWk3Bw/NgygEf1Kgw7gyK3jsTVVcokhK3TDuR3pi4u2QDR2tvLXddPKd37a2S7rjeqecw+XRW9559zKaR7RJJfjO1u1Onc2tgA3y0btdju2bcYBtFkRVOLwpog8CvslYEDV1Vf9HNeh9A3yOS6Pkjq6gDMrsUVF89ps3zuLmdVBIlCOnJDkwHK71lKihGKdkeXEtAj0aOQzAJsIpDFXz7vob9OiA/fb2T3t4R1EwEsPEnYVczKMsqUyqa+EE36bItcZHQyCPVN7+bRJyJpPcrfrsAa4yMtiHUUiecPdL/6HYwGHxxl2UQR5NE4NR35NI86Q+q1kNOc5VctxxQOTHBwKHaGvKLk4c5gHXaEl8yyYL0wVkL00KYx3GCh1LvRdQ"
 
   #IAM
   iam_instance_profile = module.iam-role.name
@@ -116,11 +113,13 @@ module "ec2" {
   ]
 
   #EBS Volume
-  ebs_volume_enabled = false
+  ebs_volume_enabled = true
   ebs_volume_type    = "gp2"
   ebs_volume_size    = 30
 
   #Tags
   instance_tags = { "snapshot" = true }
 
+  #Mount EBS With User Data
+  user_data = file("user-data.sh")
 }

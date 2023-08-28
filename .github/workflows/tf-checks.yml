@@ -8,11 +8,11 @@ jobs:
   basic_example:
     uses: clouddrove/github-shared-workflows/.github/workflows/tf-checks.yml@master
     with:
-      working_directory: './_example/basic_example/'
-  ebs_mount:
+      working_directory: './_example/basic/'
+  complete_example:
     uses: clouddrove/github-shared-workflows/.github/workflows/tf-checks.yml@master
     with:
-      working_directory: './_example/ebs_mount/'
+      working_directory: './_example/complete/'
   spot_instance:
     uses: clouddrove/github-shared-workflows/.github/workflows/tf-checks.yml@master
     with:
