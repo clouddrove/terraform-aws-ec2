@@ -14,27 +14,23 @@ locals {
 ## A VPC is a virtual network that closely resembles a traditional network that you'd operate in your own data center.
 ####----------------------------------------------------------------------------------
 module "vpc" {
-  source  = "clouddrove/vpc/aws"
-  version = "2.0.0"
-
+  source      = "clouddrove/vpc/aws"
+  version     = "2.0.0"
   name        = "vpc"
   environment = local.environment
   label_order = local.label_order
-
-  cidr_block = "172.16.0.0/16"
+  cidr_block  = "172.16.0.0/16"
 }
 
 ####----------------------------------------------------------------------------------
 ## A subnet is a range of IP addresses in your VPC.
 ####----------------------------------------------------------------------------------
 module "public_subnets" {
-  source  = "clouddrove/subnet/aws"
-  version = "2.0.0"
-
-  name        = "public-subnet"
-  environment = local.environment
-  label_order = local.label_order
-
+  source             = "clouddrove/subnet/aws"
+  version            = "2.0.0"
+  name               = "public-subnet"
+  environment        = local.environment
+  label_order        = local.label_order
   availability_zones = ["eu-west-1b", "eu-west-1c"]
   vpc_id             = module.vpc.vpc_id
   cidr_block         = module.vpc.vpc_cidr_block
@@ -44,16 +40,14 @@ module "public_subnets" {
 }
 
 module "iam-role" {
-  source  = "clouddrove/iam-role/aws"
-  version = "1.3.0"
-
+  source             = "clouddrove/iam-role/aws"
+  version            = "1.3.0"
   name               = "iam-role"
   environment        = local.environment
   label_order        = local.label_order
   assume_role_policy = data.aws_iam_policy_document.default.json
-
-  policy_enabled = true
-  policy         = data.aws_iam_policy_document.iam-policy.json
+  policy_enabled     = true
+  policy             = data.aws_iam_policy_document.iam-policy.json
 }
 
 data "aws_iam_policy_document" "default" {
@@ -80,24 +74,21 @@ data "aws_iam_policy_document" "iam-policy" {
   }
 }
 
-####----------------------------------------------------------------------------------
+##----------------------------------------------------------------------------------
 ## Terraform module to create ec2 instance module on AWS.
-####----------------------------------------------------------------------------------
+##----------------------------------------------------------------------------------
 module "ec2" {
-  source  = "clouddrove/labels/aws"
-  version = "2.0.0"
-
+  source      = "./../../"
   name        = "ec2"
   environment = local.environment
 
-  ####----------------------------------------------------------------------------------
+  ##----------------------------------------------------------------------------------
   ## Below A security group controls the traffic that is allowed to reach and leave the resources that it is associated with.
-  ####----------------------------------------------------------------------------------
+  ##----------------------------------------------------------------------------------
   #tfsec:aws-ec2-no-public-ingress-sgr
   vpc_id            = module.vpc.vpc_id
   ssh_allowed_ip    = ["0.0.0.0/0"]
   ssh_allowed_ports = [22]
-
   #Instance
   instance_count = 1
   ami            = "ami-08d658f84a6d84a80"

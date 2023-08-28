@@ -50,6 +50,12 @@ variable "managedby" {
 
 # Module      : EC2 Module
 # Description : Terraform EC2 module variables.
+variable "enable" {
+  type        = bool
+  default     = true
+  description = "Flag to control module creation."
+}
+
 variable "ami" {
   type        = string
   default     = ""
@@ -158,7 +164,7 @@ variable "ebs_volume_type" {
   description = "The type of EBS volume. Can be standard, gp2 or io1."
 }
 
-variable "instance_enabled" {
+variable "default_instance_enabled" {
   type        = bool
   default     = true
   description = "Flag to control the instance creation."
@@ -331,7 +337,7 @@ variable "kms_key_id" {
 
 variable "alias" {
   type        = string
-  default     = "alias/ec22"
+  default     = "alias/ec2-test"
   description = "The display name of the alias. The name must start with the word `alias` followed by a forward slash."
 }
 
@@ -636,12 +642,61 @@ variable "key_name" {
 
 variable "algorithm" {
   description = "Name of the algorithm to use when generating the private key. Currently-supported values are: RSA, ECDSA, ED25519."
-  type = string
-  default = "RSA"
+  type        = string
+  default     = "RSA"
 }
 
 variable "rsa_bits" {
   description = "When algorithm is RSA, the size of the generated RSA key, in bits (default: 2048)."
-  type = number
-  default = 4096
+  type        = number
+  default     = 4096
 }
+
+variable "egress_ipv4_from_port" {
+  description = "Egress Start port (or ICMP type number if protocol is icmp or icmpv6)."
+  type        = number
+  default     = 0
+}
+
+variable "egress_ipv4_to_port" {
+  description = "Egress end port (or ICMP code if protocol is icmp)."
+  type        = number
+  default     = 65535
+}
+
+variable "egress_ipv4_protocol" {
+  description = "Protocol. If not icmp, icmpv6, tcp, udp, or all use the protocol number"
+  type        = string
+  default     = "-1"
+}
+
+variable "egress_ipv4_cidr_block" {
+  description = " List of CIDR blocks. Cannot be specified with source_security_group_id or self."
+  type        = list(string)
+  default     = ["0.0.0.0/0"]
+}
+
+variable "egress_ipv6_from_port" {
+  description = "Egress Start port (or ICMP type number if protocol is icmp or icmpv6)."
+  type        = number
+  default     = 0
+}
+
+variable "egress_ipv6_to_port" {
+  description = "Egress end port (or ICMP code if protocol is icmp)."
+  type        = number
+  default     = 65535
+}
+
+variable "egress_ipv6_protocol" {
+  description = "Protocol. If not icmp, icmpv6, tcp, udp, or all use the protocol number"
+  type        = string
+  default     = "-1"
+}
+
+variable "egress_ipv6_cidr_block" {
+  description = " List of CIDR blocks. Cannot be specified with source_security_group_id or self."
+  type        = list(string)
+  default     = ["::/0"]
+}
+
