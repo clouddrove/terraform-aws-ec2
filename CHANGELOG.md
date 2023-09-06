@@ -4,6 +4,34 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.0.0] - 2023-09-06
+### :sparkles: New Features
+- [`639f19a`](https://github.com/clouddrove/terraform-aws-ec2/commit/639f19ade34e03f8d4f8a309b9b8820754cb79cc) - auto changelog action added *(commit by [@mamrajyadav](https://github.com/mamrajyadav))*
+- [`2f9367e`](https://github.com/clouddrove/terraform-aws-ec2/commit/2f9367ea5a238dc24f6326fec0fcae2e9867ee15) - auto changelog action added *(commit by [@mamrajyadav](https://github.com/mamrajyadav))*
+- [`f6ad766`](https://github.com/clouddrove/terraform-aws-ec2/commit/f6ad76641ff1da90cf7b2873a04998cb46db9113) - added dependabot.yml file *(commit by [@mamrajyadav](https://github.com/mamrajyadav))*
+- [`9501122`](https://github.com/clouddrove/terraform-aws-ec2/commit/95011227698201a367e418bec528f375d2b1eaaf) - add deepsource & added assignees,reviewer in dependabot *(commit by [@Tanveer143s](https://github.com/Tanveer143s))*
+- [`d25dd33`](https://github.com/clouddrove/terraform-aws-ec2/commit/d25dd33d8cafd62a5505ac31d47de3957699b9cc) - add deepsource & added assignees,reviewer in dependabot *(commit by [@Tanveer143s](https://github.com/Tanveer143s))*
+- [`785a0b3`](https://github.com/clouddrove/terraform-aws-ec2/commit/785a0b312c9bf5f7aed7ae0e30a1d5a7869f95e8) - add deepsorce file *(commit by [@Tanveer143s](https://github.com/Tanveer143s))*
+- [`aa714d3`](https://github.com/clouddrove/terraform-aws-ec2/commit/aa714d3b288b41f4c263fa4a45e6fc642ebdfdb9) - add deepsorce file *(commit by [@Tanveer143s](https://github.com/Tanveer143s))*
+- [`e597f20`](https://github.com/clouddrove/terraform-aws-ec2/commit/e597f2029311ac36a7424e5c31ec6a9e3400c68e) - added security-group-rule and kms main.tf *(commit by [@theprashantyadav](https://github.com/theprashantyadav))*
+- [`224c4d9`](https://github.com/clouddrove/terraform-aws-ec2/commit/224c4d94743f5514856421eb6206995895b949c1) - added security-group-rule and kms main.tf *(commit by [@theprashantyadav](https://github.com/theprashantyadav))*
+- [`7093a75`](https://github.com/clouddrove/terraform-aws-ec2/commit/7093a756830c33845b4666209d87c26f4050fff8) - added key-pair and spot instance main.tf *(commit by [@theprashantyadav](https://github.com/theprashantyadav))*
+- [`4225f40`](https://github.com/clouddrove/terraform-aws-ec2/commit/4225f400a9daef811cdddaac0b879f60060791fe) - added key-pair and spot instance main.tf *(commit by [@theprashantyadav](https://github.com/theprashantyadav))*
+- [`887e684`](https://github.com/clouddrove/terraform-aws-ec2/commit/887e684a334dc85d67e74759afadfa57c36008fb) - added key-pair and spot instance testing *(commit by [@theprashantyadav](https://github.com/theprashantyadav))*
+- [`00b23c4`](https://github.com/clouddrove/terraform-aws-ec2/commit/00b23c4c2210db82b57388fa78417632cdf142f3) - added key-pair and spot instance testing *(commit by [@theprashantyadav](https://github.com/theprashantyadav))*
+- [`fed8d3e`](https://github.com/clouddrove/terraform-aws-ec2/commit/fed8d3eba5af92136dad816d44dadd4b7c5c1bae) - added key-pair and spot instance testing *(commit by [@theprashantyadav](https://github.com/theprashantyadav))*
+- [`2315645`](https://github.com/clouddrove/terraform-aws-ec2/commit/2315645e656add51f39eedee3727419cdc1ac308) - fix tflint and added vpc and subnet tag *(commit by [@theprashantyadav](https://github.com/theprashantyadav))*
+- [`70f539c`](https://github.com/clouddrove/terraform-aws-ec2/commit/70f539cef609a145d2630b3a337c9e3bdfb00cee) - fix tflint and added vpc and subnet tag *(commit by [@theprashantyadav](https://github.com/theprashantyadav))*
+- [`8d6af6c`](https://github.com/clouddrove/terraform-aws-ec2/commit/8d6af6c24523ea484b63ba13d3c4642762945746) - update subnet and vpc tag *(commit by [@theprashantyadav](https://github.com/theprashantyadav))*
+
+### :bug: Bug Fixes
+- [`8610ee3`](https://github.com/clouddrove/terraform-aws-ec2/commit/8610ee3c11ce11960191371dfaf40078bc77feb3) - Update user-data.sh *(PR [#54](https://github.com/clouddrove/terraform-aws-ec2/pull/54) by [@13archit](https://github.com/13archit))*
+
+### :construction_worker: Build System
+- [`6dec4c8`](https://github.com/clouddrove/terraform-aws-ec2/commit/6dec4c8d52f8b3afcb99dba7dc57d71531000f0b) - **deps**: bump clouddrove/vpc/aws in /_example/basic_example *(commit by [@dependabot[bot]](https://github.com/apps/dependabot))*
+- [`64126fd`](https://github.com/clouddrove/terraform-aws-ec2/commit/64126fd9254bbf174d0c6fa125730138f83819bc) - **deps**: bump clouddrove/vpc/aws in /_example/ebs_mount *(commit by [@dependabot[bot]](https://github.com/apps/dependabot))*
+
+
 ## [1.3.0] - 2023-01-10
 ### :bug: Bug Fixes
 - [`138df1a`](https://github.com/clouddrove/terraform-aws-ec2/commit/138df1af37e3967148c950ba263c9e9dd8c006a5) - update workflows
@@ -127,3 +155,5 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [1.0.2]:https://github.com/clouddrove/terraform-aws-ec2/compare/1.0.2...master
 [1.3.0]: https://github.com/clouddrove/terraform-aws-ec2/compare/1.3.0...master
 
+
+[2.0.0]: https://github.com/clouddrove/terraform-aws-ec2/compare/1.3.0...2.0.0
