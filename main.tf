@@ -120,6 +120,8 @@ resource "aws_kms_key" "default" {
   tags                     = module.labels.tags
 }
 
+data "aws_caller_identity" "this" {}
+
 resource "aws_kms_alias" "default" {
   count         = var.enable && var.kms_key_enabled && var.kms_key_id == "" ? 1 : 0
   name          = coalesce(var.alias, format("alias/%v", module.labels.id))
@@ -133,12 +135,11 @@ data "aws_iam_policy_document" "kms" {
     effect = "Allow"
     principals {
       type        = "AWS"
-      identifiers = ["*"]
+      identifiers = [format("arn:aws:iam::%s:root", data.aws_caller_identity.this.account_id)]
     }
     actions   = ["kms:*"]
     resources = ["*"]
   }
-
 }
 
 ##----------------------------------------------------------------------------------

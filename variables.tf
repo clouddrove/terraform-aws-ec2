@@ -234,7 +234,7 @@ variable "cpu_core_count" {
 
 variable "iam_instance_profile" {
   type        = string
-  default     = ""
+  default     = null
   description = "The IAM Instance Profile to launch the instance with. Specified as the name of the Instance Profile."
 }
 
@@ -493,12 +493,6 @@ variable "public_key" {
   default     = ""
   description = "Name  (e.g. `ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQD3F6tyPEFEzV0LX3X8BsXdMsQ`)."
   sensitive   = true
-}
-
-variable "key_path" {
-  type        = string
-  default     = ""
-  description = "Name  (e.g. `~/.ssh/id_rsa.pub`)."
 }
 
 ###### spot

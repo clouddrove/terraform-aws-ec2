@@ -2,7 +2,7 @@
 ## Provider block added, Use the Amazon Web Services (AWS) provider to interact with the many resources supported by AWS.
 ####----------------------------------------------------------------------------------
 provider "aws" {
-  region = "eu-west-1"
+  region = "us-west-1"
 }
 
 locals {
@@ -31,7 +31,7 @@ module "public_subnets" {
   name               = "public-subnet"
   environment        = local.environment
   label_order        = local.label_order
-  availability_zones = ["eu-west-1b", "eu-west-1c"]
+  availability_zones = ["us-west-1b", "us-west-1c"]
   vpc_id             = module.vpc.vpc_id
   cidr_block         = module.vpc.vpc_cidr_block
   type               = "public"
@@ -91,7 +91,7 @@ module "ec2" {
   ssh_allowed_ports = [22]
   #Instance
   instance_count = 1
-  ami            = "ami-08d658f84a6d84a80"
+  ami            = "ami-0f8e81a3da6e2510a"
   instance_type  = "t2.nano"
 
   #Keypair
