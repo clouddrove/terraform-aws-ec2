@@ -9,9 +9,8 @@ module "spot-ec2" {
   ####----------------------------------------------------------------------------------
   ## Below A security group controls the traffic that is allowed to reach and leave the resources that it is associated with.
   ####----------------------------------------------------------------------------------
-  vpc_id            = "vpc-xxxxxxxx"
-  ssh_allowed_ip    = ["0.0.0.0/0"]
-  ssh_allowed_ports = [22]
+  vpc_id         = "vpc-xxxxxxxx"
+  ssh_allowed_ip = ["0.0.0.0/0"]
 
   #Keypair
   public_key = ""

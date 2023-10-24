@@ -462,16 +462,10 @@ variable "ssh_allowed_ip" {
   description = "List of allowed ip."
 }
 
-variable "ssh_allowed_ports" {
-  type        = list(any)
-  default     = []
-  description = "List of allowed ingress ports"
-}
-
-variable "ssh_protocol" {
-  type        = string
-  default     = "tcp"
-  description = "The protocol. If not icmp, tcp, udp, or all use the."
+variable "ssh_enable" {
+  type        = bool
+  default     = true
+  description = "Flag to control ssh creation."
 }
 
 variable "ssh_sg_ingress_description" {

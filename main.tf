@@ -82,12 +82,12 @@ resource "aws_security_group_rule" "egress_ipv6" {
 }
 #tfsec:ignore:aws-ec2-no-public-ingress-sgr
 resource "aws_security_group_rule" "ssh_ingress" {
-  count             = var.enable && length(var.ssh_allowed_ip) > 0 && length(var.sg_ids) < 1 ? length(compact(var.ssh_allowed_ports)) : 0
-  description       = var.ssh_sg_ingress_description
+  count             = var.enable && var.ssh_enable && length(var.sg_ids) < 1 ? length(var.ssh_allowed_ip) : 0
+  description       = element(var.ssh_sg_ingress_description[*], count.index)
   type              = "ingress"
-  from_port         = element(var.ssh_allowed_ports, count.index)
-  to_port           = element(var.ssh_allowed_ports, count.index)
-  protocol          = var.ssh_protocol
+  from_port         = 22
+  to_port           = 22
+  protocol          = "tcp"
   cidr_blocks       = var.ssh_allowed_ip
   security_group_id = join("", aws_security_group.default[*].id)
 }
