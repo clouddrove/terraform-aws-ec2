@@ -4,6 +4,17 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.0.1] - 2023-11-22
+### :bug: Bug Fixes
+- [`a95d8c8`](https://github.com/clouddrove/terraform-aws-ec2/commit/a95d8c8ce420494fcb56724038d72f294a69cc21) - kms policy fixed *(PR [#55](https://github.com/clouddrove/terraform-aws-ec2/pull/55) by [@d4kverma](https://github.com/d4kverma))*
+
+### :construction_worker: Build System
+- [`1e27c43`](https://github.com/clouddrove/terraform-aws-ec2/commit/1e27c43183daa92b3b65b1f4fde63b5cccef690e) - **deps**: bump clouddrove/github-actions from 9.0.2 to 9.0.3 *(commit by [@dependabot[bot]](https://github.com/apps/dependabot))*
+
+### :memo: Documentation Changes
+- [`19e732a`](https://github.com/clouddrove/terraform-aws-ec2/commit/19e732a921b49985a65f954ee4f1c1d703e79a91) - update CHANGELOG.md for 2.0.0 *(commit by [@clouddrove-ci](https://github.com/clouddrove-ci))*
+
+
 ## [2.0.0] - 2023-09-06
 ### :sparkles: New Features
 - [`639f19a`](https://github.com/clouddrove/terraform-aws-ec2/commit/639f19ade34e03f8d4f8a309b9b8820754cb79cc) - auto changelog action added *(commit by [@mamrajyadav](https://github.com/mamrajyadav))*
@@ -157,3 +168,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 
 [2.0.0]: https://github.com/clouddrove/terraform-aws-ec2/compare/1.3.0...2.0.0
+[2.0.1]: https://github.com/clouddrove/terraform-aws-ec2/compare/2.0.0...2.0.1
