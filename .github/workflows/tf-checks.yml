@@ -1,3 +1,4 @@
+---
 name: tf-checks
 on:
   push:
@@ -6,15 +7,16 @@ on:
   workflow_dispatch:
 jobs:
   basic_example:
-    uses: clouddrove/github-shared-workflows/.github/workflows/tf-checks.yml@master
+    uses: clouddrove/github-shared-workflows/.github/workflows/tf-checks.yml@1.0.9
     with:
       working_directory: './_example/basic/'
   complete_example:
-    uses: clouddrove/github-shared-workflows/.github/workflows/tf-checks.yml@master
+    uses: clouddrove/github-shared-workflows/.github/workflows/tf-checks.yml@1.0.9
     with:
       working_directory: './_example/complete/'
   spot_instance:
-    uses: clouddrove/github-shared-workflows/.github/workflows/tf-checks.yml@master
+    uses: clouddrove/github-shared-workflows/.github/workflows/tf-checks.yml@1.0.9
     with:
       working_directory: './_example/spot_instance/'
+...
 
