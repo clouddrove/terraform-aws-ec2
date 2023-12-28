@@ -1,5 +1,5 @@
 ---
-name: tf-lint
+name: tf-lint-test
 on:
   push:
     branches: [ master ]
