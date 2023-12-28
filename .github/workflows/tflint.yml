@@ -6,7 +6,7 @@ on:
   pull_request:
   workflow_dispatch:
 jobs:
-  tflint:
+  tf-lint:
     uses: clouddrove/github-shared-workflows/.github/workflows/tf-lint.yml@1.0.9
     secrets:
       GITHUB: ${{ secrets.GITHUB }}
