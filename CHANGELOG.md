@@ -4,6 +4,16 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.0.2] - 2024-01-12
+### :construction_worker: Build System
+- [`2475949`](https://github.com/clouddrove/terraform-aws-ec2/commit/247594902bba486cb4df7533de7fe99d1d4bfca8) - **deps**: bump clouddrove/subnet/aws in /_example/complete *(commit by [@dependabot[bot]](https://github.com/apps/dependabot))*
+- [`4007b9e`](https://github.com/clouddrove/terraform-aws-ec2/commit/4007b9e0e9d156cf5a88b121de67aa5dfac6e02b) - **deps**: bump actions/setup-python from 4 to 5 *(commit by [@dependabot[bot]](https://github.com/apps/dependabot))*
+- [`b8f9bdb`](https://github.com/clouddrove/terraform-aws-ec2/commit/b8f9bdb52270e94a34655b893779f3b98822a8fe) - **deps**: bump clouddrove/github-shared-workflows *(commit by [@dependabot[bot]](https://github.com/apps/dependabot))*
+
+### :memo: Documentation Changes
+- [`7bcfa83`](https://github.com/clouddrove/terraform-aws-ec2/commit/7bcfa8324a2a573a87673f78f1484e8850f79254) - update CHANGELOG.md for 2.0.1 *(commit by [@clouddrove-ci](https://github.com/clouddrove-ci))*
+
+
 ## [2.0.1] - 2023-11-22
 ### :bug: Bug Fixes
 - [`a95d8c8`](https://github.com/clouddrove/terraform-aws-ec2/commit/a95d8c8ce420494fcb56724038d72f294a69cc21) - kms policy fixed *(PR [#55](https://github.com/clouddrove/terraform-aws-ec2/pull/55) by [@d4kverma](https://github.com/d4kverma))*
@@ -169,3 +179,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 [2.0.0]: https://github.com/clouddrove/terraform-aws-ec2/compare/1.3.0...2.0.0
 [2.0.1]: https://github.com/clouddrove/terraform-aws-ec2/compare/2.0.0...2.0.1
+[2.0.2]: https://github.com/clouddrove/terraform-aws-ec2/compare/2.0.1...2.0.2
