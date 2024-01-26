@@ -4,6 +4,17 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.0.3] - 2024-01-26
+### :bug: Bug Fixes
+- [`837864c`](https://github.com/clouddrove/terraform-aws-ec2/commit/837864cf57d5ed4a9b8a1d8c328eebb3cca477f7) - shutdown behavior for the instance defaults to STOP *(PR [#66](https://github.com/clouddrove/terraform-aws-ec2/pull/66) by [@h1manshu98](https://github.com/h1manshu98))*
+
+### :construction_worker: Build System
+- [`592d4ed`](https://github.com/clouddrove/terraform-aws-ec2/commit/592d4edd2c51560e36f1f2e83c8bb5b53f34cfcb) - **deps**: bump clouddrove/github-shared-workflows *(commit by [@dependabot[bot]](https://github.com/apps/dependabot))*
+
+### :memo: Documentation Changes
+- [`0d16756`](https://github.com/clouddrove/terraform-aws-ec2/commit/0d16756ee156cb75169a9c3aa0b1244e809d7b2b) - update CHANGELOG.md for 2.0.2 *(commit by [@clouddrove-ci](https://github.com/clouddrove-ci))*
+
+
 ## [2.0.2] - 2024-01-12
 ### :construction_worker: Build System
 - [`2475949`](https://github.com/clouddrove/terraform-aws-ec2/commit/247594902bba486cb4df7533de7fe99d1d4bfca8) - **deps**: bump clouddrove/subnet/aws in /_example/complete *(commit by [@dependabot[bot]](https://github.com/apps/dependabot))*
@@ -180,3 +191,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [2.0.0]: https://github.com/clouddrove/terraform-aws-ec2/compare/1.3.0...2.0.0
 [2.0.1]: https://github.com/clouddrove/terraform-aws-ec2/compare/2.0.0...2.0.1
 [2.0.2]: https://github.com/clouddrove/terraform-aws-ec2/compare/2.0.1...2.0.2
+[2.0.3]: https://github.com/clouddrove/terraform-aws-ec2/compare/2.0.2...2.0.3
