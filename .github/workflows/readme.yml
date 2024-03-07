@@ -27,11 +27,11 @@ jobs:
 
 
       - name: 'pre-commit check errors'
-        uses: pre-commit/action@v3.0.0
+        uses: pre-commit/action@v3.0.1
         continue-on-error: true
 
       - name: 'pre-commit fix erros'
-        uses: pre-commit/action@v3.0.0
+        uses: pre-commit/action@v3.0.1
         continue-on-error: true
 
       - name: 'push readme'
