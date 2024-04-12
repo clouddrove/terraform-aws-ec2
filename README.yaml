@@ -23,18 +23,28 @@ badges:
   - name: "Licence"
     image: "https://img.shields.io/badge/License-APACHE-blue.svg"
     url: "LICENSE.md"
+  - name: "Changelog"
+    image: "https://img.shields.io/badge/Changelog-blue"
+    url: "CHANGELOG.md"
 
 prerequesties:
-  - name: Terraform 1.4.6
+  - name: Terraform
     url: https://learn.hashicorp.com/terraform/getting-started/install.html
+    version: ">= 1.6.6"
+
+providers:
+  - name: aws
+    url: https://aws.amazon.com/
+    version: ">= 5.31.0"
+
+module_dependencies:
+  - name: Labels Module
+    url: https://github.com/clouddrove/terraform-aws-labels
+    description: Provides resource tagging.
 
 #  description of this project
 description: |-
   Terraform module to create an EC2 resource on AWS with ElasticC IP Addresses and Elastic Block Store.
-
-# extra content
-include:
-  - "terraform.md"
 
 # How to use this project
 # How to use this project
