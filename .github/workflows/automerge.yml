@@ -4,7 +4,7 @@ on:
   pull_request:
 jobs:
   auto-merge:
-    uses: clouddrove/github-shared-workflows/.github/workflows/auto_merge.yml@1.2.4
+    uses: clouddrove/github-shared-workflows/.github/workflows/auto_merge.yml@1.2.5
     secrets:
       GITHUB: ${{ secrets.GITHUB }}
     with:
