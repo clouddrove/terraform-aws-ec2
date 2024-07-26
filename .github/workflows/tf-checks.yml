@@ -7,15 +7,15 @@ on:
   workflow_dispatch:
 jobs:
   basic_example:
-    uses: clouddrove/github-shared-workflows/.github/workflows/tf-checks.yml@1.2.4
+    uses: clouddrove/github-shared-workflows/.github/workflows/tf-checks.yml@1.2.7
     with:
       working_directory: './examples/basic/'
   complete_example:
-    uses: clouddrove/github-shared-workflows/.github/workflows/tf-checks.yml@1.2.4
+    uses: clouddrove/github-shared-workflows/.github/workflows/tf-checks.yml@1.2.7
     with:
       working_directory: './examples/complete/'
   spot_instance:
-    uses: clouddrove/github-shared-workflows/.github/workflows/tf-checks.yml@1.2.4
+    uses: clouddrove/github-shared-workflows/.github/workflows/tf-checks.yml@1.2.7
     with:
       working_directory: './examples/spot_instance/'
 ...
