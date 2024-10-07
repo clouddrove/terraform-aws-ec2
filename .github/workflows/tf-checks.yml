@@ -19,4 +19,3 @@ jobs:
     with:
       working_directory: './examples/spot_instance/'
 ...
-

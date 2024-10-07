@@ -135,4 +135,3 @@
 | subnet\_id | The EC2 subnet ID. |
 | tags | The instance ID. |
 | vpc\_security\_group\_ids | The associated security groups in non-default VPC. |
-

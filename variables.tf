@@ -694,4 +694,3 @@ variable "egress_ipv6_cidr_block" {
   type        = list(string)
   default     = ["::/0"]
 }
-
