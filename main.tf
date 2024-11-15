@@ -148,33 +148,34 @@ data "aws_iam_policy_document" "kms" {
 #tfsec:ignore:aws-ec2-enforce-http-token-imds
 resource "aws_instance" "default" {
   count                                = var.enable && var.default_instance_enabled ? var.instance_count : 0
-  ami                                  = var.ami == "" ? data.aws_ami.ubuntu.id : var.ami
-  ebs_optimized                        = var.ebs_optimized
-  instance_type                        = var.instance_type
+  ami                                  = var.instance_configuration.ami == "" ? data.aws_ami.ubuntu.id : var.instance_configuration.ami
+  ebs_optimized                        = var.instance_configuration.ebs_optimized
+  instance_type                        = var.instance_configuration.instance_type
   key_name                             = var.key_name == "" ? join("", aws_key_pair.default[*].key_name) : var.key_name
-  monitoring                           = var.monitoring
+  monitoring                           = var.instance_configuration.monitoring
   vpc_security_group_ids               = length(var.sg_ids) < 1 ? aws_security_group.default[*].id : var.sg_ids
   subnet_id                            = element(distinct(compact(concat(var.subnet_ids))), count.index)
-  associate_public_ip_address          = var.associate_public_ip_address
-  disable_api_termination              = var.disable_api_termination
-  instance_initiated_shutdown_behavior = var.instance_initiated_shutdown_behavior
-  placement_group                      = var.placement_group
-  tenancy                              = var.tenancy
-  host_id                              = var.host_id
-  cpu_core_count                       = var.cpu_core_count
-  cpu_threads_per_core                 = var.cpu_threads_per_core
-  user_data                            = var.user_data
-  user_data_base64                     = var.user_data_base64
-  user_data_replace_on_change          = var.user_data_replace_on_change
-  availability_zone                    = var.availability_zone
-  get_password_data                    = var.get_password_data
-  private_ip                           = var.private_ip
-  secondary_private_ips                = var.secondary_private_ips
+  associate_public_ip_address          = var.instance_configuration.associate_public_ip_address
+  disable_api_termination              = var.instance_configuration.disable_api_termination
+  instance_initiated_shutdown_behavior = var.instance_configuration.instance_initiated_shutdown_behavior
+  placement_group                      = var.instance_configuration.placement_group
+  tenancy                              = var.instance_configuration.tenancy
+  host_id                              = var.instance_configuration.host_id
+  cpu_core_count                       = var.instance_configuration.cpu_core_count
+  cpu_threads_per_core                 = var.instance_configuration.cpu_threads_per_core
+  user_data                            = var.instance_configuration.user_data
+  user_data_base64                     = var.instance_configuration.user_data_base64
+  user_data_replace_on_change          = var.instance_configuration.user_data_replace_on_change
+  availability_zone                    = var.instance_configuration.availability_zone
+  get_password_data                    = var.instance_configuration.get_password_data
+  private_ip                           = var.instance_configuration.private_ip
+  secondary_private_ips                = var.instance_configuration.secondary_private_ips
   iam_instance_profile                 = join("", aws_iam_instance_profile.default[*].name)
-  source_dest_check                    = var.source_dest_check
-  ipv6_address_count                   = var.ipv6_address_count
-  ipv6_addresses                       = var.ipv6_addresses
-  hibernation                          = var.hibernation
+  source_dest_check                    = var.instance_configuration.source_dest_check
+  ipv6_address_count                   = var.instance_configuration.ipv6_address_count
+  ipv6_addresses                       = var.instance_configuration.ipv6_addresses
+  hibernation                          = var.instance_configuration.hibernation
+
   dynamic "cpu_options" {
     for_each = length(var.cpu_options) > 0 ? [var.cpu_options] : []
     content {
@@ -199,7 +200,7 @@ resource "aws_instance" "default" {
   }
 
   dynamic "root_block_device" {
-    for_each = var.root_block_device
+    for_each = var.instance_configuration.root_block_device
     content {
       delete_on_termination = lookup(root_block_device.value, "delete_on_termination", null)
       encrypted             = true
@@ -238,7 +239,7 @@ resource "aws_instance" "default" {
   }
 
   dynamic "ephemeral_block_device" {
-    for_each = var.ephemeral_block_device
+    for_each = var.instance_configuration.ephemeral_block_device
     content {
       device_name  = ephemeral_block_device.value.device_name
       no_device    = lookup(ephemeral_block_device.value, "no_device", null)
@@ -373,41 +374,43 @@ resource "aws_route53_record" "default" {
 ##----------------------------------------------------------------------------------
 resource "aws_spot_instance_request" "default" {
   count                                = var.enable && var.spot_instance_enabled ? var.spot_instance_count : 0
-  spot_price                           = var.spot_price
-  wait_for_fulfillment                 = var.spot_wait_for_fulfillment
-  spot_type                            = var.spot_type
-  launch_group                         = var.spot_launch_group
-  block_duration_minutes               = var.spot_block_duration_minutes
-  instance_interruption_behavior       = var.spot_instance_interruption_behavior
-  valid_until                          = var.spot_valid_until
-  valid_from                           = var.spot_valid_from
-  ami                                  = var.ami == "" ? data.aws_ami.ubuntu.id : var.ami
-  ebs_optimized                        = var.ebs_optimized
-  instance_type                        = var.instance_type
+  spot_price                           = var.spot_configuration.spot_price
+  wait_for_fulfillment                 = var.spot_configuration.wait_for_fulfillment
+  spot_type                            = var.spot_configuration.spot_type
+  launch_group                         = var.spot_configuration.launch_group
+  block_duration_minutes               = var.spot_configuration.block_duration_minutes
+  instance_interruption_behavior       = var.spot_configuration.instance_interruption_behavior
+  valid_until                          = var.spot_configuration.valid_until
+  valid_from                           = var.spot_configuration.valid_from
+
+  # Instance configuration
+  ami                                  = var.instance_configuration.ami == "" ? data.aws_ami.ubuntu.id : var.instance_configuration.ami
+  ebs_optimized                        = var.instance_configuration.ebs_optimized
+  instance_type                        = var.instance_configuration.instance_type
   key_name                             = var.key_name == "" ? join("", aws_key_pair.default[*].key_name) : var.key_name
-  monitoring                           = var.monitoring
+  monitoring                           = var.instance_configuration.monitoring
   vpc_security_group_ids               = length(var.sg_ids) < 1 ? aws_security_group.default[*].id : var.sg_ids
   subnet_id                            = element(distinct(compact(concat(var.subnet_ids))), count.index)
-  associate_public_ip_address          = var.associate_public_ip_address
-  disable_api_termination              = var.disable_api_termination
-  instance_initiated_shutdown_behavior = var.instance_initiated_shutdown_behavior
-  placement_group                      = var.placement_group
-  tenancy                              = var.tenancy
-  host_id                              = var.host_id
-  cpu_core_count                       = var.cpu_core_count
-  cpu_threads_per_core                 = var.cpu_threads_per_core
-  user_data                            = var.user_data
-  user_data_base64                     = var.user_data_base64
-  user_data_replace_on_change          = var.user_data_replace_on_change
-  availability_zone                    = var.availability_zone
-  get_password_data                    = var.get_password_data
-  private_ip                           = var.private_ip
-  secondary_private_ips                = var.secondary_private_ips
+  associate_public_ip_address          = var.instance_configuration.associate_public_ip_address
+  disable_api_termination              = var.instance_configuration.disable_api_termination
+  instance_initiated_shutdown_behavior = var.instance_configuration.instance_initiated_shutdown_behavior
+  placement_group                      = var.instance_configuration.placement_group
+  tenancy                              = var.instance_configuration.tenancy
+  host_id                              = var.instance_configuration.host_id
+  cpu_core_count                       = var.instance_configuration.cpu_core_count
+  cpu_threads_per_core                 = var.instance_configuration.cpu_threads_per_core
+  user_data                            = var.instance_configuration.user_data
+  user_data_base64                     = var.instance_configuration.user_data_base64
+  user_data_replace_on_change          = var.instance_configuration.user_data_replace_on_change
+  availability_zone                    = var.instance_configuration.availability_zone
+  get_password_data                    = var.instance_configuration.get_password_data
+  private_ip                           = var.instance_configuration.private_ip
+  secondary_private_ips                = var.instance_configuration.secondary_private_ips
   iam_instance_profile                 = join("", aws_iam_instance_profile.default[*].name)
-  source_dest_check                    = var.source_dest_check
-  ipv6_address_count                   = var.ipv6_address_count
-  ipv6_addresses                       = var.ipv6_addresses
-  hibernation                          = var.hibernation
+  source_dest_check                    = var.instance_configuration.source_dest_check
+  ipv6_address_count                   = var.instance_configuration.ipv6_address_count
+  ipv6_addresses                       = var.instance_configuration.ipv6_addresses
+  hibernation                          = var.instance_configuration.hibernation
 
   dynamic "cpu_options" {
     for_each = length(var.cpu_options) > 0 ? [var.cpu_options] : []
@@ -433,7 +436,7 @@ resource "aws_spot_instance_request" "default" {
   }
 
   dynamic "root_block_device" {
-    for_each = var.root_block_device
+    for_each = var.instance_configuration.root_block_device
     content {
       delete_on_termination = lookup(root_block_device.value, "delete_on_termination", null)
       encrypted             = true
@@ -472,7 +475,7 @@ resource "aws_spot_instance_request" "default" {
   }
 
   dynamic "ephemeral_block_device" {
-    for_each = var.ephemeral_block_device
+    for_each = var.instance_configuration.ephemeral_block_device
     content {
       device_name  = ephemeral_block_device.value.device_name
       no_device    = lookup(ephemeral_block_device.value, "no_device", null)

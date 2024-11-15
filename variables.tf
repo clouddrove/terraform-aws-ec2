@@ -56,82 +56,38 @@ variable "enable" {
   description = "Flag to control module creation."
 }
 
-variable "ami" {
-  type        = string
-  default     = ""
-  description = "The AMI to use for the instance."
-}
-
-variable "ebs_optimized" {
-  type        = bool
-  default     = false
-  description = "If true, the launched EC2 instance will be EBS-optimized."
-}
-
-variable "instance_type" {
-  type        = string
-  description = "The type of instance to start. Updates to this field will trigger a stop/start of the EC2 instance."
-}
-
-variable "monitoring" {
-  type        = bool
-  default     = false
-  description = "If true, the launched EC2 instance will have detailed monitoring enabled. (Available since v0.6.0)."
-}
-
-variable "associate_public_ip_address" {
-  type        = bool
-  default     = true
-  description = "Associate a public IP address with the instance."
-  sensitive   = true
-}
-
-variable "ephemeral_block_device" {
-  type        = list(any)
-  default     = []
-  description = "Customize Ephemeral (also known as Instance Store) volumes on the instance."
-}
-
-variable "disable_api_termination" {
-  type        = bool
-  default     = false
-  description = "If true, enables EC2 Instance Termination Protection."
-}
-
-variable "instance_initiated_shutdown_behavior" {
-  type        = string
-  default     = "stop"
-  description = "(Optional) Shutdown behavior for the instance. Amazon defaults this to `stop` for EBS-backed instances and `terminate` for instance-store instances. Cannot be set on instance-store instances. See Shutdown Behavior for more information."
-}
-
-variable "placement_group" {
-  type        = string
-  default     = ""
-  description = "The Placement Group to start the instance in."
-}
-
-variable "tenancy" {
-  type        = string
-  default     = "default"
-  description = "The tenancy of the instance (if the instance is running in a VPC). An instance with a tenancy of dedicated runs on single-tenant hardware. The host tenancy is not supported for the import-instance command."
-}
-
-variable "root_block_device" {
-  type        = list(any)
-  default     = []
-  description = "Customize details about the root block device of the instance. See Block Devices below for details."
-}
-
-variable "user_data" {
-  type        = string
-  default     = ""
-  description = "(Optional) A string of the desired User Data for the ec2."
-}
-
-variable "user_data_base64" {
-  description = "Can be used instead of user_data to pass base64-encoded binary data directly. Use this instead of user_data whenever the value is not a valid UTF-8 string. For example, gzip-encoded user data must be base64-encoded and passed via this argument to avoid corruption"
-  type        = string
-  default     = null
+variable "instance_configuration" {
+  description = "Configuration options for the EC2 instance"
+  type = object({
+    ami                                  = optional(string, "")
+    ebs_optimized                        = optional(bool, false)
+    instance_type                        = string
+    monitoring                           = optional(bool, false)
+    associate_public_ip_address          = optional(bool, true)
+    disable_api_termination              = optional(bool, false)
+    instance_initiated_shutdown_behavior = optional(string, "stop")
+    placement_group                      = optional(string, "")
+    tenancy                             = optional(string, "default")
+    host_id                             = optional(string, null)
+    cpu_core_count                      = optional(number, null)
+    cpu_threads_per_core                = optional(number, null)
+    user_data                           = optional(string, "")
+    user_data_base64                    = optional(string, null)
+    user_data_replace_on_change         = optional(bool, null)
+    availability_zone                    = optional(string, null)
+    get_password_data                   = optional(bool, null)
+    private_ip                          = optional(string, null)
+    secondary_private_ips               = optional(list(string), null)
+    source_dest_check                   = optional(bool, true)
+    ipv6_address_count                  = optional(number, null)
+    ipv6_addresses                     = optional(list(string), null)
+    hibernation                        = optional(bool, false)
+    root_block_device                  = optional(list(any), [])
+    ephemeral_block_device             = optional(list(any), [])
+  })
+  default = {
+    instance_type = "t2.micro"  # Providing a default instance type
+  }
 }
 
 variable "assign_eip_address" {
@@ -509,52 +465,19 @@ variable "spot_instance_count" {
   description = "Number of instances to launch."
 }
 
-variable "spot_price" {
-  type        = string
-  default     = null
-  description = "The maximum price to request on the spot market. Defaults to on-demand price"
-}
-
-variable "spot_wait_for_fulfillment" {
-  type        = bool
-  default     = false
-  description = "If set, Terraform will wait for the Spot Request to be fulfilled, and will throw an error if the timeout of 10m is reached"
-}
-
-variable "spot_type" {
-  type        = string
-  default     = null
-  description = "If set to one-time, after the instance is terminated, the spot request will be closed. Default `persistent`"
-}
-
-variable "spot_launch_group" {
-  type        = string
-  default     = null
-  description = "A launch group is a group of spot instances that launch together and terminate together. If left empty instances are launched and terminated individually"
-}
-
-variable "spot_block_duration_minutes" {
-  type        = number
-  default     = null
-  description = "The required duration for the Spot instances, in minutes. This value must be a multiple of 60 (60, 120, 180, 240, 300, or 360)"
-}
-
-variable "spot_instance_interruption_behavior" {
-  type        = string
-  default     = null
-  description = "Indicates Spot instance behavior when it is interrupted. Valid values are `terminate`, `stop`, or `hibernate`"
-}
-
-variable "spot_valid_until" {
-  type        = string
-  default     = null
-  description = "The end date and time of the request, in UTC RFC3339 format(for example, YYYY-MM-DDTHH:MM:SSZ)"
-}
-
-variable "spot_valid_from" {
-  type        = string
-  default     = null
-  description = "The start date and time of the request, in UTC RFC3339 format(for example, YYYY-MM-DDTHH:MM:SSZ)"
+variable "spot_configuration" {
+  description = "Configuration options for the EC2 spot instance"
+  type = object({
+    spot_price                     = optional(string, null)
+    wait_for_fulfillment           = optional(bool, false)
+    spot_type                      = optional(string, null)
+    launch_group                   = optional(string, null)
+    block_duration_minutes         = optional(number, null)
+    instance_interruption_behavior = optional(string, null)
+    valid_until                    = optional(string, null)
+    valid_from                     = optional(string, null)
+  })
+  default = {}
 }
 
 variable "cpu_threads_per_core" {

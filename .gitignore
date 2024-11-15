@@ -7,3 +7,4 @@
 go.sum
 *.terraform.lock.hcl
 crash.log
+*.tfvars
