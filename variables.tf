@@ -480,42 +480,6 @@ variable "spot_configuration" {
   default = {}
 }
 
-variable "cpu_threads_per_core" {
-  description = "Sets the number of CPU threads per core for an instance (has no effect unless cpu_core_count is also set)"
-  type        = number
-  default     = null
-}
-
-variable "user_data_replace_on_change" {
-  description = "When used in combination with user_data or user_data_base64 will trigger a destroy and recreate when set to true. Defaults to false if not set"
-  type        = bool
-  default     = null
-}
-
-variable "availability_zone" {
-  description = "AZ to start the instance in"
-  type        = string
-  default     = null
-}
-
-variable "get_password_data" {
-  description = "If true, wait for password data to become available and retrieve it"
-  type        = bool
-  default     = null
-}
-
-variable "private_ip" {
-  description = "Private IP address to associate with the instance in a VPC"
-  type        = string
-  default     = null
-}
-
-variable "secondary_private_ips" {
-  description = "A list of secondary private IPv4 addresses to assign to the instance's primary network interface (eth0) in a VPC. Can only be assigned to the primary network interface (eth0) attached at instance creation, not a pre-existing network interface i.e. referenced in a `network_interface block`"
-  type        = list(string)
-  default     = null
-}
-
 variable "cpu_options" {
   description = "Defines CPU options to apply to the instance at launch time."
   type        = any
