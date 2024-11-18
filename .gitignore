@@ -1,9 +1,24 @@
-# ignored  files
+# Terraform state files - Contains sensitive infrastructure state information
 *.tfstate
 *.tfstate.backup
+
+# Local Terraform directory - Contains downloaded providers and modules
 .terraform
+
+# IDE settings directory for IntelliJ
 .idea
+
+# IntelliJ project files
 *.iml
+
+# Go dependency file
 go.sum
+
+# Terraform lock file - Contains provider version constraints
 *.terraform.lock.hcl
+
+# Terraform crash log file - Generated during crashes
 crash.log
+
+# Variable definitions files - May contain sensitive values
+*.tfvars
