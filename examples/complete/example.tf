@@ -91,8 +91,21 @@ module "ec2" {
   ssh_allowed_ports = [22]
   #Instance
   instance_count = 1
-  ami            = "ami-0f8e81a3da6e2510a"
-  instance_type  = "t2.nano"
+  instance_configuration = {
+    ami           = "ami-0f8e81a3da6e2510a"
+    instance_type = "t4g.small"
+
+    #Root Volume
+    root_block_device = [
+      {
+        volume_type           = "gp3"
+        volume_size           = 15
+        delete_on_termination = true
+      }
+    ]
+    #Mount EBS With User Data
+    user_data = file("user-data.sh")
+  }
 
   #Keypair
   public_key = ""
@@ -103,23 +116,15 @@ module "ec2" {
   #IAM
   iam_instance_profile = module.iam-role.name
 
-  #Root Volume
-  root_block_device = [
-    {
-      volume_type           = "gp2"
-      volume_size           = 15
-      delete_on_termination = true
-    }
-  ]
+
 
   #EBS Volume
   ebs_volume_enabled = true
-  ebs_volume_type    = "gp2"
+  ebs_volume_type    = "gp3"
   ebs_volume_size    = 30
 
   #Tags
   instance_tags = { "snapshot" = true }
 
-  #Mount EBS With User Data
-  user_data = file("user-data.sh")
+
 }
