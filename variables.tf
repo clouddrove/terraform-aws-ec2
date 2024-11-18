@@ -151,43 +151,12 @@ variable "instance_count" {
   description = "Number of instances to launch."
 }
 
-variable "source_dest_check" {
-  type        = bool
-  default     = true
-  description = "Controls if traffic is routed to the instance when the destination address does not match the instance. Used for NAT or VPNs."
-}
-
-variable "ipv6_address_count" {
-  type        = number
-  default     = null
-  description = "Number of IPv6 addresses to associate with the primary network interface. Amazon EC2 chooses the IPv6 addresses from the range of your subnet."
-}
-
-variable "ipv6_addresses" {
-  type        = list(any)
-  default     = null
-  description = "List of IPv6 addresses from the range of the subnet to associate with the primary network interface."
-  sensitive   = true
-}
-
 variable "network_interface" {
   description = "Customize network interfaces to be attached at instance boot time"
   type        = list(map(string))
   default     = []
 }
 
-
-variable "host_id" {
-  type        = string
-  default     = null
-  description = "The Id of a dedicated host that the instance will be assigned to. Use when an instance is to be launched on a specific dedicated host."
-}
-
-variable "cpu_core_count" {
-  type        = string
-  default     = null
-  description = "Sets the number of CPU cores for an instance."
-}
 
 variable "iam_instance_profile" {
   type        = string
@@ -266,12 +235,6 @@ variable "instance_metadata_tags_enabled" {
   type        = string
   default     = "disabled"
   description = "Whether the metadata tag is available. Valid values include enabled or disabled. Defaults to enabled."
-}
-
-variable "hibernation" {
-  type        = bool
-  default     = false
-  description = "hibernate an instance, Amazon EC2 signals the operating system to perform hibernation."
 }
 
 variable "multi_attach_enabled" {
