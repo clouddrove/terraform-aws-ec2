@@ -16,8 +16,19 @@ module "ec2" {
 
   #instance
   instance_count = 1
-  ami            = "ami-08d658f84a6d84a80"
-  instance_type  = "c4.xlarge"
+  instance_configuration = {
+    ami           = "ami-08d658f84a6d84a80"
+    instance_type = "t4g.small"
+
+    #Root Volume
+    root_block_device = [
+      {
+        volume_type           = "gp3"
+        volume_size           = 15
+        delete_on_termination = true
+      }
+    ]
+  }
 
   #Networking
   subnet_ids = ["subnet-xxxxxxxx"]
@@ -28,14 +39,7 @@ module "ec2" {
   #IAM
   iam_instance_profile = "iam-profile-xxxxxxxxx"
 
-  #Root Volume
-  root_block_device = [
-    {
-      volume_type           = "gp2"
-      volume_size           = 15
-      delete_on_termination = true
-    }
-  ]
+
   #Tags
   instance_tags = { "snapshot" = true }
 

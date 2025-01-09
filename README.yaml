@@ -82,7 +82,7 @@ usage: |-
       #Root Volume
       root_block_device = [
         {
-          volume_type           = "gp2"
+          volume_type           = "gp3"
           volume_size           = 15
           delete_on_termination = true
         }
@@ -90,7 +90,7 @@ usage: |-
     
       #EBS Volume
       ebs_volume_enabled = false
-      ebs_volume_type    = "gp2"
+      ebs_volume_type    = "gp3"
       ebs_volume_size    = 30
     
       #Tags
@@ -131,7 +131,7 @@ usage: |-
       #Root Volume
       root_block_device = [
         {
-          volume_type           = "gp2"
+          volume_type           = "gp3"
           volume_size           = 15
           delete_on_termination = true
         }
@@ -139,7 +139,7 @@ usage: |-
     
       #EBS Volume
       ebs_volume_enabled = true
-      ebs_volume_type    = "gp2"
+      ebs_volume_type    = "gp3"
       ebs_volume_size    = 30
     
       #Tags
@@ -187,7 +187,7 @@ usage: |-
       #Root Volume
       root_block_device = [
       {
-      volume_type           = "gp2"
+      volume_type           = "gp3"
       volume_size           = 15
       delete_on_termination = true
       }
@@ -195,7 +195,7 @@ usage: |-
     
       #EBS Volume
       ebs_volume_enabled = true
-      ebs_volume_type    = "gp2"
+      ebs_volume_type    = "gp3"
       ebs_volume_size    = 30
     
       #Tags
