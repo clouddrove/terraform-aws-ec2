@@ -17,13 +17,23 @@ module "spot-ec2" {
   public_key = ""
 
   # Spot-instance
-  spot_price                          = "0.3"
-  spot_wait_for_fulfillment           = true
-  spot_type                           = "persistent"
-  spot_instance_interruption_behavior = "terminate"
-  spot_instance_enabled               = true
-  spot_instance_count                 = 1
-  instance_type                       = "c4.xlarge"
+  spot_configuration = {
+    spot_price                     = "0.3"
+    wait_for_fulfillment           = true
+    spot_type                      = "persistent"
+    instance_interruption_behavior = "terminate"
+    spot_instance_enabled          = true
+    spot_instance_count            = 1
+    instance_type                  = "c4.xlarge"
+
+    root_block_device = [
+      {
+        volume_type           = "gp2"
+        volume_size           = 15
+        delete_on_termination = true
+      }
+    ]
+  }
 
   #Networking
   subnet_ids = ["subnet-xxxxxxxx"]
@@ -32,13 +42,6 @@ module "spot-ec2" {
   iam_instance_profile = "iam-profile-xxxxxxxxx"
 
   #Root Volume
-  root_block_device = [
-    {
-      volume_type           = "gp2"
-      volume_size           = 15
-      delete_on_termination = true
-    }
-  ]
 
   #EBS Volume
   ebs_volume_enabled = true
