@@ -28,7 +28,7 @@
 | ebs\_optimized | If true, the launched EC2 instance will be EBS-optimized. | `bool` | `false` | no |
 | ebs\_volume\_enabled | Flag to control the ebs creation. | `bool` | `false` | no |
 | ebs\_volume\_size | Size of the EBS volume in gigabytes. | `number` | `30` | no |
-| ebs\_volume\_type | The type of EBS volume. Can be standard, gp2 or io1. | `string` | `"gp2"` | no |
+| ebs\_volume\_type | The type of EBS volume. Can be standard, gp3 or io1. | `string` | `"gp3"` | no |
 | egress\_ipv4\_cidr\_block | List of CIDR blocks. Cannot be specified with source\_security\_group\_id or self. | `list(string)` | <pre>[<br>  "0.0.0.0/0"<br>]</pre> | no |
 | egress\_ipv4\_from\_port | Egress Start port (or ICMP type number if protocol is icmp or icmpv6). | `number` | `0` | no |
 | egress\_ipv4\_protocol | Protocol. If not icmp, icmpv6, tcp, udp, or all use the protocol number | `string` | `"-1"` | no |
