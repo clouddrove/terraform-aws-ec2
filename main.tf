@@ -161,8 +161,6 @@ resource "aws_instance" "default" {
   placement_group                      = var.instance_configuration.placement_group
   tenancy                              = var.instance_configuration.tenancy
   host_id                              = var.instance_configuration.host_id
-  cpu_core_count                       = var.instance_configuration.cpu_core_count
-  cpu_threads_per_core                 = var.instance_configuration.cpu_threads_per_core
   user_data                            = var.instance_configuration.user_data
   user_data_base64                     = var.instance_configuration.user_data_base64
   user_data_replace_on_change          = var.instance_configuration.user_data_replace_on_change
@@ -378,7 +376,6 @@ resource "aws_spot_instance_request" "default" {
   wait_for_fulfillment           = var.spot_configuration.wait_for_fulfillment
   spot_type                      = var.spot_configuration.spot_type
   launch_group                   = var.spot_configuration.launch_group
-  block_duration_minutes         = var.spot_configuration.block_duration_minutes
   instance_interruption_behavior = var.spot_configuration.instance_interruption_behavior
   valid_until                    = var.spot_configuration.valid_until
   valid_from                     = var.spot_configuration.valid_from
@@ -397,8 +394,6 @@ resource "aws_spot_instance_request" "default" {
   placement_group                      = var.instance_configuration.placement_group
   tenancy                              = var.instance_configuration.tenancy
   host_id                              = var.instance_configuration.host_id
-  cpu_core_count                       = var.instance_configuration.cpu_core_count
-  cpu_threads_per_core                 = var.instance_configuration.cpu_threads_per_core
   user_data                            = var.instance_configuration.user_data
   user_data_base64                     = var.instance_configuration.user_data_base64
   user_data_replace_on_change          = var.instance_configuration.user_data_replace_on_change
