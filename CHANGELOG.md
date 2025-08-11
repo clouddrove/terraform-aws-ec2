@@ -4,6 +4,28 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.0.4] - 2025-08-11
+### :sparkles: New Features
+- [`baf748a`](https://github.com/clouddrove/terraform-aws-ec2/commit/baf748adb622f1d6e1955830f36e741c5a525ebb) - updated example path and readme paramters *(commit by [@VishwajitNagulkar](https://github.com/VishwajitNagulkar))*
+- [`599665a`](https://github.com/clouddrove/terraform-aws-ec2/commit/599665a0dd96173f87bbd391cffb22382ee3d527) - updated readme path *(commit by [@VishwajitNagulkar](https://github.com/VishwajitNagulkar))*
+- [`e585a0f`](https://github.com/clouddrove/terraform-aws-ec2/commit/e585a0ff135380db8acf8bb232fae08ee7065682) - updated branch name in uses of workflow *(PR [#75](https://github.com/clouddrove/terraform-aws-ec2/pull/75) by [@VishwajitNagulkar](https://github.com/VishwajitNagulkar))*
+
+### :bug: Bug Fixes
+- [`0a1f586`](https://github.com/clouddrove/terraform-aws-ec2/commit/0a1f5867eb318fd46a3778078c5adb3bbdae915d) - Updated the object-based configuration in variable.tf *(PR [#79](https://github.com/clouddrove/terraform-aws-ec2/pull/79) by [@Bhomesh](https://github.com/Bhomesh))*
+- [`8cddaf2`](https://github.com/clouddrove/terraform-aws-ec2/commit/8cddaf2490185c02a4309f210e83d8dba80ac12e) - removed depricated arguments *(PR [#81](https://github.com/clouddrove/terraform-aws-ec2/pull/81) by [@cloudOpsgenius](https://github.com/cloudOpsgenius))*
+
+### :construction_worker: Build System
+- [`1f06c48`](https://github.com/clouddrove/terraform-aws-ec2/commit/1f06c484c352ec50f5af8c7367cd4cb0275652a4) - **deps**: bump clouddrove/github-shared-workflows from 1.2.1 to 1.2.2 *(commit by [@dependabot[bot]](https://github.com/apps/dependabot))*
+- [`adf3ee8`](https://github.com/clouddrove/terraform-aws-ec2/commit/adf3ee8184f5e7bd2604b0b0d9a53277baa40682) - **deps**: bump pre-commit/action from 3.0.0 to 3.0.1 *(commit by [@dependabot[bot]](https://github.com/apps/dependabot))*
+- [`f3820c0`](https://github.com/clouddrove/terraform-aws-ec2/commit/f3820c0db43ffe3a4b5150237e8040415cdac6ee) - **deps**: bump clouddrove/iam-role/aws in /_example/complete *(commit by [@dependabot[bot]](https://github.com/apps/dependabot))*
+- [`f095a84`](https://github.com/clouddrove/terraform-aws-ec2/commit/f095a84eb370240df7f786466e66d1a7941704db) - **deps**: bump clouddrove/github-shared-workflows from 1.2.2 to 1.2.4 *(commit by [@dependabot[bot]](https://github.com/apps/dependabot))*
+- [`9be2fb2`](https://github.com/clouddrove/terraform-aws-ec2/commit/9be2fb27e045048d81b500a4d47d4eb8392b5901) - **deps**: bump clouddrove/github-shared-workflows from 1.2.4 to 1.2.7 *(PR [#74](https://github.com/clouddrove/terraform-aws-ec2/pull/74) by [@dependabot[bot]](https://github.com/apps/dependabot))*
+- [`5386009`](https://github.com/clouddrove/terraform-aws-ec2/commit/5386009d568999ac9e301061744c975af0687205) - **deps**: bump clouddrove/iam-role/aws in /examples/complete *(PR [#80](https://github.com/clouddrove/terraform-aws-ec2/pull/80) by [@dependabot[bot]](https://github.com/apps/dependabot))*
+
+### :memo: Documentation Changes
+- [`400f20c`](https://github.com/clouddrove/terraform-aws-ec2/commit/400f20c162fa4ae4f4dbb80ca90991dbc4561769) - update CHANGELOG.md for 2.0.3 *(commit by [@clouddrove-ci](https://github.com/clouddrove-ci))*
+
+
 ## [2.0.3] - 2024-01-26
 ### :bug: Bug Fixes
 - [`837864c`](https://github.com/clouddrove/terraform-aws-ec2/commit/837864cf57d5ed4a9b8a1d8c328eebb3cca477f7) - shutdown behavior for the instance defaults to STOP *(PR [#66](https://github.com/clouddrove/terraform-aws-ec2/pull/66) by [@h1manshu98](https://github.com/h1manshu98))*
@@ -192,3 +214,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [2.0.1]: https://github.com/clouddrove/terraform-aws-ec2/compare/2.0.0...2.0.1
 [2.0.2]: https://github.com/clouddrove/terraform-aws-ec2/compare/2.0.1...2.0.2
 [2.0.3]: https://github.com/clouddrove/terraform-aws-ec2/compare/2.0.2...2.0.3
+[2.0.4]: https://github.com/clouddrove/terraform-aws-ec2/compare/2.0.3...2.0.4
