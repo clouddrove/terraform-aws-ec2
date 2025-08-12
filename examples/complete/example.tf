@@ -2,12 +2,13 @@
 ## Provider block added, Use the Amazon Web Services (AWS) provider to interact with the many resources supported by AWS.
 ####----------------------------------------------------------------------------------
 provider "aws" {
-  region = "us-west-1"
+  region = local.region
 }
 
 locals {
   environment = "test-app"
   label_order = ["name", "environment"]
+  region      = "us-east-1"
 }
 
 ####----------------------------------------------------------------------------------
@@ -31,7 +32,7 @@ module "public_subnets" {
   name               = "public-subnet"
   environment        = local.environment
   label_order        = local.label_order
-  availability_zones = ["us-west-1b", "us-west-1c"]
+  availability_zones = ["${local.region}b", "${local.region}c"]
   vpc_id             = module.vpc.vpc_id
   cidr_block         = module.vpc.vpc_cidr_block
   type               = "public"
@@ -86,16 +87,17 @@ module "ec2" {
   ## Below A security group controls the traffic that is allowed to reach and leave the resources that it is associated with.
   ##----------------------------------------------------------------------------------
   #tfsec:aws-ec2-no-public-ingress-sgr
-  vpc_id            = module.vpc.vpc_id
-  ssh_allowed_ip    = ["0.0.0.0/0"]
-  ssh_allowed_ports = [22]
-  #Instance
+  vpc_id = module.vpc.vpc_id
+
   instance_count = 1
   instance_configuration = {
-    ami           = "ami-0f8e81a3da6e2510a"
-    instance_type = "t4g.small"
-
-    #Root Volume
+    ami = {
+      type         = "ubuntu" # -- valid values are - al1, al2, al2023, ubuntu
+      architecture = "x86_64" # -- valid values are - arm64 or x86_64
+      version      = "22.04"  # Only required if type = ubuntu. Defaults to 22.04, valid values are - 20.04, 22.04, 23.04
+      region       = local.region
+    }
+    instance_type = "t3.small"
     root_block_device = [
       {
         volume_type           = "gp3"
@@ -116,8 +118,6 @@ module "ec2" {
   #IAM
   iam_instance_profile = module.iam-role.name
 
-
-
   #EBS Volume
   ebs_volume_enabled = true
   ebs_volume_type    = "gp3"
@@ -125,6 +125,4 @@ module "ec2" {
 
   #Tags
   instance_tags = { "snapshot" = true }
-
-
 }
