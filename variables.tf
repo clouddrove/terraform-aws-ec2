@@ -59,7 +59,12 @@ variable "enable" {
 variable "instance_configuration" {
   description = "Configuration options for the EC2 instance"
   type = object({
-    ami                                  = optional(string, "")
+    ami = optional(object({
+      type         = string           # al1, al2, al2023, ubuntu
+      version      = optional(string) # Only for ubuntu
+      architecture = string           # arm64 or x86_64
+      region       = string
+    }), null)
     ebs_optimized                        = optional(bool, false)
     instance_type                        = string
     monitoring                           = optional(bool, false)
