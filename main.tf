@@ -15,15 +15,6 @@ locals {
   ebs_iops = var.ebs_volume_type == "io1" || var.ebs_volume_type == "io2" || var.ebs_volume_type == "gp3" ? var.ebs_iops : 0
 }
 
-data "aws_ami" "ubuntu" {
-  most_recent = "true"
-  filter {
-    name   = "name"
-    values = ["ubuntu/images/hvm-ssd/ubuntu-focal-20.04-amd64-server-*"]
-  }
-  owners = ["099720109477"]
-}
-
 ##----------------------------------------------------------------------------------
 ## resource for generating or importing an SSH public key file into AWS.
 ##----------------------------------------------------------------------------------
@@ -148,7 +139,7 @@ data "aws_iam_policy_document" "kms" {
 #tfsec:ignore:aws-ec2-enforce-http-token-imds
 resource "aws_instance" "default" {
   count                                = var.enable && var.default_instance_enabled ? var.instance_count : 0
-  ami                                  = var.instance_configuration.ami == "" ? data.aws_ami.ubuntu.id : var.instance_configuration.ami
+  ami                                  = var.instance_configuration.ami.type == "ubuntu" ? data.aws_ami.ubuntu[0].id : data.aws_ami.amazon[0].id
   ebs_optimized                        = var.instance_configuration.ebs_optimized
   instance_type                        = var.instance_configuration.instance_type
   key_name                             = var.key_name == "" ? join("", aws_key_pair.default[*].key_name) : var.key_name
@@ -381,7 +372,7 @@ resource "aws_spot_instance_request" "default" {
   valid_from                     = var.spot_configuration.valid_from
 
   # Instance configuration
-  ami                                  = var.instance_configuration.ami == "" ? data.aws_ami.ubuntu.id : var.instance_configuration.ami
+  ami                                  = var.instance_configuration.ami.type == "ubuntu" ? data.aws_ami.ubuntu[0].id : data.aws_ami.amazon[0].id
   ebs_optimized                        = var.instance_configuration.ebs_optimized
   instance_type                        = var.instance_configuration.instance_type
   key_name                             = var.key_name == "" ? join("", aws_key_pair.default[*].key_name) : var.key_name
