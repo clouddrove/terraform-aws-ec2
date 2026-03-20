@@ -6,10 +6,16 @@ on:
     tags:
       - "*"
   workflow_dispatch:
+    inputs:
+      tag:
+        required: true
+        type: string
+        description: "Enter the semantic version tag (eg: 3.4.2) for which you want to update the changelog"
 jobs:
   changelog:
-    uses: clouddrove/github-shared-workflows/.github/workflows/changelog.yml@master
+    uses: clouddrove/github-shared-workflows/.github/workflows/release-changelog.yml@v2
     secrets: inherit
     with:
       branch: 'master'
+      tag: ${{ inputs.tag || '' }}
 ...

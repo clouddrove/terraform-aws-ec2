@@ -6,21 +6,21 @@ on:
   pull_request:
 jobs:
   basic_example:
-    uses: clouddrove/github-shared-workflows/.github/workflows/tf-checks.yml@master
+    uses: clouddrove/github-shared-workflows/.github/workflows/tf-checks.yml@v2
     with:
       working_directory: './examples/basic/'
       provider: aws
     secrets:
       BUILD_ROLE: ${{ secrets.BUILD_ROLE }}
   complete_example:
-    uses: clouddrove/github-shared-workflows/.github/workflows/tf-checks.yml@master
+    uses: clouddrove/github-shared-workflows/.github/workflows/tf-checks.yml@v2
     with:
       working_directory: './examples/complete/'
       provider: aws
     secrets:
       BUILD_ROLE: ${{ secrets.BUILD_ROLE }}
   spot_instance:
-    uses: clouddrove/github-shared-workflows/.github/workflows/tf-checks.yml@master
+    uses: clouddrove/github-shared-workflows/.github/workflows/tf-checks.yml@v2
     with:
       working_directory: './examples/spot_instance/'
       provider: aws
