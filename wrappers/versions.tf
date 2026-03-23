@@ -9,7 +9,7 @@ terraform {
     }
     tls = {
       source  = "hashicorp/tls"
-      version = ">= 5.80.0"
+      version = ">= 4.0.0"
     }
   }
 }
