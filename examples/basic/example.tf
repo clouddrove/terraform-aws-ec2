@@ -17,7 +17,11 @@ module "ec2" {
   #instance
   instance_count = 1
   instance_configuration = {
-    ami           = "ami-08d658f84a6d84a80"
+    ami = {
+      type         = "al2023"
+      architecture = "arm64"
+      region       = "eu-west-1"
+    }
     instance_type = "t4g.small"
 
     #Root Volume
