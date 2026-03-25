@@ -13,7 +13,7 @@ on:
         description: "Enter the semantic version tag (eg: 3.4.2) for which you want to update the changelog"
 jobs:
   changelog:
-    uses: clouddrove/github-shared-workflows/.github/workflows/release-changelog.yml@v2
+    uses: clouddrove/github-shared-workflows/.github/workflows/release-changelog.yml@master
     secrets: inherit
     with:
       branch: 'master'
