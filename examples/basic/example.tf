@@ -17,8 +17,13 @@ module "ec2" {
   #instance
   instance_count = 1
   instance_configuration = {
-    ami           = "ami-08d658f84a6d84a80"
     instance_type = "t4g.small"
+    ami = {
+      type         = "ubuntu" 
+      architecture = "x86_64" 
+      version      = "22.04"  
+      region       = "us-east-1"
+    }
 
     #Root Volume
     root_block_device = [
