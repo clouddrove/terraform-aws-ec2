@@ -11,6 +11,7 @@ jobs:
     with:
       working_directory: './examples/basic/'
       provider: aws
+      enable_plan: true
     secrets:
       BUILD_ROLE: ${{ secrets.BUILD_ROLE }}
   complete_example:
@@ -19,6 +20,7 @@ jobs:
     with:
       working_directory: './examples/complete/'
       provider: aws
+      enable_plan: true
     secrets:
       BUILD_ROLE: ${{ secrets.BUILD_ROLE }}
   spot_instance:
@@ -27,6 +29,7 @@ jobs:
     with:
       working_directory: './examples/spot_instance/'
       provider: aws
+      enable_plan: true
     secrets:
       BUILD_ROLE: ${{ secrets.BUILD_ROLE }}
 ...
