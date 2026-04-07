@@ -19,12 +19,12 @@ module "spot-ec2" {
   instance_configuration = {
     instance_type = "t4g.small"
     ami = {
-      type         = "ubuntu" 
-      architecture = "x86_64" 
-      version      = "22.04"  
+      type         = "ubuntu"
+      architecture = "x86_64"
+      version      = "22.04"
       region       = "us-east-1"
     }
-        #Root Volume
+    #Root Volume
     root_block_device = [
       {
         volume_type           = "gp3"
