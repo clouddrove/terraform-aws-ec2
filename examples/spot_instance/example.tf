@@ -16,6 +16,23 @@ module "spot-ec2" {
   #Keypair
   public_key = ""
 
+  instance_configuration = {
+    instance_type = "t4g.small"
+    ami = {
+      type         = "ubuntu"
+      architecture = "x86_64"
+      version      = "22.04"
+      region       = "us-east-1"
+    }
+    #Root Volume
+    root_block_device = [
+      {
+        volume_type           = "gp3"
+        volume_size           = 15
+        delete_on_termination = true
+      }
+    ]
+  }
   # Spot-instance
   spot_configuration = {
     spot_price                     = "0.3"
@@ -25,14 +42,6 @@ module "spot-ec2" {
     spot_instance_enabled          = true
     spot_instance_count            = 1
     instance_type                  = "t4g.small"
-
-    root_block_device = [
-      {
-        volume_type           = "gp3"
-        volume_size           = 15
-        delete_on_termination = true
-      }
-    ]
   }
 
   #Networking
