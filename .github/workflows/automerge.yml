@@ -1,12 +1,17 @@
----
 name: Auto merge
+
 on:
   pull_request:
+
+permissions:
+  contents: write
+  checks: read
+  pull-requests: write
+
 jobs:
   auto-merge:
     uses: clouddrove/github-shared-workflows/.github/workflows/pr-auto-assignee.yml@master
     secrets:
       GITHUB: ${{ secrets.GITHUB_TOKEN }}
-    with:
-      tfcheck: 'examples/spot_instance / Check code format'
 ...
+

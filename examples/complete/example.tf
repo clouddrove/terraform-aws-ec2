@@ -16,7 +16,7 @@ locals {
 ####----------------------------------------------------------------------------------
 module "vpc" {
   source      = "clouddrove/vpc/aws"
-  version     = "2.0.0"
+  version     = "2.0.3"
   name        = "vpc"
   environment = local.environment
   label_order = local.label_order
@@ -28,7 +28,7 @@ module "vpc" {
 ####----------------------------------------------------------------------------------
 module "public_subnets" {
   source             = "clouddrove/subnet/aws"
-  version            = "2.0.1"
+  version            = "2.0.2"
   name               = "public-subnet"
   environment        = local.environment
   label_order        = local.label_order
@@ -42,7 +42,7 @@ module "public_subnets" {
 
 module "iam-role" {
   source             = "clouddrove/iam-role/aws"
-  version            = "1.3.3"
+  version            = "1.3.4"
   name               = "iam-role"
   environment        = local.environment
   label_order        = local.label_order
