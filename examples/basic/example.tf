@@ -1,10 +1,25 @@
+####----------------------------------------------------------------------------------
+## Provider block added, Use the Amazon Web Services (AWS) provider to interact with the many resources supported by AWS.
+####----------------------------------------------------------------------------------
+provider "aws" {
+  region = local.region
+}
+
+locals {
+  name        = "ec2"
+  environment = "test"
+  label_order = ["environment", "name"]
+  region      = "us-east-1"
+}
+
 ##----------------------------------------------------------------------------------
 ## Terraform module to create instance module on AWS.
 ##----------------------------------------------------------------------------------
 module "ec2" {
   source      = "./../../"
-  name        = "ec2"
-  environment = "test"
+  name        = local.name
+  environment = local.environment
+  label_order = local.label_order
 
   ##----------------------------------------------------------------------------------
   ## Below A security group controls the traffic that is allowed to reach and leave the resources that it is associated with.
@@ -20,7 +35,7 @@ module "ec2" {
     ami = {
       type         = "al2023"
       architecture = "arm64"
-      region       = "eu-west-1"
+      region       = local.region
     }
     instance_type = "t4g.small"
 
