@@ -8,14 +8,8 @@ variable "name" {
 
 variable "repository" {
   type        = string
-  default     = "https://github.com/clouddrove/terraform-aws-ec2"
+  default     = ""
   description = "Terraform current module repo"
-
-  validation {
-    # regex(...) fails if it cannot find a match
-    condition     = can(regex("^https://", var.repository))
-    error_message = "The module-repo value must be a valid Git repo link."
-  }
 }
 
 variable "environment" {
@@ -44,7 +38,7 @@ variable "tags" {
 
 variable "managedby" {
   type        = string
-  default     = "hello@clouddrove.com"
+  default     = ""
   description = "ManagedBy, eg 'CloudDrove'."
 }
 
@@ -65,6 +59,7 @@ variable "instance_configuration" {
       architecture = string           # arm64 or x86_64
       region       = string
     }), null)
+    ami_id                               = optional(string, "")
     ebs_optimized                        = optional(bool, false)
     instance_type                        = string
     monitoring                           = optional(bool, false)
