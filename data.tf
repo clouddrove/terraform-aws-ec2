@@ -21,7 +21,7 @@ locals {
 # Amazon (ARM, AMD)
 ######################################
 data "aws_ami" "amazon" {
-  count       = var.instance_configuration.ami.type != "ubuntu" ? 1 : 0
+  count       = var.instance_configuration.ami_id == "" && var.instance_configuration.ami.type != "ubuntu" ? 1 : 0
   most_recent = true
   owners      = [local.ami_owner_map[var.instance_configuration.ami.type]]
 
@@ -50,7 +50,7 @@ data "aws_ami" "amazon" {
 # Ubuntu (ARM, AMD)
 ######################################
 data "aws_ami" "ubuntu" {
-  count       = var.instance_configuration.ami.type == "ubuntu" ? 1 : 0
+  count       = var.instance_configuration.ami_id == "" && var.instance_configuration.ami.type == "ubuntu" ? 1 : 0
   most_recent = true
   owners      = ["099720109477"] # Canonical
 
