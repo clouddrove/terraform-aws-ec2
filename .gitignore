@@ -22,3 +22,5 @@ crash.log
 
 # Variable definitions files - May contain sensitive values
 *.tfvars
+node_modules/
+package-lock.json
