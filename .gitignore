@@ -21,5 +21,6 @@ go.sum
 crash.log
 
 # Variable definitions files - May contain sensitive values
-*.tfvarsnode_modules/
+*.tfvars
+node_modules/
 package-lock.json
