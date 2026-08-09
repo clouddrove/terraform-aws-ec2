@@ -42,7 +42,7 @@ module "public_subnets" {
 
 module "iam-role" {
   source             = "clouddrove/iam-role/aws"
-  version            = "1.3.4"
+  version            = "1.4.0"
   name               = "iam-role"
   environment        = local.environment
   label_order        = local.label_order
