@@ -3,12 +3,13 @@
 ##----------------------------------------------------------------------------------
 module "labels" {
   source      = "clouddrove/labels/aws"
-  version     = "1.3.0"
+  version     = "1.3.1"
   name        = var.name
   repository  = var.repository
   environment = var.environment
   managedby   = var.managedby
   label_order = var.label_order
+  extra_tags  = var.tags
 }
 
 locals {

@@ -152,6 +152,14 @@ variable "instance_count" {
   type        = number
   default     = 0
   description = "Number of instances to launch."
+
+  validation {
+    condition = var.instance_count >= 0 && (
+      !(var.enable && var.default_instance_enabled && var.instance_count > 0) ||
+      var.instance_configuration.ami != null
+    )
+    error_message = "Set instance_configuration.ami when launching standard EC2 instances, and ensure instance_count is not negative."
+  }
 }
 
 variable "network_interface" {
@@ -429,6 +437,14 @@ variable "spot_instance_count" {
   type        = number
   default     = 0
   description = "Number of instances to launch."
+
+  validation {
+    condition = var.spot_instance_count >= 0 && (
+      !(var.enable && var.spot_instance_enabled && var.spot_instance_count > 0) ||
+      var.instance_configuration.ami != null
+    )
+    error_message = "Set instance_configuration.ami when launching Spot instances, and ensure spot_instance_count is not negative."
+  }
 }
 
 variable "spot_configuration" {

@@ -12,8 +12,4 @@ terraform {
       version = ">= 4.0.0"
     }
   }
-
-  provider_meta "aws" {
-    module_name = "clouddrove/terraform-aws-ec2"
-  }
 }
