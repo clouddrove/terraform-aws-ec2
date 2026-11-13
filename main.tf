@@ -140,7 +140,7 @@ data "aws_iam_policy_document" "kms" {
 #tfsec:ignore:aws-ec2-enforce-http-token-imds
 resource "aws_instance" "default" {
   count                                = var.enable && var.default_instance_enabled ? var.instance_count : 0
-  ami                                  = var.instance_configuration.ami_id != "" ? var.instance_configuration.ami_id : (var.instance_configuration.ami.type == "ubuntu" ? data.aws_ami.ubuntu[0].id : data.aws_ami.amazon[0].id)
+  ami                                  = local.use_ami_lookup ? (local.ami_type == "ubuntu" ? data.aws_ami.ubuntu[0].id : data.aws_ami.amazon[0].id) : var.instance_configuration.ami_id
   ebs_optimized                        = var.instance_configuration.ebs_optimized
   instance_type                        = var.instance_configuration.instance_type
   key_name                             = var.key_name == "" ? join("", aws_key_pair.default[*].key_name) : var.key_name
@@ -373,7 +373,7 @@ resource "aws_spot_instance_request" "default" {
   valid_from                     = var.spot_configuration.valid_from
 
   # Instance configuration
-  ami                                  = var.instance_configuration.ami.type == "ubuntu" ? data.aws_ami.ubuntu[0].id : data.aws_ami.amazon[0].id
+  ami                                  = local.use_ami_lookup ? (local.ami_type == "ubuntu" ? data.aws_ami.ubuntu[0].id : data.aws_ami.amazon[0].id) : var.instance_configuration.ami_id
   ebs_optimized                        = var.instance_configuration.ebs_optimized
   instance_type                        = var.instance_configuration.instance_type
   key_name                             = var.key_name == "" ? join("", aws_key_pair.default[*].key_name) : var.key_name

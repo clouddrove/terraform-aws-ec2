@@ -15,24 +15,29 @@ locals {
     al2    = "137112412989" # Amazon
     al2023 = "137112412989" # Amazon
   }
+
+  ami_type         = try(var.instance_configuration.ami.type, "al2023")
+  ami_architecture = try(var.instance_configuration.ami.architecture, "arm64")
+  ami_version      = try(var.instance_configuration.ami.version, null)
+  use_ami_lookup   = var.instance_configuration.ami_id == ""
 }
 
 ######################################
 # Amazon (ARM, AMD)
 ######################################
 data "aws_ami" "amazon" {
-  count       = try(var.instance_configuration.ami.type != "ubuntu", false) ? 1 : 0
+  count       = local.use_ami_lookup && local.ami_type != "ubuntu" ? 1 : 0
   most_recent = true
-  owners      = [local.ami_owner_map[var.instance_configuration.ami.type]]
+  owners      = [lookup(local.ami_owner_map, local.ami_type, local.ami_owner_map.al2023)]
 
   filter {
     name   = "name"
-    values = [local.ami_name_map[var.instance_configuration.ami.type]]
+    values = [lookup(local.ami_name_map, local.ami_type, local.ami_name_map.al2023)]
   }
 
   filter {
     name   = "architecture"
-    values = [var.instance_configuration.ami.architecture]
+    values = [local.ami_architecture]
   }
 
   filter {
@@ -50,20 +55,20 @@ data "aws_ami" "amazon" {
 # Ubuntu (ARM, AMD)
 ######################################
 data "aws_ami" "ubuntu" {
-  count       = try(var.instance_configuration.ami.type == "ubuntu", false) ? 1 : 0
+  count       = local.use_ami_lookup && local.ami_type == "ubuntu" ? 1 : 0
   most_recent = true
   owners      = ["099720109477"] # Canonical
 
   filter {
     name = "name"
     values = [
-      "${var.instance_configuration.ami.type}/images/*${var.instance_configuration.ami.version == null ? "22.04" : var.instance_configuration.ami.version}*"
+      "ubuntu/images/*${coalesce(local.ami_version, "22.04")}*"
     ]
   }
 
   filter {
     name   = "architecture"
-    values = [var.instance_configuration.ami.architecture]
+    values = [local.ami_architecture]
   }
 
   filter {

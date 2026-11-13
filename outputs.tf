@@ -54,6 +54,7 @@ output "security_group_ids" {
 output "subnet_id" {
   value       = aws_instance.default[*].subnet_id
   description = "The EC2 subnet ID."
+  sensitive   = true
 }
 
 output "instance_count" {
