@@ -48,6 +48,8 @@ run "ami_id_and_ubuntu_skips_lookup" {
 
   variables {
     instance_count        = 1
+    spot_instance_enabled = true
+    spot_instance_count   = 1
     subnet_ids            = ["subnet-mock"]
     enable_security_group = false
     kms_key_enabled       = false
@@ -68,6 +70,11 @@ run "ami_id_and_ubuntu_skips_lookup" {
   assert {
     condition     = aws_instance.default[0].ami == "ami-explicit-ubuntu"
     error_message = "The instance must use the explicit AMI ID."
+  }
+
+  assert {
+    condition     = aws_spot_instance_request.default[0].ami == "ami-explicit-ubuntu"
+    error_message = "The Spot request must use the explicit AMI ID."
   }
 }
 

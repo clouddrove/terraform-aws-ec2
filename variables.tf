@@ -444,9 +444,9 @@ variable "spot_instance_count" {
   validation {
     condition = var.spot_instance_count >= 0 && (
       !(var.enable && var.spot_instance_enabled && var.spot_instance_count > 0) ||
-      var.instance_configuration.ami != null
+      var.instance_configuration.ami_id != "" || var.instance_configuration.ami != null
     )
-    error_message = "Set instance_configuration.ami when launching Spot instances, and ensure spot_instance_count is not negative."
+    error_message = "Set instance_configuration.ami or ami_id when launching Spot instances, and ensure spot_instance_count is not negative."
   }
 }
 
