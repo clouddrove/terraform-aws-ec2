@@ -38,25 +38,28 @@ output "key_name" {
 
 output "ipv6_addresses" {
   value       = aws_instance.default[*].ipv6_addresses
-  sensitive   = true
   description = "A list of assigned IPv6 addresses."
 }
 
 output "vpc_security_group_ids" {
   value       = aws_instance.default[*].vpc_security_group_ids
-  sensitive   = true
   description = "The associated security groups in non-default VPC."
+}
+
+output "security_group_ids" {
+  value       = length(var.sg_ids) > 0 ? var.sg_ids : aws_security_group.default[*].id
+  description = "Security group IDs used by the EC2 instances."
 }
 
 output "subnet_id" {
   value       = aws_instance.default[*].subnet_id
-  sensitive   = true
   description = "The EC2 subnet ID."
+  sensitive   = true
 }
 
 output "instance_count" {
-  value       = var.instance_count
-  description = "The count of instances."
+  value       = length(aws_instance.default)
+  description = "The number of EC2 instances created by this module."
 }
 output "name" {
   value       = join("", aws_key_pair.default[*].key_name)
@@ -74,5 +77,5 @@ output "spot_bid_status" {
 }
 output "tags" {
   value       = module.labels.tags
-  description = "The instance ID."
+  description = "Tags applied to resources created by this module."
 }

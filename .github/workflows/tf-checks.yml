@@ -12,7 +12,7 @@ on:
       - '*.tf'
 jobs:
   basic_example:
-    if: github.actor != 'dependabot[bot]'
+    if: github.actor != 'dependabot[bot]' && github.event.pull_request.head.repo.fork != true 
     uses: clouddrove/github-shared-workflows/.github/workflows/tf-checks.yml@master
     with:
       working_directory: './examples/basic/'
@@ -22,7 +22,7 @@ jobs:
     secrets:
       BUILD_ROLE: ${{ secrets.BUILD_ROLE }}
   complete_example:
-    if: github.actor != 'dependabot[bot]'
+    if: github.actor != 'dependabot[bot]' && github.event.pull_request.head.repo.fork != true
     uses: clouddrove/github-shared-workflows/.github/workflows/tf-checks.yml@master
     with:
       working_directory: './examples/complete/'
@@ -32,7 +32,7 @@ jobs:
     secrets:
       BUILD_ROLE: ${{ secrets.BUILD_ROLE }}
   spot_instance:
-    if: github.actor != 'dependabot[bot]'
+    if: github.actor != 'dependabot[bot]' && github.event.pull_request.head.repo.fork != true
     uses: clouddrove/github-shared-workflows/.github/workflows/tf-checks.yml@master
     with:
       working_directory: './examples/spot_instance/'

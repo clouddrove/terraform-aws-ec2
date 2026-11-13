@@ -1,65 +1,37 @@
-####----------------------------------------------------------------------------------
-## Provider block added, Use the Amazon Web Services (AWS) provider to interact with the many resources supported by AWS.
-####----------------------------------------------------------------------------------
+locals {
+  name        = "clouddrove"
+  region      = "us-east-1"
+  environment = "test"
+  label_order = ["environment", "name"]
+}
+
 provider "aws" {
   region = local.region
 }
 
-locals {
-  name        = "ec2"
-  environment = "test"
-  label_order = ["environment", "name"]
-  region      = "us-east-1"
-}
-
-##----------------------------------------------------------------------------------
-## Terraform module to create instance module on AWS.
-##----------------------------------------------------------------------------------
+## Minimal EC2 example.
+## provide subnet/VPC IDs from your network module or existing VPC.
 module "ec2" {
-  source      = "./../../"
-  name        = local.name
+  source = "../../"
+
+  name        = "${local.name}-ec2"
   environment = local.environment
   label_order = local.label_order
+  vpc_id      = "vpc-xxxxxxxx"      # Replace with your VPC ID.
+  subnet_ids  = ["subnet-xxxxxxxx"] # Replace with a subnet in the same VPC.
 
-  ##----------------------------------------------------------------------------------
-  ## Below A security group controls the traffic that is allowed to reach and leave the resources that it is associated with.
-  ##----------------------------------------------------------------------------------
-  #tfsec:aws-ec2-no-public-ingress-sgr
-  vpc_id            = "vpc-xxxxxxxxx"
-  ssh_allowed_ip    = ["0.0.0.0/0"]
-  ssh_allowed_ports = [22]
-
-  #instance
   instance_count = 1
   instance_configuration = {
     ami = {
       type         = "al2023"
-      architecture = "arm64"
-      region       = local.region
+      architecture = "x86_64"
+      region       = local.region # AWS provider region must match this region.
     }
-    instance_type = "t4g.small"
-
-    #Root Volume
-    root_block_device = [
-      {
-        volume_type           = "gp3"
-        volume_size           = 15
-        delete_on_termination = true
-      }
-    ]
+    instance_type = "t3.micro"
   }
 
-  #Networking
-  subnet_ids = ["subnet-xxxxxxxx"]
-
-  #Keypair
-  public_key = "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQCm63Yf1+E6Fkts7LcAdOalvdUrZE0oA1A6pJUkx9c/V8ZFuclg7uNdnXV98iHWlA6tcvV69HsdBJZU3w66+6rxGgM0dbwSalRz60IGM40HwRTYZNn0e/1xwL3O0tvsIiSdapLDjPXIm4zZGQL7KXT98f6LJzDfDBF67ZEAVoeOxIl/a1k+DOTRuFtg7dtvPhJQpDCh685EtiC/+HH4vpHcw3LcNfP2WaifQpCG4Pxgj6KWf1bGVJhhpN26lbJYfN4n+GZJYDKDS+Tc4eF4aC1s1JnOtKC2z1bb+FI7Y4ZdYfIsdf0P1Fo751JLp7fjTqckBgxYd+iXAhKO6dPjbVp3L56pxTJbbSgi5Cw29+Ef8AcK9WOGCgbnma7XmCpFF0NxSSLim74p2y+oyjt1UmX9UvOKnb1MXlGW4JYo4qQV4M5TL64JcYa5sSRDvMhtpC83YVpKyRb3bTNZySsgkDuxFCNsJ0c9UAWTbqzSmhpPsM9ItfBSxhq0oiogGpvNgXM="
-
-  #IAM
-  iam_instance_profile = "iam-profile-xxxxxxxxx"
-
-
-  #Tags
-  instance_tags = { "snapshot" = true }
-
+  # No inbound rules are added by default. If SSH is required, restrict
+  # ssh_allowed_ip to a trusted CIDR instead of 0.0.0.0/0.
+  enable_key_pair    = false
+  assign_eip_address = false
 }

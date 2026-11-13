@@ -54,10 +54,10 @@ variable "instance_configuration" {
   description = "Configuration options for the EC2 instance"
   type = object({
     ami = optional(object({
-      type         = string           # al1, al2, al2023, ubuntu
-      version      = optional(string) # Only for ubuntu
-      architecture = string           # arm64 or x86_64
-      region       = string
+      type         = optional(string, "al2023") # al1, al2, al2023, ubuntu
+      version      = optional(string)           # Only for ubuntu
+      architecture = optional(string, "arm64")  # arm64 or x86_64
+      region       = optional(string)
     }), null)
     ami_id                               = optional(string, "")
     ebs_optimized                        = optional(bool, false)
@@ -85,6 +85,14 @@ variable "instance_configuration" {
   })
   default = {
     instance_type = "t4g.small" # Providing a default instance type
+  }
+
+  validation {
+    condition = var.instance_configuration.ami_id != "" || var.instance_configuration.ami == null || (
+      contains(["al1", "al2", "al2023", "ubuntu"], var.instance_configuration.ami.type) &&
+      contains(["arm64", "x86_64"], var.instance_configuration.ami.architecture)
+    )
+    error_message = "When ami_id is empty, ami.type must be al1, al2, al2023, or ubuntu and ami.architecture must be arm64 or x86_64."
   }
 }
 
@@ -147,6 +155,14 @@ variable "instance_count" {
   type        = number
   default     = 0
   description = "Number of instances to launch."
+
+  validation {
+    condition = var.instance_count >= 0 && (
+      !(var.enable && var.default_instance_enabled && var.instance_count > 0) ||
+      var.instance_configuration.ami_id != "" || var.instance_configuration.ami != null
+    )
+    error_message = "Set instance_configuration.ami or ami_id when launching standard EC2 instances, and ensure instance_count is not negative."
+  }
 }
 
 variable "network_interface" {
@@ -424,6 +440,14 @@ variable "spot_instance_count" {
   type        = number
   default     = 0
   description = "Number of instances to launch."
+
+  validation {
+    condition = var.spot_instance_count >= 0 && (
+      !(var.enable && var.spot_instance_enabled && var.spot_instance_count > 0) ||
+      var.instance_configuration.ami_id != "" || var.instance_configuration.ami != null
+    )
+    error_message = "Set instance_configuration.ami or ami_id when launching Spot instances, and ensure spot_instance_count is not negative."
+  }
 }
 
 variable "spot_configuration" {

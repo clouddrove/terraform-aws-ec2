@@ -12,8 +12,4 @@ terraform {
       version = ">= 4.0.0"
     }
   }
-
-  provider_meta "aws" {
-    user_agent = ["github.com/clouddrove/terraform-aws-ec2"]
-  }
 }

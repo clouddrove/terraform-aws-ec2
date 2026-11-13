@@ -68,6 +68,47 @@ This table contains both Prerequisites and Providers:
 
 ## Examples
 
+### Quick start
+
+Configure the AWS provider in your root module and pass a subnet and VPC from
+the same region. With the settings below, the module creates one EC2 instance
+and its security group; the example disables the module's optional Elastic IP.
+It adds no inbound access unless you configure
+`ssh_allowed_ip` or `allowed_ip`.
+
+```hcl
+module "ec2" {
+  source  = "clouddrove/ec2/aws"
+  version = "2.1.1"
+
+  name        = "app"
+  environment = "dev"
+  vpc_id      = "vpc-xxxxxxxx"
+  subnet_ids  = ["subnet-xxxxxxxx"]
+
+  instance_count = 1
+  instance_configuration = {
+    ami = {
+      type         = "al2023"
+      architecture = "x86_64"
+      region       = "us-east-1"
+    }
+    instance_type = "t3.micro"
+  }
+
+  enable_key_pair    = false
+  assign_eip_address = false
+}
+```
+
+To allow SSH, set `ssh_allowed_ip` to a trusted CIDR (for example, your
+office/VPN public IP with `/32`) and keep `ssh_allowed_ports = [22]`. Do not
+open SSH to `0.0.0.0/0`. The AWS provider region must match the subnet region.
+
+The `ami.region` field is currently informational: AMI lookup uses the AWS
+provider's configured region. See [`examples/`](./examples) for complete VPC,
+IAM, EBS, and Spot configurations.
+
 **IMPORTANT:** Since the master branch used in source varies based on new modifications, we recommend using the [release versions](https://github.com/clouddrove/terraform-aws-ec2/releases).
 
 📌 For additional usage examples, check the complete list under [`examples/`](./examples) directory.

@@ -6,9 +6,10 @@ provider "aws" {
 }
 
 locals {
-  environment = "test-app"
-  label_order = ["name", "environment"]
+  name        = "clouddrove"
   region      = "us-east-1"
+  environment = "test"
+  label_order = ["environment", "name"]
 }
 
 ####----------------------------------------------------------------------------------
@@ -17,7 +18,7 @@ locals {
 module "vpc" {
   source      = "clouddrove/vpc/aws"
   version     = "2.0.5"
-  name        = "vpc"
+  name        = "${local.name}-vpc"
   environment = local.environment
   label_order = local.label_order
   cidr_block  = "172.16.0.0/16"
@@ -29,7 +30,7 @@ module "vpc" {
 module "public_subnets" {
   source             = "clouddrove/subnet/aws"
   version            = "2.0.3"
-  name               = "public-subnet"
+  name               = "${local.name}-public-subnet"
   environment        = local.environment
   label_order        = local.label_order
   availability_zones = ["${local.region}b", "${local.region}c"]
@@ -43,7 +44,7 @@ module "public_subnets" {
 module "iam-role" {
   source             = "clouddrove/iam-role/aws"
   version            = "1.4.0"
-  name               = "iam-role"
+  name               = "${local.name}-iam-role"
   environment        = local.environment
   label_order        = local.label_order
   assume_role_policy = data.aws_iam_policy_document.default.json
@@ -79,8 +80,8 @@ data "aws_iam_policy_document" "iam-policy" {
 ## Terraform module to create ec2 instance module on AWS.
 ##----------------------------------------------------------------------------------
 module "ec2" {
-  source      = "./../../"
-  name        = "ec2"
+  source      = "../.."
+  name        = "${local.name}-ec2"
   environment = local.environment
 
   ##----------------------------------------------------------------------------------
@@ -92,10 +93,10 @@ module "ec2" {
   instance_count = 1
   instance_configuration = {
     ami = {
-      type         = "ubuntu" # -- valid values are - al1, al2, al2023, ubuntu
-      architecture = "x86_64" # -- valid values are - arm64 or x86_64
-      version      = "22.04"  # Only required if type = ubuntu. Defaults to 22.04, valid values are - 20.04, 22.04, 23.04
-      region       = local.region
+      type         = "ubuntu"     # -- valid values are - al1, al2, al2023, ubuntu
+      architecture = "x86_64"     # -- valid values are - arm64 or x86_64
+      version      = "22.04"      # Only required if type = ubuntu. Defaults to 22.04, valid values are - 20.04, 22.04, 23.04
+      region       = local.region # AWS provider region must match this region.
     }
     instance_type = "t3.small"
     root_block_device = [
